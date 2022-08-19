@@ -75,7 +75,6 @@ fun main() {
         .build()
 
     val syfosmregisterCredentials: GcpDatabaseCredentials = objectMapper.readValue(getFileAsString("/run/secrets/secret"))
-
     val syfosmregisterDatabase = GcpDatabase(syfosmregisterCredentials, "smregister")
 
     val httpClients = HttpClients(environment)

@@ -7,7 +7,7 @@ import java.sql.Connection
 import java.sql.ResultSet
 
 class DatabaseOracle(
-    private val jdbcUrl: String,
+    private val dburl: String,
     private val serviceUser: ServiceUser
 ) : DatabaseInterfaceOracle {
 
@@ -19,7 +19,7 @@ class DatabaseOracle(
     init {
         dataSource = HikariDataSource(
             HikariConfig().apply {
-                jdbcUrl = jdbcUrl
+                jdbcUrl = dburl
                 username = serviceUser.serviceuserUsername
                 password = serviceUser.serviceuserPassword
                 maximumPoolSize = 3
