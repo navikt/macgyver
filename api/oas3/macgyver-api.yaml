@@ -1,0 +1,410 @@
+openapi: 3.0.0
+
+info:
+  title: Syfo-MacGyver
+  description: API for syfo-MacGyver. Husk å velge riktig url! :)
+  version: 1.0.0
+servers:
+  - url: 'https://macgyver.dev.intern.nav.no'
+  - url: 'https://macgyver.intern.nav.no'
+paths:
+  /api/sykmelding/fnr:
+    post:
+      operationId: endreBrukerFnr
+      summary: Endre fnr for sykmeldinger
+      description: Endrer fnr for et gitt fnr i alle sykmeldinger i SyfoSmRegister og oppdaterer aktive NL-koblinger
+      tags:
+        - Identendring
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/EndreFnrRequest'
+      responses:
+        '200':
+          description: Ok
+        '304':
+          description: Not Modified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/leder/fnr:
+    post:
+      operationId: endreLederFnr
+      summary: Endre fnr for nærmeste leder
+      description: Oppdaterer aktive NL-koblinger for leder med nytt fnr
+      tags:
+        - Identendring
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/EndreFnrRequest'
+      responses:
+        '200':
+          description: Ok
+        '304':
+          description: Not Modified
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/sykmelding/{sykmeldingId}:
+    delete:
+      summary: Sletter en sykmelding
+      operationId: deleteSykmelding
+      tags:
+        - Sykmelding
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /api/sykmelding/{sykmeldingId}/gjenapne:
+    post:
+      operationId: gjenapne
+      tags:
+        - Sykmelding
+      security:
+        - bearerAuth: [ ]
+      summary: Gjenåpne sykmelding
+      description: Gjenåpne sykmelding med gitt sykmeldingId
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/sykmelding/{sykmeldingId}/diagnose:
+    post:
+      operationId: updateDiagnosis
+      tags:
+        - Sykmelding
+      security:
+        - bearerAuth: [ ]
+      summary: Endre diagnose for sykmelding
+      description: Endre diagnose i syfosmregister og syfoservice
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      requestBody:
+        $ref: '#/components/requestBodies/EndreDiagnoseRequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/sykmelding/{sykmeldingId}/bidiagnose:
+    post:
+      operationId: updateBiDiagnose
+      tags:
+        - Sykmelding
+      security:
+        - bearerAuth: [ ]
+      summary: Endre Bi-diagnose for sykmelding
+      description: Endre Bi-diagnoser i syfosmregister og syfoservice
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      requestBody:
+        $ref: '#/components/requestBodies/EndreBiDiagnoseRequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+  /api/papirsykmelding/{sykmeldingId}/periode:
+    post:
+      operationId: updatePeriode
+      tags:
+        - Papirsykmelding
+      security:
+        - bearerAuth: [ ]
+      summary: Endre periodelisten for en gitt sykmelding
+      description: OBS! Denne vil overskrive alle eksisterende sykmeldingsperioder for denne sykmeldingen!!
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      requestBody:
+        $ref: '#/components/requestBodies/PeriodelisteDTORequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/papirsykmelding/{sykmeldingId}/behandletdato:
+    post:
+      operationId: updateBehandletDato
+      tags:
+        - Papirsykmelding
+      security:
+        - bearerAuth: [ ]
+      summary: Endre behandletdato for en gitt sykmelding
+      description: Endre behandletdato for en gitt sykmelding i smregister og syfoservice
+      parameters:
+        - $ref: '#/components/parameters/sykmeldingId'
+      requestBody:
+        $ref: '#/components/requestBodies/BehandletDatoDTORequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/oppgave/list:
+    post:
+      operationId: getOppgave
+      tags:
+        - Oppgave
+      security:
+        - bearerAuth: [ ]
+      summary: Hent liste av oppgaver
+      description: Hent en liste av oppgaver med oppgaveId fra Oppgave-api
+      requestBody:
+        $ref: '#/components/requestBodies/HentOppgaverRequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /api/narmesteleder/request:
+    post:
+      operationId: newNlRequest
+      tags:
+        - Narmesteleder
+      security:
+        - bearerAuth: [ ]
+      description: Sender ny NL-request til altinn
+      requestBody:
+        $ref: '#/components/requestBodies/NlRequest'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+
+components:
+  requestBodies:
+    NlRequest:
+      description: "Ny nl request"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NlRequest"
+    EndreFnrRequest:
+      description: "Endre fnr for bruker"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EndreFnr"
+    PeriodelisteDTORequest:
+      description: "Riktig periodeliste for sykmeldingen"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PeriodelisteDTO'
+    BehandletDatoDTORequest:
+      description: "Riktig behandletdato for sykmeldingen"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BehandletDatoDTO'
+    EndreDiagnoseRequest:
+      description: "Riktig diagnose for sykmeldingen"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EndreDiagnose'
+    EndreBiDiagnoseRequest:
+      description: "Riktig bi-diagnose for sykmelding"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EndreBiDiagnose'
+    HentOppgaverRequest:
+      description: "Liste av oppgaveider som skal hentes"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HentOppgaver'
+
+  parameters:
+    sykmeldingId:
+      description: Id for sykmelding som skal rettes
+      name: sykmeldingId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: '123'
+    oppgaveId:
+      description: Id for oppgave som skal hentes
+      name: oppgaveId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: '123'
+  schemas:
+    NlRequest:
+      type: object
+      required:
+        - fnr
+        - sykmeldingId
+        - orgnummer
+      properties:
+        fnr:
+          type: string
+          minLength: 11
+          maxLength: 11
+        orgnummer:
+          type: string
+          minLength: 9
+          maxLength: 9
+        sykmeldingId:
+          type: string
+          format: uuid
+    EndreFnr:
+      type: object
+      required:
+        - fnr
+        - nyttFnr
+      properties:
+        fnr:
+          type: string
+          minLength: 11
+          maxLength: 11
+        nyttFnr:
+          type: string
+          minLength: 11
+          maxLength: 11
+    Date:
+      type: string
+      format: date
+      example: '2020-12-15'
+    PeriodelisteDTO:
+      type: object
+      required:
+        - periodeliste
+      properties:
+        periodeliste:
+          type: array
+          items:
+            $ref: '#/components/schemas/Periode'
+    Periode:
+      type: object
+      required:
+        - fom
+        - tom
+        - reisetilskudd
+      properties:
+        fom:
+          $ref: '#/components/schemas/Date'
+        tom:
+          $ref: '#/components/schemas/Date'
+        aktivitetIkkeMulig:
+          $ref: '#/components/schemas/AktivitetIkkeMulig'
+        avventendeInnspillTilArbeidsgiver:
+          type: string
+        behandlingsdager:
+          type: integer
+        gradert:
+          $ref: '#/components/schemas/Gradert'
+        reisetilskudd:
+          type: boolean
+    AktivitetIkkeMulig:
+      type: object
+      properties:
+        medisinskArsak:
+          $ref: '#/components/schemas/MedisinskArsak'
+        arbeidsrelatertArsak:
+          $ref: '#/components/schemas/ArbeidsrelatertArsak'
+    MedisinskArsak:
+      type: object
+      properties:
+        beskrivelse:
+          type: string
+        arsak:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedisinskArsakType'
+    MedisinskArsakType:
+      type: string
+      enum: [ TILSTAND_HINDRER_AKTIVITET, AKTIVITET_FORVERRER_TILSTAND, AKTIVITET_FORHINDRER_BEDRING, ANNET ]
+    ArbeidsrelatertArsak:
+      type: object
+      properties:
+        beskrivelse:
+          type: string
+        arsak:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArbeidsrelatertArsakType'
+    ArbeidsrelatertArsakType:
+      type: string
+      enum: [ MANGLENDE_TILRETTELEGGING, ANNET ]
+    Gradert:
+      type: object
+      properties:
+        grad:
+          type: integer
+          minimum: 0
+          maximum: 100
+        reisetilskudd:
+          type: boolean
+    BehandletDatoDTO:
+      type: object
+      required:
+        - behandletDato
+      properties:
+        behandletDato:
+          $ref: '#/components/schemas/Date'
+    EndreDiagnose:
+      type: object
+      properties:
+        kode:
+          type: string
+        system:
+          type: string
+    EndreBiDiagnoser:
+      type: array
+      items:
+        $ref: '#/components/schemas/EndreDiagnose'
+    EndreBiDiagnose:
+      type: object
+      properties:
+        diagnoser:
+          $ref: '#/components/schemas/EndreBiDiagnoser'
+    HentOppgaver:
+      type: array
+      items:
+        type: integer
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: [ ]

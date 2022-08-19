@@ -1,0 +1,89 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: macgyver
+  namespace: teamsykmelding
+  labels:
+    team: teamsykmelding
+spec:
+  image: {{ image }}
+  replicas:
+    min: 3
+    max: 3
+    cpuThresholdPercentage: 90
+  port: 8080
+  liveness:
+    path: /internal/is_alive
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /internal/is_ready
+    initialDelay: 30
+    periodSeconds: 5
+    timeout: 5
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  resources:
+    limits:
+      cpu: 2048m
+      memory: 4Gi
+    requests:
+      cpu: 2048m
+      memory: 4Gi
+  kafka:
+    pool: nav-prod
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  vault:
+    enabled: false
+  webproxy: false
+  ingresses:
+    - "https://macgyver.intern.nav.no"
+  env:
+    - name: SYFOSMREGISTER_DB_URL
+      value: jdbc:postgresql://fsspgdb.adeo.no:5432/syfosmregister
+    - name: PALE_2_REGISTER_DB_URL
+      value: jdbc:postgresql://A01DBVL011.adeo.no:5432/pale-2-register
+    - name: SPARENAPROXY_DB_URL
+      value: jdbc:postgresql://A01DBVL014.adeo.no:5432/sparenaproxy
+    - name: SYFOSMMANUELL_BACKEND_DB_URL
+      value: jdbc:postgresql://A01DBVL010.adeo.no:5432/syfosmmanuell-backend
+    - name: MOUNT_PATH_VAULT
+      value: /postgresql/prod-fss
+    - name: LAST_INDEX_EIA
+      value: "33745516"
+    - name: LAST_INDEX_SYFOSERVICE
+      value: "0"
+    - name: LAST_INDEX_SYFOSMREGISTER
+      value: "2016-01-01"
+    - name: LAST_INDEX_BACKUP
+      value: "2019-05-01"
+    - name: LAST_INDEX_SPARENAPROXY
+      value: "2020-06-20"
+    - name: PDL_GRAPHQL_PATH
+      value: https://pdl-api.prod-fss-pub.nais.io/graphql
+    - name: PDL_SCOPE
+      value: api://prod-fss.pdl.pdl-api/.default
+    - name: SECURITY_TOKEN_SERVICE_URL
+      value: https://security-token-service.nais.adeo.no/rest/v1/sts/token
+    - name: KAFKA_CLIENT_ID
+      value: syfoservice-data-syfosmregister
+    - name: LAST_INDEX_NL_SYFOSERVICE
+      value: "0"
+    - name: OPPGAVEBEHANDLING_URL
+      value: https://oppgave.prod-fss-pub.nais.io/api/v1/oppgaver
+    - name: NARMESTELEDER_URL
+      value: https://narmesteleder.intern.nav.no
+    - name: NARMESTELEDER_SCOPE
+      value: api://prod-gcp.teamsykmelding.narmesteleder/.default
+    - name: SYKMELDING_BUCKET_NAME
+      value: teamsykmelding-sykmelding-vedlegg-bucket-prod
+    - name: PALE_VEDLEGG_BUCKET_NAME
+      value: teamsykmelding-pale2-vedlegg-bucket-prod
+    - name: PALE_BUCKET_NAME
+      value: teamsykmelding-pale2-legeerklaring-bucket-prod
