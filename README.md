@@ -1,5 +1,6 @@
+[![Deploy to dev and prod](https://github.com/navikt/macgyver/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/navikt/macgyver/actions/workflows/deploy.yml)
 # macgyver
-macgyver
+Application that fixes stuff like macgyver for team sykmelding
 
 ## Technologies used
 * Kotlin
