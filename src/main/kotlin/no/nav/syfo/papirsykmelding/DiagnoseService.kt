@@ -2,7 +2,7 @@ package no.nav.syfo.papirsykmelding
 
 import no.nav.helse.sm2013.CV
 import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingsdokument
@@ -11,7 +11,7 @@ import no.nav.syfo.persistering.db.postgres.updateDiagnose
 import no.nav.syfo.sm.Diagnosekoder
 import no.nav.syfo.sykmelding.api.model.EndreDiagnose
 
-class DiagnoseService(private val syfosmRegisterDb: DatabasePostgres, private val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer) {
+class DiagnoseService(private val syfosmRegisterDb: GcpDatabase, private val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer) {
 
     fun endreDiagnose(sykmeldingId: String, diagnoseKode: String, system: String) {
         val sykmeldingsdokument = syfosmRegisterDb.connection.hentSykmeldingsdokument(sykmeldingId)

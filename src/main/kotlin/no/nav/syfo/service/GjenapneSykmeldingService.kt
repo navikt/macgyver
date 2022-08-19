@@ -1,6 +1,6 @@
 package no.nav.syfo.service
 
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.STATUS_APEN
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
@@ -11,10 +11,10 @@ import java.time.ZoneOffset
 
 class GjenapneSykmeldingService(
     private val sykmeldingStatusKafkaProducer: SykmeldingStatusKafkaProducer,
-    private val databasePostgres: DatabasePostgres
+    private val syfoSmRegisterDb: GcpDatabase
 ) {
     fun gjenapneSykmelding(sykmeldingId: String) {
-        val sykmelding = databasePostgres.connection.hentSykmeldingMedId(sykmeldingId)
+        val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingId)
         if (sykmelding != null) {
             log.info("Gjenåpner sykmelding med sykmeldingid {}", sykmeldingId)
             val sykmeldingStatusKafkaEventDTO = SykmeldingStatusKafkaEventDTO(

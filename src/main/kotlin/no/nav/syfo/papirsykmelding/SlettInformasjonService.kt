@@ -3,12 +3,12 @@ package no.nav.syfo.papirsykmelding
 import no.nav.syfo.aksessering.db.oracle.getSykmeldingsDokument
 import no.nav.syfo.aksessering.db.oracle.updateDocument
 import no.nav.syfo.db.DatabaseOracle
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.toMap
 import no.nav.syfo.persistering.db.postgres.updateUtdypendeOpplysninger
 
-class SlettInformasjonService(private val databaseoracle: DatabaseOracle, private val databasePostgres: DatabasePostgres) {
+class SlettInformasjonService(private val databaseoracle: DatabaseOracle, private val databasePostgres: GcpDatabase) {
 
     val sykmeldingId = ""
     val nySvartekst = "Tekst slettet pga feil tekst fra lege. Se sykmelding som erstatter denne for korrekt informasjon"

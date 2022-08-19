@@ -1,12 +1,12 @@
 package no.nav.syfo.manuell
 
-import no.nav.syfo.db.DatabasePostgresManuell
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.Status
 import no.nav.syfo.model.ValidationResult
 
 class ValidationResultService(
-    private val databasePostgres: DatabasePostgresManuell
+    private val databasePostgres: GcpDatabase
 ) {
     fun run() {
         val aktuelleOppgaver = databasePostgres.hentAktuelleManuellOppgaver()

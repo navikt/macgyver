@@ -20,7 +20,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import no.nav.syfo.application.setupAuth
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.updateFnr
@@ -50,15 +50,13 @@ class EndreFnrApiTest : FunSpec({
             val narmestelederClient = mockk<NarmestelederClient>()
 
             mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
-            val db = mockk<DatabaseInterfacePostgres>(relaxed = true)
+            val db = mockk<GcpDatabase>(relaxed = true)
 
             start()
 
             application.setupAuth(
                 jwkProvider,
-                "sillyUser",
-                "clint",
-                listOf("foo", "bar")
+                "sillyUser"
             )
             application.routing {
                 registerFnrApi(UpdateFnrService(pdlPersonService, db, sendtSykmeldingKafkaProducer, narmesteLederResponseKafkaProducer, narmestelederClient, "topic"))

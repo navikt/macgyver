@@ -1,12 +1,12 @@
 package no.nav.syfo.persistering.db.postgres
 
-import no.nav.syfo.db.DatabaseInterfacePostgresUtenVault
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.db.toList
 import java.sql.ResultSet
 import java.sql.Timestamp
 import java.time.LocalDate
 
-fun DatabaseInterfacePostgresUtenVault.hentAntallSykmeldinger(): List<AntallSykmeldingerBackup> =
+fun GcpDatabase.hentAntallSykmeldinger(): List<AntallSykmeldingerBackup> =
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -27,7 +27,7 @@ fun ResultSet.toAntallSykmeldingerBackup(): AntallSykmeldingerBackup =
         antall = getString("antall")
     )
 
-fun DatabaseInterfacePostgresUtenVault.hentSykmeldingsIderUtenBehandlingsutfall(
+fun GcpDatabase.hentSykmeldingsIderUtenBehandlingsutfall(
     lastMottattTidspunkt: LocalDate
 ): List<String> =
     connection.use { connection ->

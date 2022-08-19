@@ -4,14 +4,14 @@ import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
 import no.nav.syfo.aksessering.db.oracle.getSykmeldingsDokument
 import no.nav.syfo.aksessering.db.oracle.updateDocument
 import no.nav.syfo.db.DatabaseOracle
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.persistering.db.postgres.updatePeriode
 import no.nav.syfo.sykmelding.model.Gradert
 import no.nav.syfo.sykmelding.model.Periode
 import java.time.LocalDate
 
-class GradService(private val databaseoracle: DatabaseOracle, private val databasePostgres: DatabasePostgres) {
+class GradService(private val databaseoracle: DatabaseOracle, private val databasePostgres: GcpDatabase) {
 
     val sykmeldingId = ""
 

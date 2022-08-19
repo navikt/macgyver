@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val coroutinesVersion = "1.6.1"
+val coroutinesVersion = "1.6.4"
 val jacksonVersion = "2.13.3"
 val kluentVersion = "1.68"
 val ktorVersion = "2.1.0"
@@ -27,7 +27,6 @@ val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1
 val kithHodemeldingVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val javaTimeAdapterVersion = "1.1.3"
 val postgresVersion = "42.4.1"
-val vaultJavaDriveVersion = "3.1.0"
 val kontrollsystemblokk = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val infotrygdForespVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val avroVersion = "1.8.2"
@@ -112,7 +111,6 @@ dependencies {
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("com.oracle.ojdbc:ojdbc8:$ojdbc8Version")
     implementation("org.postgresql:postgresql:$postgresVersion")
-    implementation("com.bettercloud:vault-java-driver:$vaultJavaDriveVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
@@ -120,7 +118,7 @@ dependencies {
     implementation("no.nav.helse.xml:legeerklaering:$legeerklaering")
     implementation("com.google.cloud:google-cloud-storage:$googleCloudStorageVersion")
     implementation("no.nav.syfo:pale-2-common-models:$pale2CommonVersion")
-    swaggerUI( "org.webjars:swagger-ui:$swaggerUiVersion")
+    swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
@@ -169,7 +167,9 @@ tasks {
         useJUnitPlatform {
         }
         testLogging {
-            showStandardStreams = true
+            events("skipped", "failed")
+            showStackTraces = true
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
         }
     }
 

@@ -2,7 +2,7 @@ package no.nav.syfo.service
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.syfo.application.ApplicationState
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.Eia
 import no.nav.syfo.objectMapper
@@ -12,7 +12,7 @@ import java.time.Duration
 
 class SkrivTilSyfosmRegisterServiceEia(
     private val kafkaconsumerEia: KafkaConsumer<String, String>,
-    private val databasePostgres: DatabaseInterfacePostgres,
+    private val databasePostgres: GcpDatabase,
     private val sm2013EiaSykmedlingTopic: String,
     private val applicationState: ApplicationState
 ) {

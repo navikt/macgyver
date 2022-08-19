@@ -1,7 +1,7 @@
 package no.nav.syfo.identendring.db
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.db.toList
 import no.nav.syfo.log
 import no.nav.syfo.objectMapper
@@ -10,7 +10,7 @@ import java.sql.ResultSet
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-fun DatabaseInterfacePostgres.updateFnr(fnr: String, nyttFnr: String): Int {
+fun GcpDatabase.updateFnr(fnr: String, nyttFnr: String): Int {
     connection.use { connection ->
         var updated: Int
         connection.prepareStatement(
@@ -28,7 +28,7 @@ fun DatabaseInterfacePostgres.updateFnr(fnr: String, nyttFnr: String): Int {
     }
 }
 
-fun DatabaseInterfacePostgres.getSykmeldingerMedFnrUtenBehandlingsutfall(fnr: String): List<SykmeldingDbModelUtenBehandlingsutfall> =
+fun GcpDatabase.getSykmeldingerMedFnrUtenBehandlingsutfall(fnr: String): List<SykmeldingDbModelUtenBehandlingsutfall> =
     connection.use { connection ->
         return connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fnr)
     }

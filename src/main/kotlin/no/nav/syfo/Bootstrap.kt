@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -15,9 +16,8 @@ import no.nav.syfo.application.ApplicationServer
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.createApplicationEngine
 import no.nav.syfo.clients.HttpClients
-import no.nav.syfo.db.DatabaseOracle
-import no.nav.syfo.db.DatabasePostgres
-import no.nav.syfo.db.VaultCredentialService
+import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.gcp.GcpDatabaseCredentials
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
@@ -28,9 +28,6 @@ import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.papirsykmelding.DiagnoseService
-import no.nav.syfo.papirsykmelding.GradService
-import no.nav.syfo.papirsykmelding.PeriodeService
-import no.nav.syfo.papirsykmelding.SlettInformasjonService
 import no.nav.syfo.papirsykmelding.api.UpdateBehandletDatoService
 import no.nav.syfo.papirsykmelding.api.UpdatePeriodeService
 import no.nav.syfo.service.GjenapneSykmeldingService
@@ -41,7 +38,6 @@ import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import no.nav.syfo.utils.getFileAsString
-import no.nav.syfo.vault.RenewVaultService
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
@@ -73,18 +69,16 @@ fun main() {
     val environment = Environment()
     val applicationState = ApplicationState()
 
-    val jwtVaultSecrets = JwtVaultSecrets()
-    val jwkProviderInternal = JwkProviderBuilder(URL(jwtVaultSecrets.internalJwtWellKnownUri))
+    val jwkProviderAadV2 = JwkProviderBuilder(URL(environment.jwkKeysUrlV2))
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
 
-    val vaultCredentialService = VaultCredentialService()
-    val vaultServiceuser = getVaultServiceUser()
+    val syfosmregisterCredentials: GcpDatabaseCredentials = objectMapper.readValue(getFileAsString("/run/secrets/secret"))
 
-    val databasePostgres = DatabasePostgres(environment, vaultCredentialService)
+    val syfosmregisterDatabase = GcpDatabase(syfosmregisterCredentials, "smregister")
 
-    val httpClients = HttpClients(environment, vaultServiceuser)
+    val httpClients = HttpClients(environment)
 
     val kafkaAivenProducer = KafkaProducer<String, SykmeldingV2KafkaMessage?>(
         KafkaUtils
@@ -111,7 +105,7 @@ fun main() {
     val statusKafkaProducer =
         SykmeldingStatusKafkaProducer(KafkaProducer(aivenProducerProperties), environment.aivenSykmeldingStatusTopic)
     val updatePeriodeService = UpdatePeriodeService(
-        databasePostgres = databasePostgres,
+        databasePostgres = syfosmregisterDatabase,
         sykmeldingEndringsloggKafkaProducer = sykmeldingEndringsloggKafkaProducer,
         sykmeldingProducer = SykmeldingV2KafkaProducer(kafkaAivenProducer),
         mottattSykmeldingTopic = environment.mottattSykmeldingV2Topic,
@@ -119,7 +113,7 @@ fun main() {
         bekreftetSykmeldingTopic = environment.bekreftSykmeldingV2KafkaTopic
     )
     val updateBehandletDatoService = UpdateBehandletDatoService(
-        databasePostgres = databasePostgres,
+        syfoSmRegisterDb = syfosmregisterDatabase,
         sykmeldingEndringsloggKafkaProducer = sykmeldingEndringsloggKafkaProducer
     )
 
@@ -135,7 +129,7 @@ fun main() {
 
     val updateFnrService = UpdateFnrService(
         pdlPersonService = httpClients.pdlService,
-        syfoSmRegisterDb = databasePostgres,
+        syfoSmRegisterDb = syfosmregisterDatabase,
         sendtSykmeldingKafkaProducer = sendtSykmeldingKafkaProducerFnr,
         narmesteLederResponseKafkaProducer = narmesteLederResponseKafkaProducer,
         narmestelederClient = httpClients.narmestelederClient,
@@ -149,8 +143,7 @@ fun main() {
     )
 
     val deleteSykmeldingService = DeleteSykmeldingService(
-        environment,
-        databasePostgres,
+        syfosmregisterDatabase,
         statusKafkaProducer,
         sykmeldingEndringsloggKafkaProducer,
         tombstoneProducer,
@@ -159,7 +152,7 @@ fun main() {
 
     val gjenapneSykmeldingService = GjenapneSykmeldingService(
         statusKafkaProducer,
-        databasePostgres
+        syfosmregisterDatabase
     )
     val narmestelederService = NarmestelederService(
         pdlService = httpClients.pdlService,
@@ -172,19 +165,14 @@ fun main() {
         updatePeriodeService = updatePeriodeService,
         updateBehandletDatoService = updateBehandletDatoService,
         updateFnrService = updateFnrService,
-        diagnoseService = DiagnoseService(databasePostgres, sykmeldingEndringsloggKafkaProducer),
+        diagnoseService = DiagnoseService(syfosmregisterDatabase, sykmeldingEndringsloggKafkaProducer),
         oppgaveClient = httpClients.oppgaveClient,
-        jwkProviderInternal = jwkProviderInternal,
-        issuerServiceuser = jwtVaultSecrets.jwtIssuer,
-        clientId = jwtVaultSecrets.clientId,
-        appIds = listOf(jwtVaultSecrets.clientId),
         deleteSykmeldingService = deleteSykmeldingService,
         gjenapneSykmeldingService = gjenapneSykmeldingService,
-        narmestelederService = narmestelederService
+        narmestelederService = narmestelederService,
+        jwkProviderAadV2 = jwkProviderAadV2
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
-
-    RenewVaultService(vaultCredentialService, applicationState).startRenewTasks()
 
     applicationServer.start()
 }
@@ -200,71 +188,4 @@ fun startBackgroundJob(applicationState: ApplicationState, block: suspend Corout
             applicationState.ready = false
         }
     }
-}
-
-fun getDatabasePostgres(): DatabasePostgres {
-    val environment = Environment()
-    val vaultCredentialService = VaultCredentialService()
-    return DatabasePostgres(environment, vaultCredentialService)
-}
-
-fun getDatabaseOracle(): DatabaseOracle {
-    val vaultConfig = VaultConfig(
-        jdbcUrl = getFileAsString("/secrets/syfoservice/config/jdbc_url")
-    )
-    val syfoserviceVaultSecrets = VaultCredentials(
-        databasePassword = getFileAsString("/secrets/syfoservice/credentials/password"),
-        databaseUsername = getFileAsString("/secrets/syfoservice/credentials/username")
-    )
-    return DatabaseOracle(vaultConfig, syfoserviceVaultSecrets)
-}
-
-fun updatePeriode(databaseOracle: DatabaseOracle, databasePostgres: DatabasePostgres) {
-    val periodeService = PeriodeService(databaseOracle, databasePostgres)
-    periodeService.start()
-}
-
-fun slettInfo(applicationState: ApplicationState, environment: Environment) {
-    val vaultConfig = VaultConfig(
-        jdbcUrl = getFileAsString("/secrets/syfoservice/config/jdbc_url")
-    )
-    val syfoserviceVaultSecrets = VaultCredentials(
-        databasePassword = getFileAsString("/secrets/syfoservice/credentials/password"),
-        databaseUsername = getFileAsString("/secrets/syfoservice/credentials/username")
-    )
-    val vaultCredentialService = VaultCredentialService()
-    RenewVaultService(vaultCredentialService, applicationState).startRenewTasks()
-
-    val databasePostgres = DatabasePostgres(environment, vaultCredentialService)
-    val databaseOracle = DatabaseOracle(vaultConfig, syfoserviceVaultSecrets)
-
-    val slettInformasjonService = SlettInformasjonService(databaseOracle, databasePostgres)
-    slettInformasjonService.start()
-}
-
-fun updateGrad(applicationState: ApplicationState, environment: Environment) {
-    val vaultConfig = VaultConfig(
-        jdbcUrl = getFileAsString("/secrets/syfoservice/config/jdbc_url")
-    )
-    val syfoserviceVaultSecrets = VaultCredentials(
-        databasePassword = getFileAsString("/secrets/syfoservice/credentials/password"),
-        databaseUsername = getFileAsString("/secrets/syfoservice/credentials/username")
-    )
-    val vaultCredentialService = VaultCredentialService()
-    RenewVaultService(vaultCredentialService, applicationState).startRenewTasks()
-
-    val databasePostgres = DatabasePostgres(environment, vaultCredentialService)
-    val databaseOracle = DatabaseOracle(vaultConfig, syfoserviceVaultSecrets)
-
-    val gradService = GradService(databaseOracle, databasePostgres)
-    // gradService.start()
-    gradService.addPeriode()
-}
-
-fun getVaultServiceUser(): VaultServiceUser {
-    val vaultServiceuser = VaultServiceUser(
-        serviceuserPassword = getFileAsString("/secrets/serviceuser/password"),
-        serviceuserUsername = getFileAsString("/secrets/serviceuser/username")
-    )
-    return vaultServiceuser
 }

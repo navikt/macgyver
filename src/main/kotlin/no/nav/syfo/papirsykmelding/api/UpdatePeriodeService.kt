@@ -1,6 +1,6 @@
 package no.nav.syfo.papirsykmelding.api
 
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.model.ShortName
@@ -30,7 +30,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 class UpdatePeriodeService(
-    private val databasePostgres: DatabasePostgres,
+    private val databasePostgres: GcpDatabase,
     private val sykmeldingEndringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer,
     private val sykmeldingProducer: SykmeldingV2KafkaProducer,
     private val mottattSykmeldingTopic: String,

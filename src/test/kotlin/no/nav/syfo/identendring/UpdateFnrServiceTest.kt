@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.identendring.client.NarmesteLeder
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.Adresse
@@ -50,7 +50,7 @@ import kotlin.test.assertFailsWith
 class UpdateFnrServiceTest : FunSpec({
     val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
     mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
-    val db = mockk<DatabaseInterfacePostgres>(relaxed = true)
+    val db = mockk<GcpDatabase>(relaxed = true)
     val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
     val narmesteLederResponseKafkaProducer = mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
     val narmestelederClient = mockk<NarmestelederClient>()

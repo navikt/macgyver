@@ -1,6 +1,6 @@
 package no.nav.syfo.papirsykmelding.api
 
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.objectMapper
@@ -9,11 +9,11 @@ import no.nav.syfo.persistering.db.postgres.updateBehandletTidspunkt
 import java.time.LocalDate
 
 class UpdateBehandletDatoService(
-    private val databasePostgres: DatabasePostgres,
+    private val syfoSmRegisterDb: GcpDatabase,
     private val sykmeldingEndringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer
 ) {
     fun updateBehandletDato(sykmeldingId: String, behandletDato: LocalDate) {
-        val sykmeldingsdokument = databasePostgres.connection.hentSykmeldingsdokument(sykmeldingId)
+        val sykmeldingsdokument = syfoSmRegisterDb.connection.hentSykmeldingsdokument(sykmeldingId)
         val oppdatertBehandletTidspunkt = behandletDato.atTime(12, 0)
 
         if (sykmeldingsdokument != null) {
@@ -23,7 +23,7 @@ class UpdateBehandletDatoService(
             )
             sykmeldingEndringsloggKafkaProducer.publishToKafka(sykmeldingsdokument)
 
-            databasePostgres.updateBehandletTidspunkt(sykmeldingId, oppdatertBehandletTidspunkt)
+            syfoSmRegisterDb.updateBehandletTidspunkt(sykmeldingId, oppdatertBehandletTidspunkt)
 
             log.info("BehandletDato er oppdatert")
         } else {

@@ -7,12 +7,13 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import no.nav.syfo.client.StsOidcClient
+import no.nav.syfo.clients.AccessTokenClientV2
 import java.time.LocalDate
 
 class OppgaveClient(
     private val url: String,
-    private val oidcClient: StsOidcClient,
+    private val accessTokenClientV2: AccessTokenClientV2,
+    private val scope: String,
     private val httpClient: HttpClient
 ) {
 
@@ -20,8 +21,8 @@ class OppgaveClient(
 
         val httpResponse = httpClient.get("$url/$oppgaveId") {
             contentType(ContentType.Application.Json)
-            val oidcToken = oidcClient.oidcToken()
-            header("Authorization", "Bearer ${oidcToken.access_token}")
+            val token = accessTokenClientV2.getAccessTokenV2(scope)
+            header("Authorization", "Bearer $token")
             header("X-Correlation-ID", msgId)
         }
 

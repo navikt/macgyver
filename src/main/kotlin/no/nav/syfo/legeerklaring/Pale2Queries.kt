@@ -1,8 +1,8 @@
 package no.nav.syfo.legeerklaring
 
-import no.nav.syfo.db.DatabasePale2Postgres
+import no.nav.syfo.db.gcp.GcpDatabase
 
-fun DatabasePale2Postgres.exists(mottakId: String, msgId: String): Boolean {
+fun GcpDatabase.exists(mottakId: String, msgId: String): Boolean {
     return connection.use { connection ->
         connection.prepareStatement(
             """

@@ -1,6 +1,6 @@
 package no.nav.syfo.identendring
 
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.Periode
 import no.nav.syfo.identendring.db.SykmeldingDbModelUtenBehandlingsutfall
@@ -31,7 +31,7 @@ import java.time.ZoneOffset
 
 class UpdateFnrService(
     private val pdlPersonService: PdlPersonService,
-    private val syfoSmRegisterDb: DatabaseInterfacePostgres,
+    private val syfoSmRegisterDb: GcpDatabase,
     private val sendtSykmeldingKafkaProducer: SykmeldingV2KafkaProducer,
     private val narmesteLederResponseKafkaProducer: NarmesteLederResponseKafkaProducer,
     private val narmestelederClient: NarmestelederClient,

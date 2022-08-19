@@ -16,7 +16,7 @@ Application that fixes stuff like macgyver for team sykmelding
 
 ## Getting started
 ### Getting github-package-registry packages NAV-IT
-Some packages used in this repo is uploaded to the Github Package Registry which requires authentication. It can, for example, be solved like this in Gradle:
+Some packages used in this repo is uploaded to the GitHub Package Registry which requires authentication. It can, for example, be solved like this in Gradle:
 ```
 val githubUser: String by project
 val githubPassword: String by project

@@ -1,8 +1,7 @@
 package no.nav.syfo.persistering.db.postgres
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.syfo.db.DatabaseInterfacePostgres
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.db.toList
 import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
@@ -312,7 +311,7 @@ fun lagreBehandlingsutfall(
     }
 }
 
-fun DatabaseInterfacePostgres.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) {
+fun GcpDatabase.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) {
     this.connection.use { connection ->
         connection.prepareStatement(
             """
@@ -507,7 +506,7 @@ private fun ResultSet.getBehandlingsutfall(sykmeldingId: String): Behandlingsutf
     }
 }
 
-fun DatabasePostgres.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sykmeldingId: String) {
+fun GcpDatabase.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -524,7 +523,7 @@ fun DatabasePostgres.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sy
     }
 }
 
-fun DatabasePostgres.updateBiDiagnose(diagnoser: List<Diagnosekoder.DiagnosekodeType>, sykmeldingId: String) {
+fun GcpDatabase.updateBiDiagnose(diagnoser: List<Diagnosekoder.DiagnosekodeType>, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -541,7 +540,7 @@ fun DatabasePostgres.updateBiDiagnose(diagnoser: List<Diagnosekoder.Diagnosekode
     }
 }
 
-fun DatabasePostgres.updateSvangerskap(sykmeldingId: String, svangerskap: Boolean): Int {
+fun GcpDatabase.updateSvangerskap(sykmeldingId: String, svangerskap: Boolean): Int {
     var updated: Int
     connection.use { connection ->
         connection.prepareStatement(
@@ -558,7 +557,7 @@ fun DatabasePostgres.updateSvangerskap(sykmeldingId: String, svangerskap: Boolea
     }
 }
 
-fun DatabasePostgres.updateBehandletTidspunkt(sykmeldingId: String, behandletTidspunkt: LocalDateTime) {
+fun GcpDatabase.updateBehandletTidspunkt(sykmeldingId: String, behandletTidspunkt: LocalDateTime) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -574,7 +573,7 @@ fun DatabasePostgres.updateBehandletTidspunkt(sykmeldingId: String, behandletTid
     }
 }
 
-fun DatabasePostgres.updateSkjermesForPasient(sykmeldingId: String, skjermet: Boolean): Int {
+fun GcpDatabase.updateSkjermesForPasient(sykmeldingId: String, skjermet: Boolean): Int {
     var updated: Int
     connection.use { connection ->
         connection.prepareStatement(
@@ -591,7 +590,7 @@ fun DatabasePostgres.updateSkjermesForPasient(sykmeldingId: String, skjermet: Bo
     }
 }
 
-fun DatabasePostgres.updatePeriode(periodeListe: List<Periode>, sykmeldingId: String) {
+fun GcpDatabase.updatePeriode(periodeListe: List<Periode>, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -607,7 +606,7 @@ fun DatabasePostgres.updatePeriode(periodeListe: List<Periode>, sykmeldingId: St
     }
 }
 
-fun DatabasePostgres.updateErIkkeIArbeid(sykmeldingId: String, erIkkeIArbeid: ErIkkeIArbeid?) {
+fun GcpDatabase.updateErIkkeIArbeid(sykmeldingId: String, erIkkeIArbeid: ErIkkeIArbeid?) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -655,7 +654,7 @@ private fun ResultSet.getSykmeldingdocument(): Sykmelding {
     return objectMapper.readValue(getString("sykmelding"))
 }
 
-fun DatabasePostgres.updatePrognose(sykmeldingId: String, prognose: Prognose?) {
+fun GcpDatabase.updatePrognose(sykmeldingId: String, prognose: Prognose?) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -671,7 +670,7 @@ fun DatabasePostgres.updatePrognose(sykmeldingId: String, prognose: Prognose?) {
     }
 }
 
-fun DatabasePostgres.updateUtdypendeOpplysninger(
+fun GcpDatabase.updateUtdypendeOpplysninger(
     sykmeldingId: String,
     utdypendeOpplysninger: Map<String, Map<String, SporsmalSvar>>
 ) {

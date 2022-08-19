@@ -4,14 +4,14 @@ import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
 import no.nav.syfo.aksessering.db.oracle.getSykmeldingsDokument
 import no.nav.syfo.aksessering.db.oracle.updateDocument
 import no.nav.syfo.db.DatabaseOracle
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.persistering.db.postgres.getSykmeldingWithEmptyUtdypendeOpplysninger
 import no.nav.syfo.persistering.db.postgres.getSykmeldingWithIArbeidIkkeIArbeid
 import no.nav.syfo.persistering.db.postgres.updatePrognose
 import no.nav.syfo.persistering.db.postgres.updateUtdypendeOpplysninger
 
-class UpdateIncorrectPapirsykmeldingService(private val databaseOracle: DatabaseOracle, private val databasePostgres: DatabasePostgres) {
+class UpdateIncorrectPapirsykmeldingService(private val databaseOracle: DatabaseOracle, private val databasePostgres: GcpDatabase) {
 
     private val sykmeldingID = ""
 

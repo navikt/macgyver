@@ -12,24 +12,26 @@ import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.log
 
 fun Application.setupAuth(
-    jwkProviderInternal: JwkProvider,
-    issuerServiceuser: String,
-    clientId: String,
-    appIds: List<String>
+    jwkProviderAadV2: JwkProvider,
+    jwtIssuerV2: String
 ) {
     install(Authentication) {
-        jwt(name = "jwtserviceuser") {
-            verifier(jwkProviderInternal, issuerServiceuser)
+        jwt(name = "azureadv2") {
+            verifier(jwkProviderAadV2, jwtIssuerV2)
             validate { credentials ->
-                val appId: String = credentials.payload.getClaim("azp").asString()
-                if (appId in appIds && clientId in credentials.payload.audience) {
-                    JWTPrincipal(credentials.payload)
-                } else {
-                    unauthorized(credentials)
+                when {
+                    hasAccess(credentials, jwtIssuerV2) -> JWTPrincipal(credentials.payload)
+                    else -> unauthorized(credentials)
                 }
             }
         }
     }
+}
+
+fun hasAccess(credentials: JWTCredential, clientId: String): Boolean {
+    val appid: String = credentials.payload.getClaim("azp").asString()
+    log.debug("authorization attempt for $appid")
+    return credentials.payload.audience.contains(clientId)
 }
 
 fun unauthorized(credentials: JWTCredential): Principal? {

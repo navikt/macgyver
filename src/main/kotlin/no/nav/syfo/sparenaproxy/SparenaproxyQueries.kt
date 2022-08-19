@@ -1,12 +1,12 @@
 package no.nav.syfo.sparenaproxy
 
-import no.nav.syfo.db.DatabaseSparenaproxyPostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.db.toList
 import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
-fun DatabaseSparenaproxyPostgres.getPlanlagte8Ukersmeldinger(lastOpprettetTidspunkt: OffsetDateTime): List<PlanlagtMeldingDbModel> =
+fun GcpDatabase.getPlanlagte8Ukersmeldinger(lastOpprettetTidspunkt: OffsetDateTime): List<PlanlagtMeldingDbModel> =
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -19,7 +19,7 @@ fun DatabaseSparenaproxyPostgres.getPlanlagte8Ukersmeldinger(lastOpprettetTidspu
         }
     }
 
-fun DatabaseSparenaproxyPostgres.planlagt4UkersmeldingFinnes(fnr: String, startdato: LocalDate): Boolean =
+fun GcpDatabase.planlagt4UkersmeldingFinnes(fnr: String, startdato: LocalDate): Boolean =
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -33,7 +33,7 @@ fun DatabaseSparenaproxyPostgres.planlagt4UkersmeldingFinnes(fnr: String, startd
         }
     }
 
-fun DatabaseSparenaproxyPostgres.lagrePlanlagtMelding(planlagtMeldingDbModel: PlanlagtMeldingDbModel) {
+fun GcpDatabase.lagrePlanlagtMelding(planlagtMeldingDbModel: PlanlagtMeldingDbModel) {
     connection.use { connection ->
         connection.prepareStatement(
             """

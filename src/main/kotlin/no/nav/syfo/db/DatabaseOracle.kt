@@ -2,14 +2,13 @@ package no.nav.syfo.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import no.nav.syfo.VaultConfig
-import no.nav.syfo.VaultCredentials
+import no.nav.syfo.ServiceUser
 import java.sql.Connection
 import java.sql.ResultSet
 
 class DatabaseOracle(
-    private val vaultConfig: VaultConfig,
-    private val vaultCredentialService: VaultCredentials
+    private val jdbcUrl: String,
+    private val serviceUser: ServiceUser
 ) : DatabaseInterfaceOracle {
 
     private val dataSource: HikariDataSource
@@ -20,9 +19,9 @@ class DatabaseOracle(
     init {
         dataSource = HikariDataSource(
             HikariConfig().apply {
-                jdbcUrl = vaultConfig.jdbcUrl
-                username = vaultCredentialService.databaseUsername
-                password = vaultCredentialService.databasePassword
+                jdbcUrl = jdbcUrl
+                username = serviceUser.serviceuserUsername
+                password = serviceUser.serviceuserPassword
                 maximumPoolSize = 3
                 isAutoCommit = false
                 driverClassName = "oracle.jdbc.OracleDriver"

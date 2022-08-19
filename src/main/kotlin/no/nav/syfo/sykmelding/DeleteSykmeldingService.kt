@@ -1,7 +1,6 @@
 package no.nav.syfo.sykmelding
 
-import no.nav.syfo.Environment
-import no.nav.syfo.db.DatabasePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
@@ -13,8 +12,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class DeleteSykmeldingService(
-    val environment: Environment,
-    val databasePostgres: DatabasePostgres,
+    val syfoSmRegisterDb: GcpDatabase,
     val kafkaProducer: SykmeldingStatusKafkaProducer,
     val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer,
     val tombstoneProducer: KafkaProducer<String, Any?>,
@@ -23,7 +21,7 @@ class DeleteSykmeldingService(
 ) {
     fun deleteSykmelding(sykmeldingID: String) {
 
-        val sykmelding = databasePostgres.connection.hentSykmeldingMedId(sykmeldingID)
+        val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
             endringsloggKafkaProducer.publishToKafka(sykmelding.sykmeldingsdokument!!)
             kafkaProducer.send(

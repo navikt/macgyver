@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import no.nav.syfo.application.ApplicationState
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
 import no.nav.syfo.model.RuleInfo
@@ -25,7 +25,7 @@ import java.time.ZoneId
 @DelicateCoroutinesApi
 class BehandlingsutfallFraOppgaveTopicService(
     private val kafkaConsumer: KafkaConsumer<String, RegisterTask>,
-    private val databasePostgres: DatabaseInterfacePostgres,
+    private val databasePostgres: GcpDatabase,
     private val oppgaveTopic: String,
     private val applicationState: ApplicationState,
     private val ruleMap: Map<String, RuleInfo>

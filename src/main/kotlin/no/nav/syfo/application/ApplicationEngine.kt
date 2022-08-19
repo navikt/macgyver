@@ -42,13 +42,10 @@ fun createApplicationEngine(
     updateFnrService: UpdateFnrService,
     diagnoseService: DiagnoseService,
     oppgaveClient: OppgaveClient,
-    jwkProviderInternal: JwkProvider,
-    issuerServiceuser: String,
-    clientId: String,
-    appIds: List<String>,
     deleteSykmeldingService: DeleteSykmeldingService,
     gjenapneSykmeldingService: GjenapneSykmeldingService,
-    narmestelederService: NarmestelederService
+    narmestelederService: NarmestelederService,
+    jwkProviderAadV2: JwkProvider
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -60,17 +57,15 @@ fun createApplicationEngine(
             }
         }
         setupAuth(
-            jwkProviderInternal = jwkProviderInternal,
-            issuerServiceuser = issuerServiceuser,
-            clientId = clientId,
-            appIds = appIds
+            jwkProviderAadV2 = jwkProviderAadV2,
+            jwtIssuerV2 = env.jwtIssuerV2
         )
 
         routing {
             registerNaisApi(applicationState)
             setupSwaggerDocApi()
 
-            authenticate("jwtserviceuser") {
+            authenticate("azureadv2") {
                 registrerPeriodeApi(updatePeriodeService)
                 registrerBehandletDatoApi(updateBehandletDatoService)
                 registerFnrApi(updateFnrService)

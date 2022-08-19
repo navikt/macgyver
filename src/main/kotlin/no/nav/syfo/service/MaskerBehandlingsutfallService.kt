@@ -1,7 +1,7 @@
 package no.nav.syfo.service
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.syfo.db.DatabaseInterfacePostgres
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
 import no.nav.syfo.model.Status
@@ -11,7 +11,7 @@ import no.nav.syfo.persistering.db.postgres.oppdaterBehandlingsutfall
 import java.nio.file.Paths
 
 class MaskerBehandlingsutfallService(
-    private val databasePostgres: DatabaseInterfacePostgres
+    private val databasePostgres: GcpDatabase
 ) {
 
     fun maskerBehandlingsutfall() {

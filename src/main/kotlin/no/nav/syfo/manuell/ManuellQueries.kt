@@ -1,14 +1,14 @@
 package no.nav.syfo.manuell
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.syfo.db.DatabasePostgresManuell
+import no.nav.syfo.db.gcp.GcpDatabase
 import no.nav.syfo.db.toList
 import no.nav.syfo.model.ValidationResult
 import no.nav.syfo.model.toPGObject
 import no.nav.syfo.objectMapper
 import java.sql.ResultSet
 
-fun DatabasePostgresManuell.oppdaterManuellOppgave(manuellOppgave: ManuellOppgave) {
+fun GcpDatabase.oppdaterManuellOppgave(manuellOppgave: ManuellOppgave) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -27,7 +27,7 @@ fun DatabasePostgresManuell.oppdaterManuellOppgave(manuellOppgave: ManuellOppgav
     }
 }
 
-fun DatabasePostgresManuell.hentAktuelleManuellOppgaver(): List<ManuellOppgave> =
+fun GcpDatabase.hentAktuelleManuellOppgaver(): List<ManuellOppgave> =
     connection.use { connection ->
         connection.prepareStatement(
             """
