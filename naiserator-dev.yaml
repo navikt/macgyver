@@ -43,6 +43,10 @@ spec:
     enabled: false
   envFrom:
     - secret: macgyver-secrets
+    - secret: google-sql-syfosmregister-smregister-macgyver-<id>
+    - secret: google-sql-pale-2-register-pale-2-register-macgyver-<id>
+    - secret: google-sql-sparenaproxy-sparenaproxy-macgyver-<id>
+    - secret: google-sql-syfosmmanuell-backend-syfosmmanuell-backend-macgyver-<id>
   webproxy: false
   ingresses:
     - "https://macgyver.dev.intern.nav.no"
