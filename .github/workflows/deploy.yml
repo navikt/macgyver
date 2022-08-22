@@ -77,12 +77,12 @@ jobs:
       - name: Deploy to Preprod
         uses: nais/deploy/actions/deploy@master
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
           CLUSTER: dev-gcp
           RESOURCE: naiserator-dev.yaml
 #      - name: Deploy to Prod
 #        uses: nais/deploy/actions/deploy@master
 #        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
 #          CLUSTER: prod-gcp
 #          RESOURCE: naiserator-prod.yaml
