@@ -29,15 +29,11 @@ data class Environment(
     val databasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),
     val dbHost: String = getEnvVar("DB_MACGYVER_HOST"),
     val dbPort: String = getEnvVar("DB_MACGYVER_PORT"),
-    val dbName: String = getEnvVar("DB_MACGYVER_DATABASE"),
     val pale2registerCloudSqlInstance: String = getEnvVar("PALE_2_REGISTER_CLOUD_SQL_INSTANCE"),
+    val syfosmregisterDbName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
+    val pale2registerDbName: String = getEnvVar("PALE_2_REGISTER_DB_NAME"),
     val syfosmregisteringCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
 
-) {
-    fun jdbcUrl(): String {
-        return "jdbc:postgresql://$dbHost:$dbPort/$dbName"
-    }
-}
-
+)
 fun getEnvVar(varName: String, defaultValue: String? = null) =
     System.getenv(varName) ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")

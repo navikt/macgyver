@@ -71,7 +71,7 @@ fun main() {
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
 
-    val syfosmregisterDatabase = Database(environment, environment.syfosmregisteringCloudSqlInstance)
+    val syfosmregisterDatabase = Database(environment, environment.syfosmregisteringCloudSqlInstance, environment.syfosmregisterDbName)
 
     val httpClients = HttpClients(environment)
 
