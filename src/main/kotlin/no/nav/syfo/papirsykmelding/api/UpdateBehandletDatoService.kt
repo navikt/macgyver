@@ -1,6 +1,6 @@
 package no.nav.syfo.papirsykmelding.api
 
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.objectMapper
@@ -9,7 +9,7 @@ import no.nav.syfo.persistering.db.postgres.updateBehandletTidspunkt
 import java.time.LocalDate
 
 class UpdateBehandletDatoService(
-    private val syfoSmRegisterDb: GcpDatabase,
+    private val syfoSmRegisterDb: Database,
     private val sykmeldingEndringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer
 ) {
     fun updateBehandletDato(sykmeldingId: String, behandletDato: LocalDate) {

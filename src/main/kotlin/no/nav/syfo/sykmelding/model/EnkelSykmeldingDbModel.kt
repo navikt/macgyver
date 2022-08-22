@@ -49,17 +49,6 @@ fun ResultSet.toEnkelSykmeldingDbModelUtenStatus(): EnkelSykmeldingDbModel {
     )
 }
 
-fun ResultSet.toMotattSykmeldingDbModel(): MottattSykmeldingDbModel {
-    return MottattSykmeldingDbModel(
-        sykmeldingsDokument = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java),
-        id = getString("id"),
-        mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
-        legekontorOrgNr = getString("legekontor_org_nr"),
-        behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
-        fnr = getString("pasient_fnr"),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) }
-    )
-}
 enum class StatusEvent {
     APEN, AVBRUTT, UTGATT, SENDT, BEKREFTET, SLETTET
 }

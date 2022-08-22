@@ -7,44 +7,10 @@ import no.nav.helse.sm2013.CV
 import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
 import no.nav.syfo.utils.fellesformatUnmarshaller
 import java.io.StringReader
-import java.sql.Timestamp
 import java.time.LocalDateTime
 
 fun unmarshallerToHealthInformation(healthInformation: String): HelseOpplysningerArbeidsuforhet =
     fellesformatUnmarshaller.unmarshal(StringReader(healthInformation)) as HelseOpplysningerArbeidsuforhet
-
-fun toReceivedSykmelding(jsonMap: Map<String, Any?>): ReceivedSykmelding {
-
-    val unmarshallerToHealthInformation = unmarshallerToHealthInformation(jsonMap["DOKUMENT"].toString())
-
-    return ReceivedSykmelding(
-        sykmelding = unmarshallerToHealthInformation.toSykmelding(
-            sykmeldingId = jsonMap["MELDING_ID"].toString(),
-            pasientAktoerId = getNullsafeAktorId(jsonMap),
-            legeAktoerId = "",
-            msgId = "",
-            signaturDato = Timestamp.valueOf((jsonMap["CREATED"].toString())).toLocalDateTime()
-        ),
-        personNrPasient = getPersonnr(unmarshallerToHealthInformation),
-        tlfPasient = unmarshallerToHealthInformation.pasient.kontaktInfo.firstOrNull()?.teleAddress?.v,
-        personNrLege = "",
-        navLogId = jsonMap["MOTTAK_ID"].toString(),
-        msgId = "",
-        legekontorOrgNr = "",
-        legekontorOrgName = "",
-        legekontorHerId = "",
-        legekontorReshId = "",
-        mottattDato = Timestamp.valueOf((jsonMap["CREATED"].toString())).toLocalDateTime(),
-        rulesetVersion = unmarshallerToHealthInformation.regelSettVersjon,
-        fellesformat = "",
-        tssid = "",
-        merknader = null,
-        partnerreferanse = null,
-        legeHelsepersonellkategori = null,
-        legeHprNr = null,
-        vedlegg = null
-    )
-}
 
 private fun getPersonnr(unmarshallerToHealthInformation: HelseOpplysningerArbeidsuforhet): String {
     val fnr = unmarshallerToHealthInformation.pasient.fodselsnummer.id

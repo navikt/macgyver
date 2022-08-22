@@ -1,6 +1,6 @@
 package no.nav.syfo.sykmelding
 
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.KafkaMetadataDTO
 import no.nav.syfo.model.sykmeldingstatus.STATUS_APEN
@@ -16,7 +16,7 @@ import java.time.ZoneOffset
 class PubliserNySykmeldingStatusService(
     private val sykmeldingStatusKafkaProducer: SykmeldingStatusKafkaProducer,
     private val mottattSykmeldingProudcer: SykmeldingV2KafkaProducer,
-    private val databasePostgres: GcpDatabase,
+    private val databasePostgres: Database,
     private val mottattSykmeldingTopic: String
 ) {
     val sykmeldingId = ""

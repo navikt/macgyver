@@ -20,7 +20,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import no.nav.syfo.application.setupAuth
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.updateFnr
@@ -50,7 +50,7 @@ class EndreFnrApiTest : FunSpec({
             val narmestelederClient = mockk<NarmestelederClient>()
 
             mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
-            val db = mockk<GcpDatabase>(relaxed = true)
+            val db = mockk<Database>(relaxed = true)
 
             start()
 

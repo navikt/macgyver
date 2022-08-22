@@ -1,62 +1,28 @@
 package no.nav.syfo.persistering.db.postgres
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
 import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
 import no.nav.syfo.model.Diagnose
-import no.nav.syfo.model.Eia
-import no.nav.syfo.model.ErIkkeIArbeid
-import no.nav.syfo.model.Prognose
 import no.nav.syfo.model.ShortName
 import no.nav.syfo.model.Sporsmal
-import no.nav.syfo.model.SporsmalSvar
 import no.nav.syfo.model.Svar
 import no.nav.syfo.model.Svartype
-import no.nav.syfo.model.Sykmelding
 import no.nav.syfo.model.Sykmeldingsdokument
 import no.nav.syfo.model.Sykmeldingsopplysninger
 import no.nav.syfo.model.toPGObject
 import no.nav.syfo.objectMapper
 import no.nav.syfo.sm.Diagnosekoder
 import no.nav.syfo.sykmelding.model.EnkelSykmeldingDbModel
-import no.nav.syfo.sykmelding.model.MottattSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.Periode
 import no.nav.syfo.sykmelding.model.toEnkelSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.toEnkelSykmeldingDbModelUtenStatus
-import no.nav.syfo.sykmelding.model.toMotattSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.toSendtSykmeldingDbModel
 import java.sql.Connection
 import java.sql.ResultSet
-import java.sql.Timestamp
-import java.time.LocalDate
 import java.time.LocalDateTime
-
-fun Connection.getMottattSykmelding(lastMottattTidspunkt: LocalDate): List<MottattSykmeldingDbModel> =
-    use {
-        this.prepareStatement(
-            """
-                    SELECT opplysninger.id,
-                    pasient_fnr,
-                    mottatt_tidspunkt,
-                    behandlingsutfall,
-                    legekontor_org_nr,
-                    sykmelding,
-                    merknader
-                    FROM sykmeldingsopplysninger AS opplysninger
-                        INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
-                        INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
-                     WHERE opplysninger.mottatt_tidspunkt >= ?
-                     AND opplysninger.mottatt_tidspunkt < ?     
-                     and not exists(select 1 from sykmeldingstatus where sykmelding_id = opplysninger.id and event in ('SLETTET'));
-                    """
-        ).use {
-            it.setTimestamp(1, Timestamp.valueOf(lastMottattTidspunkt.atStartOfDay()))
-            it.setTimestamp(2, Timestamp.valueOf(lastMottattTidspunkt.plusDays(1).atStartOfDay()))
-            it.executeQuery().toList { toMotattSykmeldingDbModel() }
-        }
-    }
 
 fun Connection.getEnkelSykmelding(sykmeldingId: String): EnkelSykmeldingDbModel? =
     use {
@@ -110,37 +76,6 @@ fun Connection.getEnkelSykmeldingUtenStatus(sykmeldingId: String): EnkelSykmeldi
         }
     }
 
-fun Connection.getSykmeldingMedSisteStatus(lastMottattTidspunkt: LocalDate): List<EnkelSykmeldingDbModel> =
-    use {
-        this.prepareStatement(
-            """
-                    SELECT opplysninger.id,
-                    pasient_fnr,
-                    mottatt_tidspunkt,
-                    behandlingsutfall,
-                    legekontor_org_nr,
-                    sykmelding,
-                    status.event,
-                    status.event_timestamp,
-                    arbeidsgiver.orgnummer,
-                    arbeidsgiver.juridisk_orgnummer,
-                    arbeidsgiver.navn,
-                    merknader
-                    FROM sykmeldingsopplysninger AS opplysninger
-                        INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
-                        INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
-                        INNER JOIN sykmeldingstatus AS status ON opplysninger.id = status.sykmelding_id AND status.event = 'SENDT'
-                        INNER JOIN arbeidsgiver as arbeidsgiver on arbeidsgiver.sykmelding_id = opplysninger.id
-                     WHERE opplysninger.mottatt_tidspunkt >= ?
-                     AND opplysninger.mottatt_tidspunkt < ?                                                         
-                    """
-        ).use {
-            it.setTimestamp(1, Timestamp.valueOf(lastMottattTidspunkt.atStartOfDay()))
-            it.setTimestamp(2, Timestamp.valueOf(lastMottattTidspunkt.plusDays(1).atStartOfDay()))
-            it.executeQuery().toList { toSendtSykmeldingDbModel() }
-        }
-    }
-
 fun Connection.getSendtSykmeldingMedSisteStatus(sykmeldingId: String): List<EnkelSykmeldingDbModel> =
     use {
         this.prepareStatement(
@@ -166,39 +101,6 @@ fun Connection.getSendtSykmeldingMedSisteStatus(sykmeldingId: String): List<Enke
                     """
         ).use {
             it.setString(1, sykmeldingId)
-            it.executeQuery().toList { toSendtSykmeldingDbModel() }
-        }
-    }
-
-fun Connection.getSykmeldingMedSisteStatusBekreftet(lastMottattTidspunkt: LocalDate): List<EnkelSykmeldingDbModel> =
-    use {
-        this.prepareStatement(
-            """
-                    SELECT opplysninger.id,
-                    pasient_fnr,
-                    mottatt_tidspunkt,
-                    behandlingsutfall,
-                    legekontor_org_nr,
-                    sykmelding,
-                    status.event,
-                    status.event_timestamp,
-                    merknader
-                    FROM sykmeldingsopplysninger AS opplysninger
-                        INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
-                        INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
-                          INNER JOIN sykmeldingstatus AS status ON opplysninger.id = status.sykmelding_id AND
-                                                status.event_timestamp = (SELECT event_timestamp
-                                                                          FROM sykmeldingstatus
-                                                                          WHERE sykmelding_id = opplysninger.id
-                                                                          ORDER BY event_timestamp DESC
-                                                                          LIMIT 1) AND
-                                                                status.event = 'BEKREFTET'
-                     WHERE opplysninger.mottatt_tidspunkt >= ?
-                     AND opplysninger.mottatt_tidspunkt < ?                                                         
-                    """
-        ).use {
-            it.setTimestamp(1, Timestamp.valueOf(lastMottattTidspunkt.atStartOfDay()))
-            it.setTimestamp(2, Timestamp.valueOf(lastMottattTidspunkt.plusDays(1).atStartOfDay()))
             it.executeQuery().toList { toSendtSykmeldingDbModel() }
         }
     }
@@ -290,12 +192,6 @@ private fun tilSvartype(svartype: String): Svartype {
     }
 }
 
-fun Connection.lagreBehandlingsutfallAndCommit(behandlingsutfall: Behandlingsutfall) =
-    use { connection ->
-        lagreBehandlingsutfall(connection, behandlingsutfall)
-        connection.commit()
-    }
-
 fun lagreBehandlingsutfall(
     connection: Connection,
     behandlingsutfall: Behandlingsutfall
@@ -311,7 +207,7 @@ fun lagreBehandlingsutfall(
     }
 }
 
-fun GcpDatabase.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) {
+fun Database.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) {
     this.connection.use { connection ->
         connection.prepareStatement(
             """
@@ -329,33 +225,6 @@ fun GcpDatabase.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) 
     }
 }
 
-fun Connection.oppdaterSykmeldingsopplysninger(listEia: List<Eia>) {
-    use { connection ->
-        connection.prepareStatement(
-            """
-                UPDATE SYKMELDINGSOPPLYSNINGER
-                SET lege_fnr = ?,
-                    legekontor_org_nr = ?,
-                    legekontor_her_id = ?,
-                    legekontor_resh_id = ?
-                WHERE
-                mottak_id = ?
-            """
-        ).use {
-            for (eia in listEia) {
-                it.setString(1, eia.legefnr)
-                it.setString(2, eia.legekontorOrgnr)
-                it.setString(3, eia.legekontorHer)
-                it.setString(4, eia.legekontorResh)
-                it.setString(5, eia.mottakid)
-                it.addBatch()
-            }
-            it.executeBatch()
-        }
-        connection.commit()
-    }
-}
-
 fun Connection.hentSykmeldingsdokument(sykmeldingid: String): Sykmeldingsdokument? =
     use { connection ->
         connection.prepareStatement(
@@ -365,37 +234,6 @@ fun Connection.hentSykmeldingsdokument(sykmeldingid: String): Sykmeldingsdokumen
         ).use {
             it.setString(1, sykmeldingid)
             it.executeQuery().toSykmeldingsdokument()
-        }
-    }
-
-fun Connection.hentSykmeldingMedBehandlingsutfallForId(id: String): List<SykmeldingDokumentBehandlingsutfallDbModel> =
-    use { connection ->
-        connection.prepareStatement(
-            """
-                select * from sykmeldingsopplysninger sm 
-                LEFT OUTER JOIN sykmeldingsdokument sd on sm.id = sd.id 
-                LEFT OUTER JOIN behandlingsutfall bu on sm.id = bu.id
-                where sm.id = ?
-                and sm.epj_system_navn!='SYFOSERVICE' 
-                AND sm.mottatt_tidspunkt < '2019-12-19' 
-                AND sm.mottatt_tidspunkt >= '2019-10-07'
-            """
-        ).use {
-            it.setString(1, id)
-            it.executeQuery().toList { toSykmeldingDokumentBehandlingsutfall() }
-        }
-    }
-
-fun Connection.hentSykmeldingIdManglerBehandlingsutfall(msgId: String): String? =
-    use { connection ->
-        connection.prepareStatement(
-            """
-                select sd.id from sykmeldingsdokument sd
-                where NOT exists(select 1 from behandlingsutfall where id = sd.id) AND sd.sykmelding->>'msgId' = ?;
-            """
-        ).use {
-            it.setString(1, msgId)
-            it.executeQuery().getId()
         }
     }
 
@@ -460,18 +298,6 @@ private fun ResultSet.getNullsafeSykmeldingsdokument(sykmeldingId: String): Sykm
     return Sykmeldingsdokument(sykmeldingId, objectMapper.readValue(getString("sykmelding")))
 }
 
-fun ResultSet.toSykmeldingDokumentBehandlingsutfall(): SykmeldingDokumentBehandlingsutfallDbModel {
-    val sykmeldingId = getString("id")
-    val sykmeldingsDokument = this.getNullsafeSykmeldingsdokument(sykmeldingId)
-    val sykmeldingMedBehandlingsutfall = this.toSykmeldingMedBehandlingsutfall()
-
-    return SykmeldingDokumentBehandlingsutfallDbModel(
-        sykmeldingMedBehandlingsutfall.sykmeldingsopplysninger,
-        sykmeldingsDokument,
-        sykmeldingMedBehandlingsutfall.behandlingsutfall
-    )
-}
-
 fun ResultSet.toSykmeldingMedBehandlingsutfall(): SykmeldingBehandlingsutfallDbModel {
     val sykmeldingId = getString("id")
     val behandlingsutfall = getBehandlingsutfall(sykmeldingId)
@@ -506,7 +332,7 @@ private fun ResultSet.getBehandlingsutfall(sykmeldingId: String): Behandlingsutf
     }
 }
 
-fun GcpDatabase.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sykmeldingId: String) {
+fun Database.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -523,7 +349,7 @@ fun GcpDatabase.updateDiagnose(diagnose: Diagnosekoder.DiagnosekodeType, sykmeld
     }
 }
 
-fun GcpDatabase.updateBiDiagnose(diagnoser: List<Diagnosekoder.DiagnosekodeType>, sykmeldingId: String) {
+fun Database.updateBiDiagnose(diagnoser: List<Diagnosekoder.DiagnosekodeType>, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -540,24 +366,7 @@ fun GcpDatabase.updateBiDiagnose(diagnoser: List<Diagnosekoder.DiagnosekodeType>
     }
 }
 
-fun GcpDatabase.updateSvangerskap(sykmeldingId: String, svangerskap: Boolean): Int {
-    var updated: Int
-    connection.use { connection ->
-        connection.prepareStatement(
-            """
-            UPDATE sykmeldingsdokument set sykmelding = jsonb_set(sykmelding, '{medisinskVurdering,svangerskap}', ?::jsonb) where id = ?;
-        """
-        ).use {
-            it.setString(1, svangerskap.toString())
-            it.setString(2, sykmeldingId)
-            updated = it.executeUpdate()
-        }
-        connection.commit()
-        return updated
-    }
-}
-
-fun GcpDatabase.updateBehandletTidspunkt(sykmeldingId: String, behandletTidspunkt: LocalDateTime) {
+fun Database.updateBehandletTidspunkt(sykmeldingId: String, behandletTidspunkt: LocalDateTime) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -573,24 +382,7 @@ fun GcpDatabase.updateBehandletTidspunkt(sykmeldingId: String, behandletTidspunk
     }
 }
 
-fun GcpDatabase.updateSkjermesForPasient(sykmeldingId: String, skjermet: Boolean): Int {
-    var updated: Int
-    connection.use { connection ->
-        connection.prepareStatement(
-            """
-            UPDATE sykmeldingsdokument set sykmelding = jsonb_set(sykmelding, '{medisinskVurdering,skjermetForPasient}', ?::jsonb) where id = ?;
-        """
-        ).use {
-            it.setString(1, skjermet.toString())
-            it.setString(2, sykmeldingId)
-            updated = it.executeUpdate()
-        }
-        connection.commit()
-        return updated
-    }
-}
-
-fun GcpDatabase.updatePeriode(periodeListe: List<Periode>, sykmeldingId: String) {
+fun Database.updatePeriode(periodeListe: List<Periode>, sykmeldingId: String) {
     connection.use { connection ->
         connection.prepareStatement(
             """
@@ -598,89 +390,6 @@ fun GcpDatabase.updatePeriode(periodeListe: List<Periode>, sykmeldingId: String)
         """
         ).use {
             it.setString(1, objectMapper.writeValueAsString(periodeListe))
-            it.setString(2, sykmeldingId)
-            val updated = it.executeUpdate()
-            log.info("Updated {} sykmeldingsdokument", updated)
-        }
-        connection.commit()
-    }
-}
-
-fun GcpDatabase.updateErIkkeIArbeid(sykmeldingId: String, erIkkeIArbeid: ErIkkeIArbeid?) {
-    connection.use { connection ->
-        connection.prepareStatement(
-            """
-            UPDATE sykmeldingsdokument set sykmelding = jsonb_set(sykmelding, '{prognose,erIkkeIArbeid}', ?::jsonb) where id = ?;
-        """
-        ).use {
-            it.setString(1, objectMapper.writeValueAsString(erIkkeIArbeid))
-            it.setString(2, sykmeldingId)
-            val updated = it.executeUpdate()
-            log.info("Updated {} sykmeldingsdokument", updated)
-        }
-        connection.commit()
-    }
-}
-
-fun Connection.getSykmeldingWithIArbeidIkkeIArbeid(): List<Sykmelding> {
-    use {
-        this.prepareStatement(
-            """
-            select sykmelding from sykmeldingsopplysninger so
-                inner join sykmeldingsdokument sd on sd.id = so.id
-            where epj_system_navn = 'Papirsykmelding' and mottatt_tidspunkt > '2020-09-28' and sykmelding->'prognose'->>'erIArbeid' is not null and sykmelding->'prognose'->>'erIkkeIArbeid' is not null;
-        """
-        ).use {
-            return it.executeQuery().toList { getSykmeldingdocument() }
-        }
-    }
-}
-
-fun Connection.getSykmeldingWithEmptyUtdypendeOpplysninger(): List<Sykmelding> {
-    use {
-        this.prepareStatement(
-            """
-            select sykmelding from sykmeldingsopplysninger so 
-            inner join sykmeldingsdokument sd on sd.id = so.id
-            where epj_system_navn = 'Papirsykmelding' and mottatt_tidspunkt > '2020-09-28' and sykmelding->>'utdypendeOpplysninger' != '{}' and sykmelding->>'utdypendeOpplysninger' LIKE '%' || '{}' || '%';
-        """
-        ).use {
-            return it.executeQuery().toList { getSykmeldingdocument() }
-        }
-    }
-}
-
-private fun ResultSet.getSykmeldingdocument(): Sykmelding {
-    return objectMapper.readValue(getString("sykmelding"))
-}
-
-fun GcpDatabase.updatePrognose(sykmeldingId: String, prognose: Prognose?) {
-    connection.use { connection ->
-        connection.prepareStatement(
-            """
-            UPDATE sykmeldingsdokument set sykmelding = jsonb_set(sykmelding, '{prognose}', ?::jsonb) where id = ?;
-        """
-        ).use {
-            it.setString(1, objectMapper.writeValueAsString(prognose))
-            it.setString(2, sykmeldingId)
-            val updated = it.executeUpdate()
-            log.info("Updated {} sykmeldingsdokument", updated)
-        }
-        connection.commit()
-    }
-}
-
-fun GcpDatabase.updateUtdypendeOpplysninger(
-    sykmeldingId: String,
-    utdypendeOpplysninger: Map<String, Map<String, SporsmalSvar>>
-) {
-    connection.use { connection ->
-        connection.prepareStatement(
-            """
-            UPDATE sykmeldingsdokument set sykmelding = jsonb_set(sykmelding, '{utdypendeOpplysninger}', ?::jsonb) where id = ?;
-        """
-        ).use {
-            it.setString(1, objectMapper.writeValueAsString(utdypendeOpplysninger))
             it.setString(2, sykmeldingId)
             val updated = it.executeUpdate()
             log.info("Updated {} sykmeldingsdokument", updated)

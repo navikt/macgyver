@@ -21,33 +21,12 @@ import no.nav.syfo.sykmelding.model.Behandler
 import no.nav.syfo.sykmelding.model.EnkelSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.Gradert
 import no.nav.syfo.sykmelding.model.KontaktMedPasient
-import no.nav.syfo.sykmelding.model.MottattSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.Periode
 import no.nav.syfo.sykmelding.model.Prognose
 import no.nav.syfo.sykmelding.sykmelding.model.getHarRedusertArbeidsgiverperiode
 import no.nav.syfo.sykmelding.sykmelding.model.getUtcTime
 
 fun EnkelSykmeldingDbModel.toArbeidsgiverSykmelding(): ArbeidsgiverSykmelding {
-    return ArbeidsgiverSykmelding(
-        id = id,
-        mottattTidspunkt = getUtcTime(mottattTidspunkt),
-        behandletTidspunkt = getUtcTime(sykmeldingsDokument.behandletTidspunkt),
-        meldingTilArbeidsgiver = sykmeldingsDokument.meldingTilArbeidsgiver,
-        tiltakArbeidsplassen = sykmeldingsDokument.tiltakArbeidsplassen,
-        syketilfelleStartDato = sykmeldingsDokument.syketilfelleStartDato,
-        behandler = sykmeldingsDokument.behandler.toBehandlerAGDTO(),
-        sykmeldingsperioder = sykmeldingsDokument.perioder.map { it.toSykmeldingsperiodeAGDTO(id) },
-        arbeidsgiver = sykmeldingsDokument.arbeidsgiver.toArbeidsgiverAGDTO(),
-        kontaktMedPasient = sykmeldingsDokument.kontaktMedPasient.toKontaktMedPasientAGDTO(),
-        prognose = sykmeldingsDokument.prognose?.toPrognoseAGDTO(),
-        egenmeldt = sykmeldingsDokument.avsenderSystem.navn == "Egenmeldt",
-        papirsykmelding = sykmeldingsDokument.avsenderSystem.navn == "Papirsykmelding",
-        harRedusertArbeidsgiverperiode = sykmeldingsDokument.medisinskVurdering.getHarRedusertArbeidsgiverperiode(sykmeldingsDokument.perioder),
-        merknader = merknader?.map { Merknad(type = it.type, beskrivelse = it.beskrivelse) }
-    )
-}
-
-fun MottattSykmeldingDbModel.toArbeidsgiverSykmelding(): ArbeidsgiverSykmelding {
     return ArbeidsgiverSykmelding(
         id = id,
         mottattTidspunkt = getUtcTime(mottattTidspunkt),

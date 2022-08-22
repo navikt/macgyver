@@ -19,7 +19,6 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val ojdbc8Version = "19.3.0.0"
 val mockkVersion = "1.12.4"
 val smCommonVersion = "1.f132f2b"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
@@ -109,7 +108,6 @@ dependencies {
     }
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
-    implementation("com.oracle.ojdbc:ojdbc8:$ojdbc8Version")
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")

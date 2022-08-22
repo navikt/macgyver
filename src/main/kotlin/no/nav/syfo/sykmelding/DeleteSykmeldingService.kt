@@ -1,6 +1,6 @@
 package no.nav.syfo.sykmelding
 
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
@@ -12,7 +12,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class DeleteSykmeldingService(
-    val syfoSmRegisterDb: GcpDatabase,
+    val syfoSmRegisterDb: Database,
     val kafkaProducer: SykmeldingStatusKafkaProducer,
     val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer,
     val tombstoneProducer: KafkaProducer<String, Any?>,

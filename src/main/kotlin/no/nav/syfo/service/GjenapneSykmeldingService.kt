@@ -1,6 +1,6 @@
 package no.nav.syfo.service
 
-import no.nav.syfo.db.gcp.GcpDatabase
+import no.nav.syfo.db.Database
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.STATUS_APEN
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
@@ -11,7 +11,7 @@ import java.time.ZoneOffset
 
 class GjenapneSykmeldingService(
     private val sykmeldingStatusKafkaProducer: SykmeldingStatusKafkaProducer,
-    private val syfoSmRegisterDb: GcpDatabase
+    private val syfoSmRegisterDb: Database
 ) {
     fun gjenapneSykmelding(sykmeldingId: String) {
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingId)

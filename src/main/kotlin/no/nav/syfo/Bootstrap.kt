@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -16,8 +15,7 @@ import no.nav.syfo.application.ApplicationServer
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.createApplicationEngine
 import no.nav.syfo.clients.HttpClients
-import no.nav.syfo.db.gcp.GcpDatabase
-import no.nav.syfo.db.gcp.GcpDatabaseCredentials
+import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
@@ -37,7 +35,6 @@ import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
-import no.nav.syfo.utils.getFileAsString
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
@@ -62,7 +59,7 @@ val legeerklaringObjectMapper: ObjectMapper = ObjectMapper().apply {
     configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
 }
 
-val log: Logger = LoggerFactory.getLogger("no.nav.syfo.syfoservicedatasyfosmregister")
+val log: Logger = LoggerFactory.getLogger("no.nav.syfo.macgyver")
 
 @DelicateCoroutinesApi
 fun main() {
@@ -74,8 +71,7 @@ fun main() {
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
 
-    val syfosmregisterCredentials: GcpDatabaseCredentials = objectMapper.readValue(getFileAsString("/run/secrets/secret"))
-    val syfosmregisterDatabase = GcpDatabase(syfosmregisterCredentials, "smregister")
+    val syfosmregisterDatabase = Database(environment, environment.syfosmregisteringCloudSqlInstance)
 
     val httpClients = HttpClients(environment)
 

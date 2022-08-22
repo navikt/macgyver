@@ -1,4 +1,4 @@
-package no.nav.syfo.db.gcp
+package no.nav.syfo.db
 
 import java.sql.Connection
 
