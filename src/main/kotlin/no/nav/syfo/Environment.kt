@@ -25,11 +25,11 @@ data class Environment(
     val pdlScope: String = getEnvVar("PDL_SCOPE"),
     val narmestelederUrl: String = getEnvVar("NARMESTELEDER_URL"),
     val narmestelederScope: String = getEnvVar("NARMESTELEDER_SCOPE"),
-    val databaseUsername: String = getEnvVar("NAIS_DATABASE_MACGYVER_USERNAME"),
-    val databasePassword: String = getEnvVar("NAIS_DATABASE_MACGYVER_PASSWORD"),
-    val dbHost: String = getEnvVar("NAIS_DATABASE_MACGYVER_HOST"),
-    val dbPort: String = getEnvVar("NAIS_DATABASE_MACGYVER_PORT"),
-    val dbName: String = getEnvVar("NAIS_DATABASE_MACGYVER_DATABASE"),
+    val databaseUsername: String = getEnvVar("DB_MACGYVER_USERNAME"),
+    val databasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),
+    val dbHost: String = getEnvVar("DB_MACGYVER_HOST"),
+    val dbPort: String = getEnvVar("DB_MACGYVER_PORT"),
+    val dbName: String = getEnvVar("DB_MACGYVER_DATABASE"),
     val pale2registerCloudSqlInstance: String = getEnvVar("PALE_2_REGISTER_CLOUD_SQL_INSTANCE"),
     val syfosmregisteringCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
 
