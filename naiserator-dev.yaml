@@ -69,6 +69,6 @@ spec:
     - name: NARMESTELEDER_SCOPE
       value: api://dev-gcp.teamsykmelding.narmesteleder/.default
     - name: SYFOSMREGISTER_CLOUD_SQL_INSTANCE
-      value: teamsykmelding-prod-2acd:europe-north1:smregister-instance
+      value: teamsykmelding-dev-1d34:europe-north1:smregister-instance
     - name: PALE_2_REGISTER_CLOUD_SQL_INSTANCE
-      value: teamsykmelding-prod-2acd:europe-north1:pale-2-register-instance
+      value: teamsykmelding-dev-1d34:europe-north1:pale-2-register-instance
