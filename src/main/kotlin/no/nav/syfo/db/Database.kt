@@ -6,6 +6,7 @@ import no.nav.syfo.Environment
 import java.sql.Connection
 import java.sql.ResultSet
 import java.util.Properties
+import no.nav.syfo.log
 
 class Database(env: Environment, cloudSqlInstance: String) : DatabaseInterface {
     private val dataSource: HikariDataSource
@@ -14,6 +15,9 @@ class Database(env: Environment, cloudSqlInstance: String) : DatabaseInterface {
 
     init {
         val properties = Properties()
+        log.info("jdbcUrl: ${env.jdbcUrl()}")
+        log.info("username: ${env.databaseUsername}")
+        log.info("cloudSqlInstance: $cloudSqlInstance")
         properties.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
         properties.setProperty("cloudSqlInstance", cloudSqlInstance)
         dataSource = HikariDataSource(
