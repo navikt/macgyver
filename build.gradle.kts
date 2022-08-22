@@ -9,7 +9,7 @@ val kluentVersion = "1.68"
 val ktorVersion = "2.1.0"
 val logbackVersion = "1.2.11"
 val logstashEncoderVersion = "7.2"
-val prometheusVersion = "0.15.0"
+val prometheusVersion = "0.16.0"
 val nimbusjosejwtVersion = "9.22"
 val hikariVersion = "5.0.1"
 val jaxbBasicAntVersion = "1.11.1"
@@ -25,7 +25,7 @@ val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val kithHodemeldingVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val javaTimeAdapterVersion = "1.1.3"
-val postgresVersion = "42.4.1"
+val postgresVersion = "42.4.2"
 val kontrollsystemblokk = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val infotrygdForespVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val avroVersion = "1.8.2"
@@ -34,9 +34,9 @@ val syfoAvroSchemasVersion = "c8be932543e7356a34690ce7979d494c5d8516d8"
 val legeerklaering = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val swaggerUiVersion = "4.10.3"
 val kotlinVersion = "1.7.10"
-val googleCloudStorageVersion = "2.6.1"
 val pale2CommonVersion = "1.19e8b45"
 val kotestVersion = "5.4.1"
+val googlePostgresVersion = "1.6.3"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -109,12 +109,12 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
+    implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion")
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("no.nav.syfo.schemas:syfosmoppgave-avro:$syfoAvroSchemasVersion")
     implementation("no.nav.helse.xml:legeerklaering:$legeerklaering")
-    implementation("com.google.cloud:google-cloud-storage:$googleCloudStorageVersion")
     implementation("no.nav.syfo:pale-2-common-models:$pale2CommonVersion")
     swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 

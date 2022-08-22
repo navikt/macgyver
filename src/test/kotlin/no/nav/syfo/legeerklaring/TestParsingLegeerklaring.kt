@@ -6,9 +6,9 @@ import no.nav.syfo.legeerklaring.LegeerklaringMapper.Companion.getAdjustedXml
 import no.nav.syfo.legeerklaring.util.extractLegeerklaering
 import no.nav.syfo.legeerklaring.util.sha256hashstring
 import no.nav.syfo.objectMapper
+import no.nav.syfo.testutil.getFileAsString
 import no.nav.syfo.utils.fellesformatMarshaller
 import no.nav.syfo.utils.fellesformatUnmarshaller
-import no.nav.syfo.utils.getFileAsString
 import no.nav.syfo.utils.toString
 import org.amshove.kluent.shouldBeEqualTo
 import java.io.File

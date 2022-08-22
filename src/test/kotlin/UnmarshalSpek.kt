@@ -1,8 +1,8 @@
 
 import io.kotest.core.spec.style.FunSpec
 import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
+import no.nav.syfo.testutil.getFileAsString
 import no.nav.syfo.utils.fellesformatUnmarshaller
-import no.nav.syfo.utils.getFileAsString
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBe
 import java.io.StringReader
