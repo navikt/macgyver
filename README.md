@@ -6,9 +6,7 @@ Application that fixes stuff like macgyver for team sykmelding
 * Kotlin
 * Ktor
 * Gradle
-* Spek
-* Vault
-* Oracle DB
+* Kotest
 
 #### Requirements
 
