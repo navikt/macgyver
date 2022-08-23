@@ -31,10 +31,8 @@ val infotrygdForespVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a
 val avroVersion = "1.8.2"
 val confluentVersion = "6.2.2"
 val syfoAvroSchemasVersion = "c8be932543e7356a34690ce7979d494c5d8516d8"
-val legeerklaering = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val swaggerUiVersion = "4.10.3"
 val kotlinVersion = "1.7.10"
-val pale2CommonVersion = "1.19e8b45"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.6.3"
 
@@ -114,8 +112,6 @@ dependencies {
     implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
     implementation("no.nav.syfo.schemas:syfosmoppgave-avro:$syfoAvroSchemasVersion")
-    implementation("no.nav.helse.xml:legeerklaering:$legeerklaering")
-    implementation("no.nav.syfo:pale-2-common-models:$pale2CommonVersion")
     swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")

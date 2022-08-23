@@ -4,7 +4,6 @@ import com.migesok.jaxb.adapter.javatime.LocalDateTimeXmlAdapter
 import com.migesok.jaxb.adapter.javatime.LocalDateXmlAdapter
 import no.nav.helse.eiFellesformat.XMLEIFellesformat
 import no.nav.helse.eiFellesformat.XMLMottakenhetBlokk
-import no.nav.helse.legeerklaering.Legeerklaring
 import no.nav.helse.msgHead.XMLMsgHead
 import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
 import java.io.StringWriter
@@ -17,7 +16,6 @@ val fellesformatJaxBContext: JAXBContext = JAXBContext.newInstance(
     XMLMsgHead::class.java,
     XMLMottakenhetBlokk::class.java,
     HelseOpplysningerArbeidsuforhet::class.java,
-    Legeerklaring::class.java
 
 )
 

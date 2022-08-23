@@ -45,11 +45,8 @@ spec:
     application:
       enabled: true
       tenant: nav.no
-  vault:
-    enabled: false
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
-  webproxy: false
   ingresses:
     - "https://macgyver.intern.nav.no"
   env:
