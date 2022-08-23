@@ -26,13 +26,6 @@ val fellesformatUnmarshaller: Unmarshaller = fellesformatJaxBContext.createUnmar
     setAdapter(LocalDateXmlAdapter::class.java, XMLDateAdapter())
 }
 
-val fellesformatMarshaller: Marshaller = fellesformatJaxBContext.createMarshaller().apply {
-    setAdapter(LocalDateTimeXmlAdapter::class.java, XMLDateTimeAdapter())
-    setAdapter(LocalDateXmlAdapter::class.java, XMLDateAdapter())
-    setProperty(Marshaller.JAXB_ENCODING, "UTF-8")
-    setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
-}
-
 fun Marshaller.toString(input: Any): String = StringWriter().use {
     marshal(input, it)
     it.toString()

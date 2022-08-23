@@ -16,6 +16,7 @@ class Database(env: Environment, cloudSqlInstance: String, dbName: String) : Dat
     init {
         val properties = Properties()
         log.info("username: ${env.databaseUsername}")
+        log.info("dbName: $dbName")
         log.info("cloudSqlInstance: $cloudSqlInstance")
         properties.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
         properties.setProperty("cloudSqlInstance", cloudSqlInstance)
