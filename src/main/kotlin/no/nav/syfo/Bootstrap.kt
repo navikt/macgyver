@@ -51,14 +51,6 @@ val objectMapper: ObjectMapper = ObjectMapper().apply {
     configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
 }
 
-val legeerklaringObjectMapper: ObjectMapper = ObjectMapper().apply {
-    registerKotlinModule()
-    registerModule(JavaTimeModule())
-    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-    configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
-}
-
 val log: Logger = LoggerFactory.getLogger("no.nav.syfo.macgyver")
 
 @DelicateCoroutinesApi
@@ -71,7 +63,11 @@ fun main() {
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
 
-    val syfosmregisterDatabase = Database(environment, environment.syfosmregisteringDatabaseCloudSqlInstance, environment.syfosmregisterDatabaseName)
+    val syfosmregisterDatabase = Database(
+        environment,
+        environment.syfosmregisteringDatabaseCloudSqlInstance,
+        environment.syfosmregisterDatabaseName
+    )
 
     val httpClients = HttpClients(environment)
 

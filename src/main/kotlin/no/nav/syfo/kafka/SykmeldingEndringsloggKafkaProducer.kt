@@ -14,7 +14,7 @@ class SykmeldingEndringsloggKafkaProducer(
         try {
             kafkaproducerEndringsloggSykmelding.send(ProducerRecord(endringsloggTopic, sykmelding)).get()
         } catch (e: Exception) {
-            log.error("Noe gikk galt ved skriving til endringslogg-topic: {}", e.cause)
+            log.error("Noe gikk galt ved skriving til endringslogg-topic: ", e.cause)
             throw e
         }
     }

@@ -12,13 +12,11 @@ import no.nav.syfo.model.Svar
 import no.nav.syfo.model.Svartype
 import no.nav.syfo.model.Sykmeldingsdokument
 import no.nav.syfo.model.Sykmeldingsopplysninger
-import no.nav.syfo.model.toPGObject
 import no.nav.syfo.objectMapper
 import no.nav.syfo.sm.Diagnosekoder
 import no.nav.syfo.sykmelding.model.EnkelSykmeldingDbModel
 import no.nav.syfo.sykmelding.model.Periode
 import no.nav.syfo.sykmelding.model.toEnkelSykmeldingDbModel
-import no.nav.syfo.sykmelding.model.toEnkelSykmeldingDbModelUtenStatus
 import no.nav.syfo.sykmelding.model.toSendtSykmeldingDbModel
 import java.sql.Connection
 import java.sql.ResultSet
@@ -51,28 +49,6 @@ fun Connection.getEnkelSykmelding(sykmeldingId: String): EnkelSykmeldingDbModel?
         ).use {
             it.setString(1, sykmeldingId)
             it.executeQuery().toList { toEnkelSykmeldingDbModel() }.firstOrNull()
-        }
-    }
-
-fun Connection.getEnkelSykmeldingUtenStatus(sykmeldingId: String): EnkelSykmeldingDbModel? =
-    use {
-        this.prepareStatement(
-            """
-                    SELECT opplysninger.id,
-                    pasient_fnr,
-                    mottatt_tidspunkt,
-                    behandlingsutfall,
-                    legekontor_org_nr,
-                    sykmelding,
-                    merknader
-                    FROM sykmeldingsopplysninger AS opplysninger
-                        INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
-                        INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
-                     WHERE opplysninger.id = ?
-                    """
-        ).use {
-            it.setString(1, sykmeldingId)
-            it.executeQuery().toList { toEnkelSykmeldingDbModelUtenStatus() }.firstOrNull()
         }
     }
 
@@ -192,39 +168,6 @@ private fun tilSvartype(svartype: String): Svartype {
     }
 }
 
-fun lagreBehandlingsutfall(
-    connection: Connection,
-    behandlingsutfall: Behandlingsutfall
-) {
-    connection.prepareStatement(
-        """
-                    INSERT INTO BEHANDLINGSUTFALL(id, behandlingsutfall) VALUES (?, ?) ON CONFLICT DO NOTHING
-                """
-    ).use {
-        it.setString(1, behandlingsutfall.id)
-        it.setObject(2, behandlingsutfall.behandlingsutfall.toPGObject())
-        it.executeUpdate()
-    }
-}
-
-fun Database.oppdaterBehandlingsutfall(behandlingsutfall: Behandlingsutfall) {
-    this.connection.use { connection ->
-        connection.prepareStatement(
-            """
-                UPDATE BEHANDLINGSUTFALL
-                SET behandlingsutfall = ?
-                WHERE
-                id = ?
-            """
-        ).use {
-            it.setObject(1, behandlingsutfall.behandlingsutfall.toPGObject())
-            it.setString(2, behandlingsutfall.id)
-            it.executeUpdate()
-        }
-        connection.commit()
-    }
-}
-
 fun Connection.hentSykmeldingsdokument(sykmeldingid: String): Sykmeldingsdokument? =
     use { connection ->
         connection.prepareStatement(
@@ -236,12 +179,6 @@ fun Connection.hentSykmeldingsdokument(sykmeldingid: String): Sykmeldingsdokumen
             it.executeQuery().toSykmeldingsdokument()
         }
     }
-
-fun ResultSet.getId(): String? {
-    return if (next()) {
-        getString("id")
-    } else null
-}
 
 fun Connection.hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? =
     use { connection ->
@@ -296,27 +233,6 @@ private fun ResultSet.getNullsafeSykmeldingsdokument(sykmeldingId: String): Sykm
         return null
     }
     return Sykmeldingsdokument(sykmeldingId, objectMapper.readValue(getString("sykmelding")))
-}
-
-fun ResultSet.toSykmeldingMedBehandlingsutfall(): SykmeldingBehandlingsutfallDbModel {
-    val sykmeldingId = getString("id")
-    val behandlingsutfall = getBehandlingsutfall(sykmeldingId)
-    val sykmeldingsopplysninger = Sykmeldingsopplysninger(
-        id = sykmeldingId,
-        mottakId = getString("mottak_id"),
-        pasientFnr = getString("pasient_fnr"),
-        pasientAktoerId = getString("pasient_aktoer_id"),
-        legeFnr = getString("lege_fnr"),
-        legeAktoerId = getString("lege_aktoer_id"),
-        legekontorOrgNr = getString("legekontor_org_nr"),
-        legekontorHerId = getString("legekontor_her_id"),
-        legekontorReshId = getString("legekontor_resh_id"),
-        epjSystemNavn = getString("epj_system_navn"),
-        epjSystemVersjon = getString("epj_system_versjon"),
-        mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
-        tssid = getString("tss_id")
-    )
-    return SykmeldingBehandlingsutfallDbModel(sykmeldingsopplysninger, behandlingsutfall)
 }
 
 private fun ResultSet.getBehandlingsutfall(sykmeldingId: String): Behandlingsutfall? {
