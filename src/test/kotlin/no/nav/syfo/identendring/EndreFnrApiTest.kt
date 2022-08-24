@@ -4,7 +4,6 @@ import com.auth0.jwk.JwkProviderBuilder
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import io.kotest.core.spec.style.FunSpec
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -33,10 +32,12 @@ import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.model.EndreFnr
 import no.nav.syfo.testutil.generateJWT
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 
-class EndreFnrApiTest : FunSpec({
-    test("Test endre fnr") {
+internal class EndreFnrApiTest {
+    @Test
+    internal fun `Test endre fnr`() {
 
         with(TestApplicationEngine()) {
 
@@ -59,7 +60,16 @@ class EndreFnrApiTest : FunSpec({
                 "sillyUser"
             )
             application.routing {
-                registerFnrApi(UpdateFnrService(pdlPersonService, db, sendtSykmeldingKafkaProducer, narmesteLederResponseKafkaProducer, narmestelederClient, "topic"))
+                registerFnrApi(
+                    UpdateFnrService(
+                        pdlPersonService,
+                        db,
+                        sendtSykmeldingKafkaProducer,
+                        narmesteLederResponseKafkaProducer,
+                        narmestelederClient,
+                        "topic"
+                    )
+                )
             }
 
             application.install(ContentNegotiation) {
@@ -96,4 +106,4 @@ class EndreFnrApiTest : FunSpec({
             }
         }
     }
-})
+}

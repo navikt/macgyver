@@ -10,7 +10,7 @@ val ktorVersion = "2.1.0"
 val logbackVersion = "1.2.11"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
-val nimbusjosejwtVersion = "9.22"
+val nimbusjosejwtVersion = "9.24.2"
 val hikariVersion = "5.0.1"
 val jaxbBasicAntVersion = "1.11.1"
 val javaxAnnotationApiVersion = "1.3.2"
@@ -19,7 +19,7 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.12.4"
+val mockkVersion = "1.12.5"
 val smCommonVersion = "1.f132f2b"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
@@ -35,6 +35,7 @@ val swaggerUiVersion = "4.10.3"
 val kotlinVersion = "1.7.10"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.6.3"
+val junitVersion = "5.9.0"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -74,7 +75,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
     implementation("no.nav.helse:syfosm-common-rest-sts:$smCommonVersion")
 
@@ -107,7 +108,9 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
-    implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion")
+    implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion") {
+        exclude(group = "commons-codec", module = "commons-codec")
+    }
     implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
     implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")
     implementation("org.apache.avro:avro:$avroVersion")
@@ -119,9 +122,9 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusjosejwtVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
 
 swaggerSources {

@@ -7,9 +7,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.engine.apache.ApacheEngineConfig
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.serialization.jackson.jackson
@@ -19,15 +20,13 @@ import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.service.PdlPersonService
-import org.apache.http.impl.conn.SystemDefaultRoutePlanner
-import java.net.ProxySelector
 
 class HttpClients(environment: Environment) {
-    private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
-        engine {
-            socketTimeout = 40_000
-            connectTimeout = 40_000
-            connectionRequestTimeout = 40_000
+    private val config: HttpClientConfig<CIOEngineConfig>.() -> Unit = {
+        install(HttpTimeout) {
+            connectTimeoutMillis = 10000
+            requestTimeoutMillis = 10000
+            socketTimeoutMillis = 10000
         }
         install(ContentNegotiation) {
             jackson {
@@ -48,16 +47,7 @@ class HttpClients(environment: Environment) {
         }
     }
 
-    private val proxyConfig: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
-        config()
-        engine {
-            customizeClient {
-                setRoutePlanner(SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-            }
-        }
-    }
-
-    private val httpClient = HttpClient(Apache, config)
+    private val httpClient = HttpClient(CIO, config)
 
     private val accessTokenClientV2 = AccessTokenClientV2(
         environment.aadAccessTokenV2Url,

@@ -1,14 +1,16 @@
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotest.core.spec.style.FunSpec
 import no.nav.syfo.model.Status
 import no.nav.syfo.model.ValidationResult
 import no.nav.syfo.objectMapper
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Test
 
-object BehandlingsutfallMapperTest : FunSpec({
-    val behandlingsutfallJson = "{\"status\": \"INVALID\", \"ruleHits\": [{\"ruleName\": \"TILBAKEDATERT_MER_ENN_8_DAGER_FORSTE_SYKMELDING\", \"messageForUser\": \"Sykmeldingen er tilbakedatert uten at det er begrunnet.\", \"messageForSender\": \"Første sykmelding er tilbakedatert mer enn det som er tillatt.\"}]}"
+internal class BehandlingsutfallMapperTest {
+    val behandlingsutfallJson =
+        "{\"status\": \"INVALID\", \"ruleHits\": [{\"ruleName\": \"TILBAKEDATERT_MER_ENN_8_DAGER_FORSTE_SYKMELDING\", \"messageForUser\": \"Sykmeldingen er tilbakedatert uten at det er begrunnet.\", \"messageForSender\": \"Første sykmelding er tilbakedatert mer enn det som er tillatt.\"}]}"
 
-    xtest("Skal ikke feile hvis ruleStatus mangler") {
+    @Test
+    internal fun `Skal ikke feile hvis ruleStatus mangler`() {
 
         val validationResult: ValidationResult = objectMapper.readValue(behandlingsutfallJson)
 
@@ -18,4 +20,4 @@ object BehandlingsutfallMapperTest : FunSpec({
         validationResult.ruleHits[0].messageForUser shouldBeEqualTo "Sykmeldingen er tilbakedatert uten at det er begrunnet."
         validationResult.ruleHits[0].messageForSender shouldBeEqualTo "Første sykmelding er tilbakedatert mer enn det som er tillatt."
     }
-})
+}

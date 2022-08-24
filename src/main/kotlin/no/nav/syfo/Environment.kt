@@ -14,8 +14,6 @@ data class Environment(
     val aivenEndringsloggTopic: String = "teamsykmelding.macgyver-sykmelding-endringslogg",
     val nlResponseTopic: String = "teamsykmelding.syfo-narmesteleder",
     val aivenSykmeldingStatusTopic: String = "teamsykmelding.sykmeldingstatus-leesah",
-    val historiskTopic: String = "teamsykmelding.sykmelding-historisk",
-    val legeerklaringTopic: String = "teamsykmelding.legeerklaering",
     val narmestelederRequestTopic: String = "teamsykmelding.syfo-nl-request",
     val papirSmRegistreringTopic: String = "teamsykmelding.papir-sm-registering",
     val manuellTopic: String = "teamsykmelding.sykmelding-manuell",
@@ -27,10 +25,10 @@ data class Environment(
     val narmestelederScope: String = getEnvVar("NARMESTELEDER_SCOPE"),
     val databaseUsername: String = getEnvVar("DB_MACGYVER_USERNAME"),
     val databasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),
-    val dbHost: String = getEnvVar("DB_MACGYVER_HOST"),
-    val dbPort: String = getEnvVar("DB_MACGYVER_PORT"),
-    val syfosmregisterDbName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
-    val syfosmregisteringCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
+    val databaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
+    val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
+    val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
+    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =

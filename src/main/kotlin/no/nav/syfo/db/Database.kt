@@ -19,7 +19,7 @@ class Database(env: Environment, cloudSqlInstance: String, dbName: String) : Dat
         dataSource = HikariDataSource(
             HikariConfig().apply {
                 dataSourceProperties = properties
-                jdbcUrl = "jdbc:postgresql://${env.dbHost}:${env.dbPort}/$dbName"
+                jdbcUrl = "jdbc:postgresql://${env.databaseHost}:${env.databasePort}/$dbName"
                 username = env.databaseUsername
                 password = env.databasePassword
                 maximumPoolSize = 2
