@@ -7,7 +7,11 @@ import java.sql.Connection
 import java.sql.ResultSet
 import java.util.Properties
 
-class Database(env: Environment, cloudSqlInstance: String, dbName: String) : DatabaseInterface {
+class Database(
+    env: Environment,
+    cloudSqlInstance: String,
+    dbName: String,
+) : DatabaseInterface {
     private val dataSource: HikariDataSource
     override val connection: Connection
         get() = dataSource.connection
@@ -22,10 +26,11 @@ class Database(env: Environment, cloudSqlInstance: String, dbName: String) : Dat
                 jdbcUrl = "jdbc:postgresql://${env.databaseHost}:${env.databasePort}/$dbName"
                 username = env.databaseUsername
                 password = env.databasePassword
-                maximumPoolSize = 2
-                minimumIdle = 1
+                maximumPoolSize = 10
+                minimumIdle = 3
+                idleTimeout = 10000
+                maxLifetime = 300000
                 isAutoCommit = false
-                connectionTimeout = 30_000
                 transactionIsolation = "TRANSACTION_REPEATABLE_READ"
                 validate()
             }
