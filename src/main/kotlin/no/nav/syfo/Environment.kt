@@ -6,8 +6,6 @@ data class Environment(
     val aadAccessTokenV2Url: String = getEnvVar("AZURE_OPENID_CONFIG_TOKEN_ENDPOINT"),
     val clientIdV2: String = getEnvVar("AZURE_APP_CLIENT_ID"),
     val clientSecretV2: String = getEnvVar("AZURE_APP_CLIENT_SECRET"),
-    val jwtIssuerV2: String = getEnvVar("AZURE_OPENID_CONFIG_ISSUER"),
-    val jwkKeysUrlV2: String = getEnvVar("AZURE_OPENID_CONFIG_JWKS_URI"),
     val sendSykmeldingV2Topic: String = "teamsykmelding.syfo-sendt-sykmelding",
     val bekreftSykmeldingV2KafkaTopic: String = "teamsykmelding.syfo-bekreftet-sykmelding",
     val mottattSykmeldingV2Topic: String = "teamsykmelding.syfo-mottatt-sykmelding",
@@ -28,7 +26,9 @@ data class Environment(
     val databaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
     val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
-    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
+    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
+    val internalJwtWellKnownUri: String = getEnvVar("JWT_WELLKNOWN_URI"),
+    val jwtIssuer: String = getEnvVar("JWT_ISSUER")
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =

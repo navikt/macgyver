@@ -58,7 +58,10 @@ fun main() {
     val environment = Environment()
     val applicationState = ApplicationState()
 
-    val jwkProviderAadV2 = JwkProviderBuilder(URL(environment.jwkKeysUrlV2))
+    val jwtVaultSecrets =
+        JwtVaultSecrets(environment.internalJwtWellKnownUri, environment.clientIdV2, environment.jwtIssuer)
+
+    val jwkProviderInternal = JwkProviderBuilder(URL(jwtVaultSecrets.internalJwtWellKnownUri))
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
@@ -161,12 +164,21 @@ fun main() {
         deleteSykmeldingService = deleteSykmeldingService,
         gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
-        jwkProviderAadV2 = jwkProviderAadV2
+        jwkProviderInternal = jwkProviderInternal,
+        issuerServiceuser = jwtVaultSecrets.jwtIssuer,
+        clientId = jwtVaultSecrets.clientId,
+        appIds = listOf(jwtVaultSecrets.clientId),
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 
     applicationServer.start()
 }
+
+data class JwtVaultSecrets(
+    val internalJwtWellKnownUri: String,
+    val clientId: String,
+    val jwtIssuer: String,
+)
 
 @DelicateCoroutinesApi
 fun startBackgroundJob(applicationState: ApplicationState, block: suspend CoroutineScope.() -> Unit) {
