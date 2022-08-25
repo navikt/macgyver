@@ -41,6 +41,12 @@ spec:
           apiVersion: resourcemanager.cnrm.cloud.google.com/v1beta1
           kind: Project
         role: roles/cloudsql.client
+  accessPolicy:
+    inbound:
+      rules:
+        - application: macgyver
+          namespace: teamsykmelding
+          cluster: dev-gcp
   azure:
     application:
       enabled: true
