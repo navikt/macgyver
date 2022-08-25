@@ -28,7 +28,8 @@ data class Environment(
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
     val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
     val internalJwtWellKnownUri: String = getEnvVar("JWT_WELLKNOWN_URI"),
-    val jwtIssuer: String = getEnvVar("JWT_ISSUER")
+    val jwtIssuer: String = getEnvVar("JWT_ISSUER"),
+    val clientId: String = getEnvVar("CLIENT_ID")
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =

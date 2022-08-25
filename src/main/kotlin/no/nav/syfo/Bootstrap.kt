@@ -58,10 +58,10 @@ fun main() {
     val environment = Environment()
     val applicationState = ApplicationState()
 
-    val jwtVaultSecrets =
-        JwtVaultSecrets(environment.internalJwtWellKnownUri, environment.clientIdV2, environment.jwtIssuer)
+    val jwtSecrets =
+        JwtSecrets(environment.internalJwtWellKnownUri, environment.clientId, environment.jwtIssuer)
 
-    val jwkProviderInternal = JwkProviderBuilder(URL(jwtVaultSecrets.internalJwtWellKnownUri))
+    val jwkProviderInternal = JwkProviderBuilder(URL(jwtSecrets.internalJwtWellKnownUri))
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
@@ -165,16 +165,16 @@ fun main() {
         gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
         jwkProviderInternal = jwkProviderInternal,
-        issuerServiceuser = jwtVaultSecrets.jwtIssuer,
-        clientId = jwtVaultSecrets.clientId,
-        appIds = listOf(jwtVaultSecrets.clientId),
+        issuerServiceuser = jwtSecrets.jwtIssuer,
+        clientId = jwtSecrets.clientId,
+        appIds = listOf(jwtSecrets.clientId),
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 
     applicationServer.start()
 }
 
-data class JwtVaultSecrets(
+data class JwtSecrets(
     val internalJwtWellKnownUri: String,
     val clientId: String,
     val jwtIssuer: String,
