@@ -170,13 +170,13 @@ internal class UpdateFnrServiceTest {
             }
             coVerify(exactly = 1) {
                 narmesteLederResponseKafkaProducer.publishToKafka(
-                    match<NlResponseKafkaMessage> { it.nlAvbrutt?.sykmeldtFnr == "12345678912" },
+                    match { it.nlAvbrutt?.sykmeldtFnr == "12345678912" },
                     "9898"
                 )
             }
             coVerify(exactly = 1) {
                 narmesteLederResponseKafkaProducer.publishToKafka(
-                    match<NlResponseKafkaMessage> { it.nlResponse == getExpectedNarmestelederResponse() },
+                    match { it.nlResponse == getExpectedNarmestelederResponse() },
                     "9898"
                 )
             }
