@@ -47,8 +47,7 @@ fun createApplicationEngine(
     narmestelederService: NarmestelederService,
     jwkProviderInternal: JwkProvider,
     issuerServiceuser: String,
-    clientId: String,
-    appIds: List<String>
+    clientId: String
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -62,8 +61,7 @@ fun createApplicationEngine(
         setupAuth(
             jwkProviderInternal = jwkProviderInternal,
             issuerServiceuser = issuerServiceuser,
-            clientId = clientId,
-            appIds = appIds
+            clientId = clientId
         )
 
         routing {

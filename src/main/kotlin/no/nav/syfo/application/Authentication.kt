@@ -14,22 +14,25 @@ import no.nav.syfo.log
 fun Application.setupAuth(
     jwkProviderInternal: JwkProvider,
     issuerServiceuser: String,
-    clientId: String,
-    appIds: List<String>
+    clientId: String
 ) {
     install(Authentication) {
         jwt(name = "jwtserviceuser") {
             verifier(jwkProviderInternal, issuerServiceuser)
             validate { credentials ->
-                val appId: String = credentials.payload.getClaim("azp").asString()
-                if (appId in appIds && clientId in credentials.payload.audience) {
-                    JWTPrincipal(credentials.payload)
-                } else {
-                    unauthorized(credentials)
+                when {
+                    harTilgang(credentials, clientId) -> JWTPrincipal(credentials.payload)
+                    else -> unauthorized(credentials)
                 }
             }
         }
     }
+}
+
+fun harTilgang(credentials: JWTCredential, clientId: String): Boolean {
+    val appid: String = credentials.payload.getClaim("azp").asString()
+    log.debug("authorization attempt for $appid")
+    return credentials.payload.audience.contains(clientId)
 }
 
 fun unauthorized(credentials: JWTCredential): Principal? {
