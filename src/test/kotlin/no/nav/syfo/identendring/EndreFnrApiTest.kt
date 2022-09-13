@@ -58,8 +58,7 @@ internal class EndreFnrApiTest {
             application.setupAuth(
                 jwkProvider,
                 "sillyUser",
-                "",
-                listOf("")
+                ""
             )
             application.routing {
                 registerFnrApi(

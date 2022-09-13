@@ -4,13 +4,13 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.6.4"
-val jacksonVersion = "2.13.3"
+val jacksonVersion = "2.13.4"
 val kluentVersion = "1.68"
-val ktorVersion = "2.1.0"
-val logbackVersion = "1.2.11"
+val ktorVersion = "2.1.1"
+val logbackVersion = "1.4.0"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
-val nimbusjosejwtVersion = "9.24.2"
+val nimbusjosejwtVersion = "9.24.3"
 val hikariVersion = "5.0.1"
 val jaxbBasicAntVersion = "1.11.1"
 val javaxAnnotationApiVersion = "1.3.2"
@@ -19,19 +19,17 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.12.5"
+val mockkVersion = "1.12.7"
 val smCommonVersion = "1.f132f2b"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val kithHodemeldingVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val javaTimeAdapterVersion = "1.1.3"
-val postgresVersion = "42.4.2"
+val postgresVersion = "42.5.0"
 val kontrollsystemblokk = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val infotrygdForespVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
-val avroVersion = "1.8.2"
 val confluentVersion = "6.2.2"
-val syfoAvroSchemasVersion = "c8be932543e7356a34690ce7979d494c5d8516d8"
-val swaggerUiVersion = "4.10.3"
+val swaggerUiVersion = "4.14.0"
 val kotlinVersion = "1.7.10"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.6.3"
@@ -111,10 +109,6 @@ dependencies {
     implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion") {
         exclude(group = "commons-codec", module = "commons-codec")
     }
-    implementation("io.confluent:kafka-avro-serializer:$confluentVersion")
-    implementation("io.confluent:kafka-streams-avro-serde:$confluentVersion")
-    implementation("org.apache.avro:avro:$avroVersion")
-    implementation("no.nav.syfo.schemas:syfosmoppgave-avro:$syfoAvroSchemasVersion")
     swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
