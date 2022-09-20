@@ -1,5 +1,7 @@
 package no.nav.syfo
 
+import com.nimbusds.jose.jwk.RSAKey
+
 data class Environment(
     val applicationPort: Int = getEnvVar("APPLICATION_PORT", "8080").toInt(),
     val applicationName: String = getEnvVar("NAIS_APP_NAME", "macgyver"),
@@ -28,7 +30,11 @@ data class Environment(
     val databaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
     val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
-    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
+    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
+    val clientIdTokenX: String = getEnvVar("TOKEN_X_CLIENT_ID"),
+    val tokenXPrivateJwk: RSAKey = RSAKey.parse(getEnvVar("TOKEN_X_PRIVATE_JWK")),
+    val tokenXWellKnownUrl: String = getEnvVar("TOKEN_X_WELL_KNOWN_URL"),
+
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =
     System.getenv(varName) ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")

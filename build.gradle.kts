@@ -34,6 +34,7 @@ val kotlinVersion = "1.7.10"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.6.3"
 val junitVersion = "5.9.0"
+val nimbusdsVersion = "9.22"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -103,6 +104,8 @@ dependencies {
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
         exclude(group = "com.sun.xml.ws", module = "policy")
     }
+
+    implementation("com.nimbusds:nimbus-jose-jwt:$nimbusdsVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")

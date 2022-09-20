@@ -51,6 +51,8 @@ spec:
     application:
       enabled: true
       tenant: nav.no
+  tokenx:
+    enabled: true
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets
