@@ -44,7 +44,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: macgyver
+        - application: macgyver-frontend
           namespace: teamsykmelding
           cluster: prod-gcp
   azure:
