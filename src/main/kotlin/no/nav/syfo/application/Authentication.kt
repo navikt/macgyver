@@ -39,6 +39,7 @@ fun Application.setupAuth(
             validate { credentials ->
                 when {
                     hasClientIdAudience(credentials, clientIdTokenX) -> {
+                        log.info("has clientId audience")
                         val principal = JWTPrincipal(credentials.payload)
                         BrukerPrincipal(
                             principal = principal,

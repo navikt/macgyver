@@ -12,6 +12,7 @@ import java.util.UUID
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {
+        log.info("Incoming request to /api/oppgave/list")
 
         val callId = UUID.randomUUID().toString()
 
