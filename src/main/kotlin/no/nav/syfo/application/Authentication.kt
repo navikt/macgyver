@@ -23,21 +23,29 @@ fun Application.setupAuth(
         jwt(name = "tokenx") {
             authHeader {
                 when (val token: String? = it.getToken()) {
-                    null -> return@authHeader null
-                    else -> return@authHeader HttpAuthHeader.Single("Bearer", token)
+                    null -> {
+                        log.warn("authHeader is missing!!")
+                        return@authHeader null
+                    }
+
+                    else -> {
+                        log.info("Bearer token is present")
+                        return@authHeader HttpAuthHeader.Single("Bearer", token)
+                    }
+
                 }
             }
             verifier(jwkProviderTokenX, tokenXIssuer)
             validate { credentials ->
                 when {
-                    hasClientIdAudience(credentials, clientIdTokenX) ->
-                        {
-                            val principal = JWTPrincipal(credentials.payload)
-                            BrukerPrincipal(
-                                principal = principal,
-                                token = this.getToken()!!
-                            )
-                        }
+                    hasClientIdAudience(credentials, clientIdTokenX) -> {
+                        val principal = JWTPrincipal(credentials.payload)
+                        BrukerPrincipal(
+                            principal = principal,
+                            token = this.getToken()!!
+                        )
+                    }
+
                     else -> unauthorized(credentials)
                 }
             }
