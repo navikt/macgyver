@@ -45,6 +45,7 @@ val objectMapper: ObjectMapper = ObjectMapper().apply {
     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+    configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
 }
 
 val log: Logger = LoggerFactory.getLogger("no.nav.syfo.macgyver")
