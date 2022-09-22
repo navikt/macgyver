@@ -7,13 +7,22 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import no.nav.syfo.log
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
+import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logNAVEpostFromTokenToSecureLogs
 
 fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingService) {
     delete("/api/sykmelding/{sykmeldingId}") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
-        if (sykmeldingId.isNullOrEmpty()) {
+
+        if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
         }
+
+        logNAVEpostFromTokenToSecureLogs(
+            getAccessTokenFromAuthHeader(call.request),
+            "slette sykmelding med id $sykmeldingId"
+        )
+
         try {
             deleteSykmeldingService.deleteSykmelding(sykmeldingId)
             call.respond(HttpStatusCode.OK)
