@@ -16,15 +16,10 @@ fun getAccessTokenFromAuthHeader(request: ApplicationRequest): String {
     return (authHeader as HttpAuthHeader.Single).blob
 }
 
-fun logNAVEpostFromTokenToSecureLogs(accessToken: String, message: String) {
-    try {
-        val decodedJWT = JWT.decode(accessToken)
-        val navEpost = decodedJWT.claims["preferred_username"]?.asString()
-        log.info("NavEpost: {} , prøver å gjøre følgende {}", navEpost, message)
-
-    } catch (exception: Exception) {
-        log.error("Fikk ikkje hentet ut navEpost", exception)
-    }
+fun logNAVEpostAndAction(accessToken: String, action: String) {
+    val decodedJWT = JWT.decode(accessToken)
+    val navEpost = decodedJWT.claims["preferred_username"]?.asString()
+    log.info("NavEpost: {}, prøver å gjøre følgende {}", navEpost, action)
 }
 
 class UnauthorizedException : Exception()

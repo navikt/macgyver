@@ -9,6 +9,8 @@ import io.ktor.server.routing.post
 import no.nav.syfo.log
 import no.nav.syfo.oppgave.client.OppgaveClient
 import java.util.UUID
+import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logNAVEpostAndAction
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {
@@ -23,12 +25,14 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
         }
 
         try {
-            log.info("Henter oppgaver fra Oppgave-api {}", ids)
-
+            logNAVEpostAndAction(
+                getAccessTokenFromAuthHeader(call.request),
+                "Henter oppgaver fra Oppgave-api ider: $ids"
+            )
             val toList = ids.map {
                 oppgaveClient.hentOppgave(oppgaveId = it, msgId = callId)
             }.toList()
-
+            log.info("Sender http OK status tilbake, for henting av oppgaver fra Oppgave-api ider: $ids")
             call.respond(HttpStatusCode.OK, toList)
         } catch (e: Exception) {
             log.error("Kastet exception ved enting av oppgaver fra oppgave-api", e)
