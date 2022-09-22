@@ -10,7 +10,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import no.nav.syfo.application.ApplicationServer
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.createApplicationEngine
-import no.nav.syfo.application.getWellKnownTokenX
 import no.nav.syfo.clients.HttpClients
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
@@ -55,8 +54,7 @@ fun main() {
     val environment = Environment()
     val applicationState = ApplicationState()
 
-    val wellKnownTokenX = getWellKnownTokenX(environment.tokenXWellKnownUrl)
-    val jwkProviderTokenX = JwkProviderBuilder(URL(wellKnownTokenX.jwks_uri))
+    val jwkProvider = JwkProviderBuilder(URL(environment.jwkKeysUrl))
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
@@ -159,8 +157,8 @@ fun main() {
         deleteSykmeldingService = deleteSykmeldingService,
         gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
-        jwkProviderTokenX = jwkProviderTokenX,
-        tokenXIssuer = wellKnownTokenX.issuer
+        jwkProvider = jwkProvider,
+        issuer = environment.jwtIssuer
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 

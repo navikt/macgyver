@@ -1,53 +1,30 @@
 package no.nav.syfo.application
 
 import com.auth0.jwk.JwkProvider
-import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.Principal
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
-import io.ktor.server.request.header
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.log
 
 fun Application.setupAuth(
-    jwkProviderTokenX: JwkProvider,
-    tokenXIssuer: String,
-    clientIdTokenX: String
+    jwkProvider: JwkProvider,
+    issuer: String,
+    clientIdV2: String
 ) {
     install(Authentication) {
-        jwt(name = "tokenx") {
-            authHeader {
-                when (val token: String? = it.getToken()) {
-                    null -> {
-                        log.warn("authHeader is missing!!")
-                        return@authHeader null
-                    }
-
-                    else -> {
-                        log.info("Bearer token is present")
-                        return@authHeader HttpAuthHeader.Single("Bearer", token)
-                    }
-
-                }
-            }
-            verifier(jwkProviderTokenX, tokenXIssuer)
+        jwt(name = "jwt") {
+            verifier(jwkProvider, issuer)
             validate { credentials ->
                 when {
-                    hasClientIdAudience(credentials, clientIdTokenX) -> {
-                        log.info("has clientId audience")
-                        val principal = JWTPrincipal(credentials.payload)
-                        BrukerPrincipal(
-                            principal = principal,
-                            token = this.getToken()!!
-                        )
+                    hasMacgyverClientIdAudience(credentials, clientIdV2) -> JWTPrincipal(credentials.payload)
+                    else -> {
+                        unauthorized(credentials)
                     }
-
-                    else -> unauthorized(credentials)
                 }
             }
         }
@@ -63,17 +40,6 @@ fun unauthorized(credentials: JWTCredential): Principal? {
     return null
 }
 
-fun ApplicationCall.getToken(): String? {
-    return when (val authHeader = request.header("Authorization")) {
-        else -> authHeader?.removePrefix("Bearer ")
-    }
+fun hasMacgyverClientIdAudience(credentials: JWTCredential, clientIdV2: String): Boolean {
+    return credentials.payload.audience.contains(clientIdV2)
 }
-
-fun hasClientIdAudience(credentials: JWTCredential, clientId: String): Boolean {
-    return credentials.payload.audience.contains(clientId)
-}
-
-data class BrukerPrincipal(
-    val principal: JWTPrincipal,
-    val token: String
-) : Principal
