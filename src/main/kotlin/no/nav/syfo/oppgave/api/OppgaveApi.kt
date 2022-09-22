@@ -18,6 +18,7 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
 
         val ids = call.receive<List<Int>>()
         if (ids.isEmpty()) {
+            log.warn("Listen med oppgaveId-er kan ikke være tom")
             call.respond(HttpStatusCode.BadRequest, "Listen med oppgaveId-er kan ikke være tom")
         }
 
