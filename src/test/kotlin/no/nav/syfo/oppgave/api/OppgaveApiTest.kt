@@ -67,15 +67,6 @@ internal class OppgaveApiTest {
                     configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 }
             }
-            application.install(CallLogging) {
-                level = Level.INFO
-                format { call ->
-                    val typeInfo = call.receiveType
-                    val httpMethod = call.request.httpMethod.value
-                    "TypeInfo: $typeInfo, HTTP method: $httpMethod"
-                }
-            }
-
 
             coEvery { oppgaveClient.hentOppgave(any(), any()) } returns Oppgave(
                 id = 1,

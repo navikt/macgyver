@@ -63,15 +63,6 @@ fun createApplicationEngine(
                 configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
             }
         }
-        install(CallLogging) {
-            level = Level.INFO
-            format { call ->
-                val typeInfo = call.receiveType
-                val httpMethod = call.request.httpMethod.value
-                val userAgent = call.request.headers["User-Agent"]
-                "TypeInfo: $typeInfo, HTTP method: $httpMethod, User agent: $userAgent"
-            }
-        }
         setupAuth(
             jwkProvider = jwkProvider,
             issuer = issuer,
