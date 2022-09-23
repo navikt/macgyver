@@ -7,11 +7,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.install
+import io.ktor.server.application.receiveType
 import io.ktor.server.auth.authenticate
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.request.httpMethod
 import io.ktor.server.routing.routing
 import no.nav.syfo.Environment
 import no.nav.syfo.application.api.registerNaisApi
@@ -33,6 +36,7 @@ import no.nav.syfo.sykmelding.api.registerDeleteSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerGjenapneSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerUpdateBiDiagnosisApi
 import no.nav.syfo.sykmelding.api.registerUpdateDiagnosisApi
+import org.slf4j.event.Level
 
 fun createApplicationEngine(
     env: Environment,
@@ -57,6 +61,15 @@ fun createApplicationEngine(
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
                 configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
+            }
+        }
+        install(CallLogging) {
+            level = Level.INFO
+            format { call ->
+                val typeInfo = call.receiveType
+                val httpMethod = call.request.httpMethod.value
+                val userAgent = call.request.headers["User-Agent"]
+                "TypeInfo: $typeInfo, HTTP method: $httpMethod, User agent: $userAgent"
             }
         }
         setupAuth(

@@ -7,7 +7,7 @@ val coroutinesVersion = "1.6.4"
 val jacksonVersion = "2.13.4"
 val kluentVersion = "1.68"
 val ktorVersion = "2.1.1"
-val logbackVersion = "1.4.0"
+val logbackVersion = "1.4.1"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
 val nimbusjosejwtVersion = "9.24.3"
@@ -71,6 +71,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")

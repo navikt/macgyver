@@ -9,7 +9,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.install
+import io.ktor.server.application.receiveType
+import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.request.httpMethod
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
@@ -27,6 +30,7 @@ import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.testutil.generateJWT
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import org.slf4j.event.Level
 
 
 internal class OppgaveApiTest {
@@ -63,6 +67,14 @@ internal class OppgaveApiTest {
                     configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 }
             }
+            application.install(CallLogging) {
+                level = Level.INFO
+                format { call ->
+                    val typeInfo = call.receiveType
+                    val httpMethod = call.request.httpMethod.value
+                    "TypeInfo: $typeInfo, HTTP method: $httpMethod"
+                }
+            }
 
 
             coEvery { oppgaveClient.hentOppgave(any(), any()) } returns Oppgave(
@@ -88,7 +100,6 @@ internal class OppgaveApiTest {
 
 
             val oppgaverid = listOf(121321312)
-            println(objectMapper.writeValueAsString(oppgaverid))
 
             with(
                 handleRequest(HttpMethod.Post, "/api/oppgave/list") {
