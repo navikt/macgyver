@@ -14,12 +14,10 @@ import no.nav.syfo.utils.logNAVEpostAndAction
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {
-        log.info("Incoming request to /api/oppgave/list")
 
         val callId = UUID.randomUUID().toString()
 
         val ids = call.receive<List<Int>>()
-        log.info("got the ids")
 
         if (ids.isEmpty()) {
             log.warn("Listen med oppgaveId-er kan ikke være tom")
