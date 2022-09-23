@@ -33,7 +33,6 @@ import no.nav.syfo.sykmelding.api.registerDeleteSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerGjenapneSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerUpdateBiDiagnosisApi
 import no.nav.syfo.sykmelding.api.registerUpdateDiagnosisApi
-import org.slf4j.event.Level
 
 fun createApplicationEngine(
     env: Environment,
