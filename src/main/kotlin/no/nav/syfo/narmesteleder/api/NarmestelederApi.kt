@@ -12,6 +12,6 @@ fun Route.registrerNarmestelederRequestApi(narmestelederService: NarmestelederSe
     post("/api/narmesteleder/request") {
         val nlRequest = call.receive<NlRequestDTO>()
         narmestelederService.sendNewNlRequest(nlRequest)
-        call.respond(HttpStatusCode.OK)
+        call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
     }
 }

@@ -4,9 +4,9 @@ import com.auth0.jwt.JWT
 import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.server.auth.parseAuthorizationHeader
 import io.ktor.server.request.ApplicationRequest
+import no.nav.syfo.log
 import java.io.IOException
 import java.net.URISyntaxException
-import no.nav.syfo.log
 
 @Throws(IOException::class, URISyntaxException::class)
 

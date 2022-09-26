@@ -26,7 +26,7 @@ fun Route.registrerPeriodeApi(updatePeriodeService: UpdatePeriodeService) {
         }
 
         updatePeriodeService.updatePeriode(sykmeldingId = sykmeldingId, periodeliste = periodeListeDTO.periodeliste)
-        call.respond(HttpStatusCode.OK)
+        call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
     }
 }
 

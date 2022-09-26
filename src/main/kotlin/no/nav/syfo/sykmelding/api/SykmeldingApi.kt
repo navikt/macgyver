@@ -23,7 +23,7 @@ fun Route.registerUpdateDiagnosisApi(diagnoseService: DiagnoseService) {
 
         try {
             diagnoseService.endreDiagnose(sykmeldingId, diagnoseKode = diagnoseDTO.kode, system = diagnoseDTO.system)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
         } catch (e: Exception) {
             log.error("Kastet exception ved endring av diagnose for sykmelding med id $sykmeldingId, ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved oppdatering av diagnose")
@@ -42,7 +42,7 @@ fun Route.registerUpdateBiDiagnosisApi(diagnoseService: DiagnoseService) {
 
         try {
             diagnoseService.endreBiDiagnose(sykmeldingId, diagnoseDTO.diagnoser)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
         } catch (e: Exception) {
             log.error("Kastet exception ved endring av diagnose for sykmelding med id $sykmeldingId, ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved oppdatering av diagnose")
@@ -59,7 +59,7 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
 
         try {
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
         } catch (e: Exception) {
             log.error("Kastet exception ved gjenåpning av sykmelding med id $sykmeldingId, ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved gjenåpning av sykmelding")

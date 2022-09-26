@@ -9,10 +9,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.install
-import io.ktor.server.application.receiveType
-import io.ktor.server.plugins.callloging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.request.httpMethod
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
@@ -20,18 +17,15 @@ import io.ktor.server.testing.setBody
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import java.nio.file.Paths
-import java.time.LocalDate
 import no.nav.syfo.application.setupAuth
 import no.nav.syfo.objectMapper
 import no.nav.syfo.oppgave.client.Oppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
-
 import no.nav.syfo.testutil.generateJWT
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import org.slf4j.event.Level
-
+import java.nio.file.Paths
+import java.time.LocalDate
 
 internal class OppgaveApiTest {
     @Test
@@ -88,7 +82,6 @@ internal class OppgaveApiTest {
                 status = null,
                 mappeId = null
             )
-
 
             val oppgaverid = listOf(121321312)
 

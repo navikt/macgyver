@@ -17,7 +17,7 @@ fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletD
         val behandletDatoDTO = call.receive<BehandletDatoDTO>()
 
         updateBehandletDatoService.updateBehandletDato(sykmeldingId = sykmeldingId, behandletDato = behandletDatoDTO.behandletDato)
-        call.respond(HttpStatusCode.OK)
+        call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
     }
 }
 
