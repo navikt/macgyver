@@ -57,7 +57,7 @@ class DiagnoseService(
 
             syfosmRegisterDb.updateBiDiagnose(diagnoseTyper, sykmeldingId)
         } else {
-            log.info("could not find sykmelding with id {}", sykmeldingId)
+            throw Exception("could not find sykmelding with id $sykmeldingId")
         }
     }
 
