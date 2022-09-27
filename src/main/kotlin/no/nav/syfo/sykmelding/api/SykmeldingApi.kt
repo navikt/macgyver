@@ -44,7 +44,7 @@ fun Route.registerUpdateBiDiagnosisApi(diagnoseService: DiagnoseService) {
             diagnoseService.endreBiDiagnose(sykmeldingId, diagnoseDTO.diagnoser)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
-            log.error("Kastet exception ved endring av diagnose for sykmelding med id $sykmeldingId, ${e.message}")
+            log.error("Kastet exception ved endring av biDiagnose for sykmelding med id $sykmeldingId, ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved oppdatering av diagnose"))
         }
     }
