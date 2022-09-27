@@ -20,9 +20,8 @@ fun Route.registerUpdateDiagnosisApi(diagnoseService: DiagnoseService) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
-        val diagnoseDTO = call.receive<EndreDiagnose>()
-
         try {
+            val diagnoseDTO = call.receive<EndreDiagnose>()
             diagnoseService.endreDiagnose(sykmeldingId, diagnoseKode = diagnoseDTO.kode, system = diagnoseDTO.system)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
