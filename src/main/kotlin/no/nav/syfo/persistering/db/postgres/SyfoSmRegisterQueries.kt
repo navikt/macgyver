@@ -6,6 +6,7 @@ import no.nav.syfo.db.toList
 import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
 import no.nav.syfo.model.Diagnose
+import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.ShortName
 import no.nav.syfo.model.Sporsmal
 import no.nav.syfo.model.Svar
@@ -116,17 +117,17 @@ fun Connection.hentSporsmalOgSvar(sykmeldingId: String): List<Sporsmal> =
     use {
         this.prepareStatement(
             """
-                    SELECT sporsmal.shortname,
-                           sporsmal.tekst,
-                           svar.sporsmal_id,
-                           svar.svar,
-                           svar.svartype,
-                           svar.sykmelding_id
-                    FROM svar
-                             INNER JOIN sporsmal
-                                        ON sporsmal.id = svar.sporsmal_id
-                    WHERE svar.sykmelding_id = ?
-                """
+                SELECT sporsmal.shortname,
+                       sporsmal.tekst,
+                       svar.sporsmal_id,
+                       svar.svar,
+                       svar.svartype,
+                       svar.sykmelding_id
+                FROM svar
+                         INNER JOIN sporsmal
+                                    ON sporsmal.id = svar.sporsmal_id
+                WHERE svar.sykmelding_id = ?
+            """
         ).use {
             it.setString(1, sykmeldingId)
             it.executeQuery().toList { tilSporsmal() }
@@ -212,7 +213,9 @@ fun ResultSet.toSykmelding(): SykmeldingDbModel? {
             epjSystemNavn = getString("epj_system_navn"),
             epjSystemVersjon = getString("epj_system_versjon"),
             mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
-            tssid = getString("tss_id")
+            tssid = getString("tss_id"),
+            merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+            partnerreferanse = getString("partnerreferanse"),
         )
         return SykmeldingDbModel(sykmeldingsopplysninger, sykmeldingsdokument)
     }
