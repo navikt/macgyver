@@ -9,7 +9,7 @@ import io.ktor.server.routing.post
 import no.nav.syfo.log
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndAction
+import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 import java.util.UUID
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
@@ -25,7 +25,7 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
         }
 
         try {
-            logNAVEpostAndAction(
+            logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
                 "Henter oppgaver fra Oppgave-api ider: $ids"
             )

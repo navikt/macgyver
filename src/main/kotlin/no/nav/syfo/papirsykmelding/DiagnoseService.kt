@@ -14,6 +14,7 @@ import no.nav.syfo.sykmelding.api.model.EndreDiagnose
 class DiagnoseService(private val syfosmRegisterDb: Database, private val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer) {
 
     fun endreDiagnose(sykmeldingId: String, diagnoseKode: String, system: String) {
+
         val sykmeldingsdokument = syfosmRegisterDb.connection.hentSykmeldingsdokument(sykmeldingId)
         if (sykmeldingsdokument != null) {
             log.info("updating sykmelding dokument with sykmelding id {}", sykmeldingId)

@@ -9,6 +9,8 @@ import io.ktor.server.routing.post
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.UpdateIdentException
 import no.nav.syfo.sykmelding.api.model.EndreFnr
+import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
     post("/api/sykmelding/fnr") {
@@ -20,11 +22,19 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 // og vi bør undersøke ytterligere
                 call.respond(HttpStatusCode.BadRequest, "fnr må være et fnr / dnr på 11 tegn")
             }
+
             endreFnr.nyttFnr.length != 11 || endreFnr.nyttFnr.any { !it.isDigit() } -> {
                 call.respond(HttpStatusCode.BadRequest, "nyttFnr må være et fnr / dnr på 11 tegn")
             }
+
             else -> {
                 try {
+
+                    logNAVEpostAndActionToSecureLog(
+                        getAccessTokenFromAuthHeader(call.request),
+                        "enderer fnr fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
+                    )
+
                     val updateFnr = updateFnrService.updateFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)
 
                     if (updateFnr) {
@@ -48,9 +58,11 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 // og vi bør undersøke ytterligere
                 call.respond(HttpStatusCode.BadRequest, "fnr må være et fnr / dnr på 11 tegn")
             }
+
             endreFnr.nyttFnr.length != 11 || endreFnr.nyttFnr.any { !it.isDigit() } -> {
                 call.respond(HttpStatusCode.BadRequest, "nyttFnr må være et fnr / dnr på 11 tegn")
             }
+
             else -> {
                 try {
                     val updateNlKoblinger = updateFnrService.updateNlFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)

@@ -7,6 +7,8 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import java.time.LocalDate
+import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletDatoService) {
     post("/api/papirsykmelding/{sykmeldingId}/behandletdato") {
@@ -14,6 +16,12 @@ fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletD
         if (sykmeldingId.isNullOrEmpty()) {
             call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
         }
+
+        logNAVEpostAndActionToSecureLog(
+            getAccessTokenFromAuthHeader(call.request),
+            "Endre behandletdato ein papir sykmelding med id $sykmeldingId"
+        )
+
         val behandletDatoDTO = call.receive<BehandletDatoDTO>()
 
         updateBehandletDatoService.updateBehandletDato(sykmeldingId = sykmeldingId, behandletDato = behandletDatoDTO.behandletDato)
