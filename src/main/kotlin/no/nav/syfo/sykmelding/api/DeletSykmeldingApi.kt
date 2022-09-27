@@ -8,6 +8,7 @@ import io.ktor.server.routing.delete
 import no.nav.syfo.log
 import no.nav.syfo.sykmelding.DeleteSykmeldingException
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
+import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndAction
 
@@ -29,6 +30,9 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
             log.info("Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId")
             call.respond(HttpStatusCode.OK, "Vellykket sletting")
 
+        } catch (unauthorizedException: UnauthorizedException) {
+            log.warn("Fant ikkje authorization header: ", unauthorizedException)
+            call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
         } catch (deleteSykmeldingException: DeleteSykmeldingException) {
             log.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
             call.respond(HttpStatusCode.NotFound, "Fant ikkje sykmelding med sykmeldingid: $sykmeldingId")
