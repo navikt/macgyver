@@ -59,7 +59,7 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
 
         try {
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
-            call.respond(HttpStatusCode.OK, "Vellykket oppdatering.")
+            call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
             log.error("Kastet exception ved gjenåpning av sykmelding med id $sykmeldingId, ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved gjenåpning av sykmelding"))
