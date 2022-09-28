@@ -10,23 +10,36 @@ import no.nav.syfo.application.HttpMessage
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 import java.time.LocalDate
+import no.nav.syfo.log
 
 fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletDatoService) {
     post("/api/papirsykmelding/{sykmeldingId}/behandletdato") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
-        if (sykmeldingId.isNullOrEmpty()) {
+        if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
-        logNAVEpostAndActionToSecureLog(
-            getAccessTokenFromAuthHeader(call.request),
-            "Endre behandletdato ein papir sykmelding med id $sykmeldingId"
-        )
+        try {
+            logNAVEpostAndActionToSecureLog(
+                getAccessTokenFromAuthHeader(call.request),
+                "endre behandletdato ein papir sykmelding med id $sykmeldingId"
+            )
 
-        val behandletDatoDTO = call.receive<BehandletDatoDTO>()
+            val behandletDatoDTO = call.receive<BehandletDatoDTO>()
 
-        updateBehandletDatoService.updateBehandletDato(sykmeldingId = sykmeldingId, behandletDato = behandletDatoDTO.behandletDato)
-        call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering"))
+            updateBehandletDatoService.updateBehandletDato(
+                sykmeldingId = sykmeldingId,
+                behandletDato = behandletDatoDTO.behandletDato
+            )
+
+            call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering"))
+        } catch (e: Exception) {
+            log.error("Kastet exception ved endre behandletdato ein papir sykmelding med id $sykmeldingId", e)
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                HttpMessage("Noe gikk galt ved endre behandletdato på ein papir sykmelding, prøv igjen")
+            )
+        }
     }
 }
 

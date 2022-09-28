@@ -19,13 +19,13 @@ class UpdateBehandletDatoService(
         if (sykmeldingsdokument != null) {
             log.info(
                 "Endrer behandletDato fra ${objectMapper.writeValueAsString(sykmeldingsdokument.sykmelding.behandletTidspunkt)}" +
-                    " til ${objectMapper.writeValueAsString(oppdatertBehandletTidspunkt)} for id $sykmeldingId"
+                        " til ${objectMapper.writeValueAsString(oppdatertBehandletTidspunkt)} for id $sykmeldingId"
             )
             sykmeldingEndringsloggKafkaProducer.publishToKafka(sykmeldingsdokument)
 
             syfoSmRegisterDb.updateBehandletTidspunkt(sykmeldingId, oppdatertBehandletTidspunkt)
 
-            log.info("BehandletDato er oppdatert")
+            log.info("BehandletDato er oppdatert for sykmeldingId: $sykmeldingId")
         } else {
             log.info("Fant ikke sykmelding med id {}", sykmeldingId)
             throw RuntimeException("Fant ikke sykmelding med id $sykmeldingId")
