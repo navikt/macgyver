@@ -15,6 +15,19 @@ Application that fixes stuff like Macgyver for team sykmelding
 
 * JDK 17
 
+## FlowChart
+This the high level flow of the application
+
+```mermaid
+  graph LR;
+      macgyver --- macgyver-frontend;
+      macgyver --- azure-ad;
+      macgyver --- id1[(syfosmregister)];
+      macgyver --- PDL;
+      macgyver --- oppgave;
+      macgyver --- narmesteleder;
+```
+
 ## Getting started
 
 ### Getting github-package-registry packages NAV-IT

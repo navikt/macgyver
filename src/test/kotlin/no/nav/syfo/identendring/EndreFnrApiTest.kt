@@ -57,8 +57,8 @@ internal class EndreFnrApiTest {
 
             application.setupAuth(
                 jwkProvider,
-                "sillyUser",
-                ""
+                "tokenxissuer",
+                "clientId"
             )
             application.routing {
                 registerFnrApi(
@@ -103,7 +103,7 @@ internal class EndreFnrApiTest {
                 }
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
-                response.content shouldBeEqualTo "Vellykket oppdatering."
+                response.content shouldBeEqualTo "{\"message\":\"Vellykket oppdatering.\"}"
             }
         }
     }

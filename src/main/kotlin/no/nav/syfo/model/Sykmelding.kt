@@ -17,7 +17,9 @@ data class Sykmeldingsopplysninger(
     val epjSystemNavn: String,
     val epjSystemVersjon: String,
     var mottattTidspunkt: LocalDateTime,
-    val tssid: String?
+    val tssid: String?,
+    val merknader: List<Merknad>?,
+    val partnerreferanse: String?
 )
 
 data class Sykmeldingsdokument(

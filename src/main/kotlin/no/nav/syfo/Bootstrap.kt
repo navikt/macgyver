@@ -6,11 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import no.nav.syfo.application.ApplicationServer
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.createApplicationEngine
@@ -49,6 +45,7 @@ val objectMapper: ObjectMapper = ObjectMapper().apply {
     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+    configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
 }
 
 val log: Logger = LoggerFactory.getLogger("no.nav.syfo.macgyver")
@@ -58,7 +55,7 @@ fun main() {
     val environment = Environment()
     val applicationState = ApplicationState()
 
-    val jwkProviderInternal = JwkProviderBuilder(URL(environment.jwkKeysUrl))
+    val jwkProvider = JwkProviderBuilder(URL(environment.jwkKeysUrl))
         .cached(10, 24, TimeUnit.HOURS)
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
@@ -161,24 +158,10 @@ fun main() {
         deleteSykmeldingService = deleteSykmeldingService,
         gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
-        jwkProviderInternal = jwkProviderInternal,
-        issuerServiceuser = environment.jwtIssuer,
-        clientId = environment.clientIdV2
+        jwkProvider = jwkProvider,
+        issuer = environment.jwtIssuer
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 
     applicationServer.start()
-}
-
-@DelicateCoroutinesApi
-fun startBackgroundJob(applicationState: ApplicationState, block: suspend CoroutineScope.() -> Unit) {
-    GlobalScope.launch(Dispatchers.IO) {
-        try {
-            block()
-        } catch (ex: Exception) {
-            log.error("Error in background task, restarting application", ex)
-            applicationState.alive = false
-            applicationState.ready = false
-        }
-    }
 }

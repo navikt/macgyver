@@ -6,6 +6,7 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
+import no.nav.syfo.application.HttpMessage
 import no.nav.syfo.log
 import no.nav.syfo.papirsykmelding.DiagnoseService
 import no.nav.syfo.service.GjenapneSykmeldingService
@@ -16,17 +17,16 @@ fun Route.registerUpdateDiagnosisApi(diagnoseService: DiagnoseService) {
     post("/api/sykmelding/{sykmeldingId}/diagnose") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
-        val diagnoseDTO = call.receive<EndreDiagnose>()
-
         try {
+            val diagnoseDTO = call.receive<EndreDiagnose>()
             diagnoseService.endreDiagnose(sykmeldingId, diagnoseKode = diagnoseDTO.kode, system = diagnoseDTO.system)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
             log.error("Kastet exception ved endring av diagnose for sykmelding med id $sykmeldingId, ${e.message}")
-            call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved oppdatering av diagnose")
+            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved oppdatering av diagnose"))
         }
     }
 }
@@ -35,17 +35,17 @@ fun Route.registerUpdateBiDiagnosisApi(diagnoseService: DiagnoseService) {
     post("/api/sykmelding/{sykmeldingId}/bidiagnose") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
         val diagnoseDTO = call.receive<EndreBiDiagnoseRequest>()
 
         try {
             diagnoseService.endreBiDiagnose(sykmeldingId, diagnoseDTO.diagnoser)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
-            log.error("Kastet exception ved endring av diagnose for sykmelding med id $sykmeldingId, ${e.message}")
-            call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved oppdatering av diagnose")
+            log.error("Kastet exception ved endring av biDiagnose for sykmelding med id $sykmeldingId, ${e.message}")
+            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved oppdatering av diagnose"))
         }
     }
 }
@@ -54,15 +54,15 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
     post("/api/sykmelding/{sykmeldingId}/gjenapne") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty() || sykmeldingId == "null") {
-            call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
         try {
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
             log.error("Kastet exception ved gjenåpning av sykmelding med id $sykmeldingId, ${e.message}")
-            call.respond(HttpStatusCode.InternalServerError, "Noe gikk galt ved gjenåpning av sykmelding")
+            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved gjenåpning av sykmelding"))
         }
     }
 }

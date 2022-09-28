@@ -50,7 +50,9 @@ spec:
   azure:
     application:
       enabled: true
-      tenant: nav.no
+      tenant: trygdeetaten.no
+  secureLogs:
+    enabled: true
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets

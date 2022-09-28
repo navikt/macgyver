@@ -7,7 +7,7 @@ val coroutinesVersion = "1.6.4"
 val jacksonVersion = "2.13.4"
 val kluentVersion = "1.68"
 val ktorVersion = "2.1.1"
-val logbackVersion = "1.4.0"
+val logbackVersion = "1.4.1"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
 val nimbusjosejwtVersion = "9.24.3"
@@ -20,7 +20,7 @@ val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
 val mockkVersion = "1.12.7"
-val smCommonVersion = "1.f132f2b"
+val smCommonVersion = "1.ea531b3"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val kithHodemeldingVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
@@ -34,6 +34,7 @@ val kotlinVersion = "1.7.10"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.6.3"
 val junitVersion = "5.9.0"
+val nimbusdsVersion = "9.22"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -103,6 +104,8 @@ dependencies {
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
         exclude(group = "com.sun.xml.ws", module = "policy")
     }
+
+    implementation("com.nimbusds:nimbus-jose-jwt:$nimbusdsVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")

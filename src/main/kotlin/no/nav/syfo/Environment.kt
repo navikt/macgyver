@@ -28,7 +28,8 @@ data class Environment(
     val databaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
     val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
-    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE")
+    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
+
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =
     System.getenv(varName) ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")

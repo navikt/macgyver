@@ -12,27 +12,23 @@ import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.log
 
 fun Application.setupAuth(
-    jwkProviderInternal: JwkProvider,
-    issuerServiceuser: String,
-    clientId: String
+    jwkProvider: JwkProvider,
+    issuer: String,
+    clientIdV2: String
 ) {
     install(Authentication) {
-        jwt(name = "jwtserviceuser") {
-            verifier(jwkProviderInternal, issuerServiceuser)
+        jwt(name = "jwt") {
+            verifier(jwkProvider, issuer)
             validate { credentials ->
                 when {
-                    harTilgang(credentials, clientId) -> JWTPrincipal(credentials.payload)
-                    else -> unauthorized(credentials)
+                    hasMacgyverClientIdAudience(credentials, clientIdV2) -> JWTPrincipal(credentials.payload)
+                    else -> {
+                        unauthorized(credentials)
+                    }
                 }
             }
         }
     }
-}
-
-fun harTilgang(credentials: JWTCredential, clientId: String): Boolean {
-    val appid: String = credentials.payload.getClaim("azp").asString()
-    log.debug("authorization attempt for $appid")
-    return credentials.payload.audience.contains(clientId)
 }
 
 fun unauthorized(credentials: JWTCredential): Principal? {
@@ -42,4 +38,8 @@ fun unauthorized(credentials: JWTCredential): Principal? {
         StructuredArguments.keyValue("audience", credentials.payload.audience)
     )
     return null
+}
+
+fun hasMacgyverClientIdAudience(credentials: JWTCredential, clientIdV2: String): Boolean {
+    return credentials.payload.audience.contains(clientIdV2)
 }

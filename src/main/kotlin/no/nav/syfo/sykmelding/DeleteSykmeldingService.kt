@@ -44,7 +44,10 @@ class DeleteSykmeldingService(
                 throw e
             }
         } else {
-            log.info("Could not find sykmelding with id $sykmeldingID")
+            log.warn("Could not find sykmelding with id $sykmeldingID")
+            throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
     }
 }
+
+class DeleteSykmeldingException(override val message: String) : Exception(message)
