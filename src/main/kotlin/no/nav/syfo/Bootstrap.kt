@@ -158,7 +158,6 @@ fun main() {
 
     val pale2StorageCredentials: Credentials =
         GoogleCredentials.fromStream(FileInputStream("/var/run/secrets/pale2-google-creds.json"))
-
     val bucketStorage: Storage = StorageOptions.newBuilder().setCredentials(pale2StorageCredentials).build().service
     val bucketService = BucketService(environment.legeerklaeringBucketName, bucketStorage)
 

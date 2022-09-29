@@ -56,7 +56,9 @@ spec:
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets
-    - secret: pale2-google-creds
+  filesFrom:
+    - mountPath: /var/run/secrets
+      secret: pale2-google-creds
   ingresses:
     - "https://macgyver.dev.intern.nav.no"
   env:
