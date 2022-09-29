@@ -7,10 +7,10 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import no.nav.syfo.application.HttpMessage
+import no.nav.syfo.log
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 import java.time.LocalDate
-import no.nav.syfo.log
 
 fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletDatoService) {
     post("/api/papirsykmelding/{sykmeldingId}/behandletdato") {

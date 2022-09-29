@@ -202,6 +202,23 @@ paths:
         '403':
           description: Forbidden
 
+  /api/legeerklaering/{legeerklaeringId}:
+    delete:
+      summary: Sletter en legeerklaering
+      operationId: deleteLegeerklaering
+      tags:
+        - Legeerklaering
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - $ref: '#/components/parameters/legeerklaeringId'
+      responses:
+        '200':
+          description: Ok
+        '401':
+          description: Unauthorized
+        '500':
+          description: InternalServerError
 
 components:
   requestBodies:
@@ -265,6 +282,14 @@ components:
       schema:
         type: string
       example: '123'
+    legeerklaeringId:
+      description: Id for legeerklaering som skal rettes
+      name: legeerklaeringId
+      in: path
+      required: true
+      schema:
+        type: string
+      example: '83919f4d-f892-4db2-9255-f3c917bd012o'
   schemas:
     NlRequest:
       type: object
