@@ -6,15 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.google.auth.Credentials
-import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageOptions
 import kotlinx.coroutines.DelicateCoroutinesApi
 import no.nav.syfo.application.ApplicationServer
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.createApplicationEngine
-import no.nav.syfo.bucket.BucketService
 import no.nav.syfo.clients.HttpClients
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
@@ -42,7 +37,6 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.FileInputStream
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
@@ -156,15 +150,9 @@ fun main() {
         environment.narmestelederRequestTopic
     )
 
-    val pale2StorageCredentials: Credentials =
-        GoogleCredentials.fromStream(FileInputStream("/var/run/secrets/pale2-google-creds.json"))
-    val bucketStorage: Storage = StorageOptions.newBuilder().setCredentials(pale2StorageCredentials).build().service
-    val bucketService = BucketService(environment.legeerklaeringBucketName, bucketStorage)
-
     val deleteLegeerklaeringService = DeleteLegeerklaeringService(
         tombstoneProducer,
         listOf(environment.legeerklaringTopic),
-        bucketService
     )
 
     val applicationEngine = createApplicationEngine(

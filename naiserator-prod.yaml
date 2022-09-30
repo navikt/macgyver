@@ -59,8 +59,6 @@ spec:
   filesFrom:
     - mountPath: /var/run/secrets
       secret: pale2-google-creds
-  ingresses:
-    - "https://macgyver.intern.nav.no"
   env:
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.prod-fss-pub.nais.io/graphql

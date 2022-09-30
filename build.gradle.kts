@@ -35,7 +35,6 @@ val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.7.0"
 val junitVersion = "5.9.0"
 val nimbusdsVersion = "9.25.1"
-val googleCloudStorageVersion = "2.12.0"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -76,10 +75,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
-
-    implementation("com.google.cloud:google-cloud-storage:$googleCloudStorageVersion"){
-        exclude(group = "commons-codec", module = "commons-codec")
-    }
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
