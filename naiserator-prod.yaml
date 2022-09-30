@@ -56,9 +56,6 @@ spec:
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets
-  filesFrom:
-    - mountPath: /var/run/secrets
-      secret: pale2-google-creds
   env:
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.prod-fss-pub.nais.io/graphql
