@@ -78,5 +78,3 @@ spec:
       value: teamsykmelding-prod-2acd:europe-north1:smregister-instance
     - name: SYFOSMREGISTER_DB_NAME
       value: smregister
-    - name: PALE_BUCKET_NAME
-      value: teamsykmelding-pale2-legeerklaring-bucket-prod

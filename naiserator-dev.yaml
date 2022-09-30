@@ -77,5 +77,3 @@ spec:
       value: teamsykmelding-dev-1d34:europe-north1:smregister-instance
     - name: SYFOSMREGISTER_DB_NAME
       value: smregister
-    - name: PALE_BUCKET_NAME
-      value: teamsykmelding-pale2-legeerklaring-bucket-dev

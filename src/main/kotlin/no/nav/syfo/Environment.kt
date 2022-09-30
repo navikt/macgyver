@@ -29,8 +29,7 @@ data class Environment(
     val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
     val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
-    val legeerklaringTopic: String = "teamsykmelding.legeerklaering",
-    val legeerklaeringBucketName: String = getEnvVar("PALE_BUCKET_NAME")
+    val legeerklaringTopic: String = "teamsykmelding.legeerklaering"
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =
