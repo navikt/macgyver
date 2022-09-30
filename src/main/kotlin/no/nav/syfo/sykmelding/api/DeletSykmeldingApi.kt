@@ -18,7 +18,7 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
         val sykmeldingId = call.parameters["sykmeldingId"]!!
 
         if (sykmeldingId.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, "Sykmeldingid må være satt")
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
         }
 
         try {
@@ -32,7 +32,7 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
         } catch (unauthorizedException: UnauthorizedException) {
             log.warn("Fant ikkje authorization header: ", unauthorizedException)
-            call.respond(HttpStatusCode.Unauthorized, "Unauthorized")
+            call.respond(HttpStatusCode.Unauthorized, HttpMessage("Unauthorized"))
         } catch (deleteSykmeldingException: DeleteSykmeldingException) {
             log.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
             call.respond(HttpStatusCode.NotFound, HttpMessage("Fant ikkje sykmelding med sykmeldingid: $sykmeldingId"))

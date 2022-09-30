@@ -16,6 +16,7 @@ import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
+import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.model.Sykmeldingsdokument
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmestelederService
@@ -142,11 +143,18 @@ fun main() {
         statusKafkaProducer,
         syfosmregisterDatabase
     )
+
     val narmestelederService = NarmestelederService(
         pdlService = httpClients.pdlService,
         kafkaAivenNarmestelederRequestProducer,
         environment.narmestelederRequestTopic
     )
+
+    val deleteLegeerklaeringService = DeleteLegeerklaeringService(
+        tombstoneProducer,
+        listOf(environment.legeerklaringTopic),
+    )
+
     val applicationEngine = createApplicationEngine(
         env = environment,
         applicationState = applicationState,
@@ -159,7 +167,8 @@ fun main() {
         gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
         jwkProvider = jwkProvider,
-        issuer = environment.jwtIssuer
+        issuer = environment.jwtIssuer,
+        deleteLegeerklaeringService = deleteLegeerklaeringService
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 

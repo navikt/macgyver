@@ -19,7 +19,7 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.12.7"
+val mockkVersion = "1.12.8"
 val smCommonVersion = "1.ea531b3"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
@@ -32,9 +32,9 @@ val confluentVersion = "6.2.2"
 val swaggerUiVersion = "4.14.0"
 val kotlinVersion = "1.7.10"
 val kotestVersion = "5.4.1"
-val googlePostgresVersion = "1.6.3"
+val googlePostgresVersion = "1.7.0"
 val junitVersion = "5.9.0"
-val nimbusdsVersion = "9.22"
+val nimbusdsVersion = "9.25.1"
 
 plugins {
     kotlin("jvm") version "1.7.10"
@@ -75,8 +75,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
-
-    implementation("no.nav.helse:syfosm-common-rest-sts:$smCommonVersion")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")

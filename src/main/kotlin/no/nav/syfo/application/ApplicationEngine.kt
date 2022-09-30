@@ -18,6 +18,8 @@ import no.nav.syfo.application.api.registerNaisApi
 import no.nav.syfo.application.api.setupSwaggerDocApi
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.api.registerFnrApi
+import no.nav.syfo.legeerklaering.api.registerDeleteLegeerklaeringApi
+import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.api.registrerNarmestelederRequestApi
 import no.nav.syfo.oppgave.api.registerHentOppgaverApi
@@ -47,6 +49,7 @@ fun createApplicationEngine(
     narmestelederService: NarmestelederService,
     jwkProvider: JwkProvider,
     issuer: String,
+    deleteLegeerklaeringService: DeleteLegeerklaeringService
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -77,6 +80,7 @@ fun createApplicationEngine(
                 registerUpdateBiDiagnosisApi(diagnoseService)
                 registerHentOppgaverApi(oppgaveClient)
                 registrerNarmestelederRequestApi(narmestelederService)
+                registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
             }
         }
     }
