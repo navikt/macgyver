@@ -36,6 +36,18 @@ spec:
   kafka:
     pool: nav-dev
   gcp:
+    sqlInstances:
+      - name: macgyver-instance
+        type: POSTGRES_14
+        diskSize: 10
+        databases:
+          - name: macgyver
+            envVarPrefix: NAIS_DATABASE
+        diskAutoresize: true
+        highAvailability: false
+        diskType: SSD
+        insights:
+          enabled: true
     permissions:
       - resource:
           apiVersion: resourcemanager.cnrm.cloud.google.com/v1beta1
