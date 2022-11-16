@@ -63,15 +63,21 @@ fun main() {
         .build()
 
     val syfosmregisterDatabase = Database(
-        environment,
-        environment.syfosmregisterDatabaseCloudSqlInstance,
-        environment.syfosmregisterDatabaseName
+        cloudSqlInstance = environment.syfosmregisterDatabaseCloudSqlInstance,
+        dbHost = environment.syfosmregisterDatabaseHost,
+        dbPort = environment.syfosmregisterDatabasePort,
+        dbName = environment.syfosmregisterDatabaseName,
+        dbUsername = environment.syfosmregisterDatabaseUsername,
+        dbPassword = environment.syfosmregisterDatabasePassword
     )
 
     val smregistreringDatabase = Database(
-        environment,
-        environment.smregisteringDatabaseCloudSqlInstance,
-        environment.smregistreringDatabaseName
+        cloudSqlInstance = environment.smregisteringDatabaseCloudSqlInstance,
+        dbHost = environment.smregistreringDatabaseHost,
+        dbPort = environment.smregistreringDatabasePort,
+        dbName = environment.smregistreringDatabaseName,
+        dbUsername = environment.smregistreringDatabaseUsername,
+        dbPassword = environment.smregistreringDatabasePassword
     )
 
     val httpClients = HttpClients(environment)

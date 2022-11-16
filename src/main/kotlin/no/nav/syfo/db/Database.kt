@@ -2,15 +2,17 @@ package no.nav.syfo.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import no.nav.syfo.Environment
 import java.sql.Connection
 import java.sql.ResultSet
 import java.util.Properties
 
 class Database(
-    env: Environment,
     cloudSqlInstance: String,
+    dbHost: String,
+    dbPort: String,
     dbName: String,
+    dbUsername: String,
+    dbPassword: String
 ) : DatabaseInterface {
     private val dataSource: HikariDataSource
     override val connection: Connection
@@ -23,9 +25,9 @@ class Database(
         dataSource = HikariDataSource(
             HikariConfig().apply {
                 dataSourceProperties = properties
-                jdbcUrl = "jdbc:postgresql://${env.databaseHost}:${env.databasePort}/$dbName"
-                username = env.databaseUsername
-                password = env.databasePassword
+                jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
+                username = dbUsername
+                password = dbPassword
                 maximumPoolSize = 10
                 minimumIdle = 3
                 idleTimeout = 10000
