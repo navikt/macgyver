@@ -30,6 +30,8 @@ import no.nav.syfo.papirsykmelding.api.UpdatePeriodeService
 import no.nav.syfo.papirsykmelding.api.registrerBehandletDatoApi
 import no.nav.syfo.papirsykmelding.api.registrerPeriodeApi
 import no.nav.syfo.service.GjenapneSykmeldingService
+import no.nav.syfo.smregistrering.SmregistreringService
+import no.nav.syfo.smregistrering.api.registerFerdigstillRegistreringsoppgaveApi
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.api.registerDeleteSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerGjenapneSykmeldingApi
@@ -49,7 +51,8 @@ fun createApplicationEngine(
     narmestelederService: NarmestelederService,
     jwkProvider: JwkProvider,
     issuer: String,
-    deleteLegeerklaeringService: DeleteLegeerklaeringService
+    deleteLegeerklaeringService: DeleteLegeerklaeringService,
+    smregistreringService: SmregistreringService
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -81,6 +84,7 @@ fun createApplicationEngine(
                 registerHentOppgaverApi(oppgaveClient)
                 registrerNarmestelederRequestApi(narmestelederService)
                 registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
+                registerFerdigstillRegistreringsoppgaveApi(smregistreringService)
             }
         }
     }

@@ -26,6 +26,7 @@ import no.nav.syfo.papirsykmelding.DiagnoseService
 import no.nav.syfo.papirsykmelding.api.UpdateBehandletDatoService
 import no.nav.syfo.papirsykmelding.api.UpdatePeriodeService
 import no.nav.syfo.service.GjenapneSykmeldingService
+import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
@@ -63,8 +64,14 @@ fun main() {
 
     val syfosmregisterDatabase = Database(
         environment,
-        environment.syfosmregisteringDatabaseCloudSqlInstance,
+        environment.syfosmregisterDatabaseCloudSqlInstance,
         environment.syfosmregisterDatabaseName
+    )
+
+    val smregistreringDatabase = Database(
+        environment,
+        environment.smregisteringDatabaseCloudSqlInstance,
+        environment.smregistreringDatabaseName
     )
 
     val httpClients = HttpClients(environment)
@@ -155,6 +162,8 @@ fun main() {
         listOf(environment.legeerklaringTopic),
     )
 
+    val smregistreringService = SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)
+
     val applicationEngine = createApplicationEngine(
         env = environment,
         applicationState = applicationState,
@@ -168,7 +177,8 @@ fun main() {
         narmestelederService = narmestelederService,
         jwkProvider = jwkProvider,
         issuer = environment.jwtIssuer,
-        deleteLegeerklaeringService = deleteLegeerklaeringService
+        deleteLegeerklaeringService = deleteLegeerklaeringService,
+        smregistreringService = smregistreringService
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 

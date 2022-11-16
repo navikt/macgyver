@@ -4,10 +4,10 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.6.4"
-val jacksonVersion = "2.13.4"
-val kluentVersion = "1.68"
-val ktorVersion = "2.1.1"
-val logbackVersion = "1.4.1"
+val jacksonVersion = "2.14.0"
+val kluentVersion = "1.72"
+val ktorVersion = "2.1.3"
+val logbackVersion = "1.4.4"
 val logstashEncoderVersion = "7.2"
 val prometheusVersion = "0.16.0"
 val nimbusjosejwtVersion = "9.24.3"
@@ -19,25 +19,23 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.2.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.12.8"
+val mockkVersion = "1.13.2"
 val smCommonVersion = "1.ea531b3"
 val sykmeldingVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val kithHodemeldingVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
 val javaTimeAdapterVersion = "1.1.3"
 val postgresVersion = "42.5.0"
-val kontrollsystemblokk = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
-val infotrygdForespVersion = "2019.07.29-02-53-86b22e73f7843e422ee500b486dac387a582f2d1"
 val confluentVersion = "6.2.2"
-val swaggerUiVersion = "4.14.0"
-val kotlinVersion = "1.7.10"
+val swaggerUiVersion = "4.15.0"
+val kotlinVersion = "1.7.21"
 val kotestVersion = "5.4.1"
-val googlePostgresVersion = "1.7.0"
+val googlePostgresVersion = "1.7.2"
 val junitVersion = "5.9.0"
-val nimbusdsVersion = "9.25.1"
+val nimbusdsVersion = "9.25.6"
 
 plugins {
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.21"
     id("org.jmailen.kotlinter") version "3.10.0"
     id("com.diffplug.spotless") version "6.5.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -74,7 +72,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache:$ktorVersion")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
@@ -89,8 +87,6 @@ dependencies {
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
     implementation("no.nav.helse.xml:kith-hodemelding:$kithHodemeldingVersion")
     implementation("no.nav.helse:syfosm-common-kafka:$smCommonVersion")
-    implementation("no.nav.helse.xml:infotrygd-foresp:$infotrygdForespVersion")
-    implementation("no.nav.helse.xml:kontrollsystemblokk:$kontrollsystemblokk")
     implementation("no.nav.helse:syfosm-common-diagnosis-codes:$smCommonVersion")
     implementation("com.migesok:jaxb-java-time-adapters:$javaTimeAdapterVersion")
 

@@ -75,3 +75,7 @@ spec:
       value: teamsykmelding-prod-2acd:europe-north1:smregister-instance
     - name: SYFOSMREGISTER_DB_NAME
       value: smregister
+    - name: SMREGISTRERING_CLOUD_SQL_INSTANCE
+      value: teamsykmelding-prod-2acd:europe-north1:smregistrering-instance
+    - name: SMREGISTRERING_DB_NAME
+      value: smregistrering
