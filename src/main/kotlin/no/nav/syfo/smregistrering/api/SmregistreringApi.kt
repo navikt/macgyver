@@ -9,7 +9,6 @@ import no.nav.syfo.application.HttpMessage
 import no.nav.syfo.log
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.getNavIdentFromToken
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: SmregistreringService) {
@@ -18,12 +17,14 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
         if (journalpostId.isEmpty() || journalpostId == "null") {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("JournalpostId må være satt"))
         }
-        val accessToken = getAccessTokenFromAuthHeader(call.request)
-        val ferdigstiltAv = getNavIdentFromToken(accessToken)
+        val ferdigstiltAv = call.parameters["ferdigstiltAv"]!!
+        if (ferdigstiltAv.isEmpty() || ferdigstiltAv == "null") {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("FerdigstiltAv må være satt"))
+        }
 
         try {
             logNAVEpostAndActionToSecureLog(
-                accessToken,
+                getAccessTokenFromAuthHeader(call.request),
                 "Ferdigstille smregistreringsoppgave for journalpostId $journalpostId"
             )
             smregistreringService.ferdigstillOppgave(journalpostId = journalpostId, ferdigstiltAv = ferdigstiltAv)
