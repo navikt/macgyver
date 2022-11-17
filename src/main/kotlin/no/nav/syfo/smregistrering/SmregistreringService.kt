@@ -19,6 +19,7 @@ class SmregistreringService(
             return
         }
 
+        log.info("Henter oppgave med id $oppgaveId for journalpostid $journalpostId")
         val oppgave = oppgaveClient.hentOppgave(oppgaveId, journalpostId)
         oppgaveClient.ferdigstillOppgave(
             ferdigstilloppgave = FerdigstillOppgave(
@@ -45,7 +46,7 @@ class SmregistreringService(
         ferdigstiltAv: String,
         tidspunkt: LocalDateTime = LocalDateTime.now()
     ): String {
-        val endringsbeskrivelse = "--- ${formaterDato(tidspunkt)} $ferdigstiltAv, 2822 ---\\nSykmelding er slettet og oppgaven lukket.\\n\\n"
+        val endringsbeskrivelse = "--- ${formaterDato(tidspunkt)} $ferdigstiltAv, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n"
         return if (opprinneligBeskrivelse.isNullOrEmpty()) {
             endringsbeskrivelse
         } else {

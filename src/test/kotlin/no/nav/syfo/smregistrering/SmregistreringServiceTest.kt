@@ -78,18 +78,18 @@ class SmregistreringServiceTest {
             tidspunkt = tidspunkt
         )
 
-        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\\nSykmelding er slettet og oppgaven lukket.\\n\\n"
+        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n"
     }
 
     @Test
     fun riktigBeskrivelseForOppgaveMedEksisterendeBeskrivelse() {
         val tidspunkt = LocalDateTime.of(2022, 11, 25, 15, 30, 0)
         val beskrivelse = smregistreringService.getBeskrivelse(
-            opprinneligBeskrivelse = "--- 20.11.2022 15:00 srvsmreg, 9999 ---\\nOpprettet registreringsoppgave.",
+            opprinneligBeskrivelse = "--- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave.",
             ferdigstiltAv = "Z989898",
             tidspunkt = tidspunkt
         )
 
-        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\\nSykmelding er slettet og oppgaven lukket.\\n\\n --- 20.11.2022 15:00 srvsmreg, 9999 ---\\nOpprettet registreringsoppgave."
+        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n --- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave."
     }
 }
