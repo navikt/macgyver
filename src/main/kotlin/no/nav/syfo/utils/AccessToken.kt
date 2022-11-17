@@ -18,6 +18,11 @@ fun getAccessTokenFromAuthHeader(request: ApplicationRequest): String {
     return (authHeader as HttpAuthHeader.Single).blob
 }
 
+fun getNavIdentFromToken(accessToken: String): String {
+    val decodedJWT = JWT.decode(accessToken)
+    return requireNotNull(decodedJWT.claims["NAVident"]?.asString()) { "NAVident mangler i token" }
+}
+
 fun logNAVEpostAndActionToSecureLog(accessToken: String, action: String) {
     val decodedJWT = JWT.decode(accessToken)
     val navEpost = decodedJWT.claims["preferred_username"]?.asString()
