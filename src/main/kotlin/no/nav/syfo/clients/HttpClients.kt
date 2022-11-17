@@ -7,8 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.CIOEngineConfig
+import io.ktor.client.engine.apache.Apache
+import io.ktor.client.engine.apache.ApacheEngineConfig
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -22,7 +22,7 @@ import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.service.PdlPersonService
 
 class HttpClients(environment: Environment) {
-    private val config: HttpClientConfig<CIOEngineConfig>.() -> Unit = {
+    private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
         install(HttpTimeout) {
             connectTimeoutMillis = 10000
             requestTimeoutMillis = 10000
@@ -47,7 +47,7 @@ class HttpClients(environment: Environment) {
         }
     }
 
-    private val httpClient = HttpClient(CIO, config)
+    private val httpClient = HttpClient(Apache, config)
 
     private val accessTokenClientV2 = AccessTokenClientV2(
         environment.aadAccessTokenV2Url,

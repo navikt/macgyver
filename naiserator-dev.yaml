@@ -56,6 +56,9 @@ spec:
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets
+    - secret: google-sql-smregistrering-backend-smregistrering-macgy-e6d883fe
+  ingresses:
+    - "https://macgyver.dev.intern.nav.no"
   env:
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.dev-fss-pub.nais.io/graphql
@@ -64,9 +67,9 @@ spec:
     - name: KAFKA_CLIENT_ID
       value: macgyver
     - name: OPPGAVEBEHANDLING_URL
-      value: https://oppgave.dev-fss-pub.nais.io/api/v1/oppgaver
+      value: https://oppgave-q1.dev-fss-pub.nais.io/api/v1/oppgaver
     - name: OPPGAVE_SCOPE
-      value: api://dev-fss.oppgavehandtering.oppgave/.default
+      value: api://dev-fss.oppgavehandtering.oppgave-q1/.default
     - name: NARMESTELEDER_URL
       value: https://narmesteleder.dev.intern.nav.no
     - name: NARMESTELEDER_SCOPE
@@ -75,3 +78,7 @@ spec:
       value: teamsykmelding-dev-1d34:europe-north1:smregister-instance
     - name: SYFOSMREGISTER_DB_NAME
       value: smregister
+    - name: SMREGISTRERING_CLOUD_SQL_INSTANCE
+      value: teamsykmelding-dev-1d34:europe-north1:smregistrering-instance
+    - name: SMREGISTRERING_DB_NAME
+      value: smregistrering

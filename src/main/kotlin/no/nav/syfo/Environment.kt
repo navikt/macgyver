@@ -23,13 +23,19 @@ data class Environment(
     val pdlScope: String = getEnvVar("PDL_SCOPE"),
     val narmestelederUrl: String = getEnvVar("NARMESTELEDER_URL"),
     val narmestelederScope: String = getEnvVar("NARMESTELEDER_SCOPE"),
-    val databaseUsername: String = getEnvVar("DB_MACGYVER_USERNAME"),
-    val databasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),
-    val databaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
-    val databasePort: String = getEnvVar("DB_MACGYVER_PORT"),
+    val syfosmregisterDatabaseUsername: String = getEnvVar("DB_MACGYVER_USERNAME"),
+    val syfosmregisterDatabasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),
+    val syfosmregisterDatabaseHost: String = getEnvVar("DB_MACGYVER_HOST"),
+    val syfosmregisterDatabasePort: String = getEnvVar("DB_MACGYVER_PORT"),
     val syfosmregisterDatabaseName: String = getEnvVar("SYFOSMREGISTER_DB_NAME"),
-    val syfosmregisteringDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
-    val legeerklaringTopic: String = "teamsykmelding.legeerklaering"
+    val syfosmregisterDatabaseCloudSqlInstance: String = getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
+    val legeerklaringTopic: String = "teamsykmelding.legeerklaering",
+    val smregistreringDatabaseUsername: String = getEnvVar("NAIS_DATABASE_MACGYVER_USERNAME"),
+    val smregistreringDatabasePassword: String = getEnvVar("NAIS_DATABASE_MACGYVER_PASSWORD"),
+    val smregistreringDatabaseHost: String = getEnvVar("NAIS_DATABASE_MACGYVER_HOST"),
+    val smregistreringDatabasePort: String = getEnvVar("NAIS_DATABASE_MACGYVER_PORT"),
+    val smregistreringDatabaseName: String = getEnvVar("SMREGISTRERING_DB_NAME"),
+    val smregisteringDatabaseCloudSqlInstance: String = getEnvVar("SMREGISTRERING_CLOUD_SQL_INSTANCE")
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =
