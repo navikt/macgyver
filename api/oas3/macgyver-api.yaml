@@ -230,7 +230,8 @@ paths:
       description: Ferdigstille registreringsoppgave i Smregistrering og Oppgave (Gosys)
       parameters:
         - $ref: '#/components/parameters/journalpostId'
-        - $ref: '#/components/parameters/ferdigstiltAv'
+      requestBody:
+        $ref: '#/components/requestBodies/FerdigstillSmregOppgaveRequest'
       responses:
         '200':
           description: Ok
@@ -283,6 +284,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/HentOppgaver'
+    FerdigstillSmregOppgaveRequest:
+      description: "Ident som skal brukes ved ferdigstilling av smreg-oppgave"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FerdigstillSmregOppgave'
 
   parameters:
     sykmeldingId:
@@ -309,15 +316,18 @@ components:
       schema:
         type: string
       example: '83919f4d-f892-4db2-9255-f3c917bd012o'
-    ferdigstiltAv:
-      description: Ident som skal brukes ved ferdigstilling av smreg-oppgave
-      name: ferdigstiltAv
-      in: query
-      required: true
-      schema:
-        type: string
-      example: 'A123456'
+
   schemas:
+    FerdigstillSmregOppgave:
+      type: object
+      required:
+        - ferdigstiltAv
+      properties:
+        ferdigstiltAv:
+          type: string
+          minLength: 7
+          maxLength: 7
+          example: 'A123456'
     NlRequest:
       type: object
       required:
