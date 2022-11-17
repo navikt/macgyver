@@ -19,7 +19,6 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
             call.respond(HttpStatusCode.BadRequest, HttpMessage("JournalpostId må være satt"))
         }
         val accessToken = getAccessTokenFromAuthHeader(call.request)
-        log.info("Token: $accessToken")
         val ferdigstiltAv = getNavIdentFromToken(accessToken)
 
         try {
