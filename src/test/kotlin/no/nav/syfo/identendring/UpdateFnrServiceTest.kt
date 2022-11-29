@@ -412,7 +412,8 @@ fun getSendtSykmelding(periodeListe: List<Periode>? = null): SykmeldingDbModelUt
             OffsetDateTime.now(ZoneOffset.UTC).minusDays(7),
             ArbeidsgiverDbModel("9898", null, "Bedriften AS")
         ),
-        merknader = null
+        merknader = null,
+        utenlandskSykmelding = null
     )
 }
 

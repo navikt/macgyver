@@ -35,7 +35,8 @@ fun Connection.getEnkelSykmelding(sykmeldingId: String): EnkelSykmeldingDbModel?
                     sykmelding,
                     status.event,
                     status.timestamp,
-                    merknader
+                    merknader,
+                    utenlandsk_sykmelding
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
                         INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
@@ -68,7 +69,8 @@ fun Connection.getSendtSykmeldingMedSisteStatus(sykmeldingId: String): List<Enke
                     arbeidsgiver.orgnummer,
                     arbeidsgiver.juridisk_orgnummer,
                     arbeidsgiver.navn,
-                    merknader
+                    merknader,
+                    utenlandsk_sykmelding
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
                         INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
@@ -94,7 +96,8 @@ fun Connection.getSykmeldingMedSisteStatusBekreftet(sykmeldingId: String): Enkel
                     sykmelding,
                     status.event,
                     status.timestamp,
-                    merknader
+                    merknader,
+                    utenlandsk_sykmelding
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
                         INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
 import no.nav.syfo.log
+import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.objectMapper
 import java.sql.Connection
 import java.sql.ResultSet
@@ -45,7 +46,8 @@ private fun Connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fn
                     arbeidsgiver.orgnummer,
                     arbeidsgiver.juridisk_orgnummer,
                     arbeidsgiver.navn,
-                    merknader
+                    merknader,
+                    utenlandsk_sykmelding
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
                         LEFT OUTER JOIN arbeidsgiver as arbeidsgiver on arbeidsgiver.sykmelding_id = opplysninger.id
@@ -71,7 +73,8 @@ fun ResultSet.toSykmeldingDbModelUtenBehandlingsutfall(): SykmeldingDbModelUtenB
         mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toInstant().atOffset(ZoneOffset.UTC),
         legekontorOrgNr = getString("legekontor_org_nr"),
         status = getStatus(mottattTidspunkt),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) }
+        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
     )
 }
 
