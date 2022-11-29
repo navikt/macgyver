@@ -2,6 +2,7 @@ package no.nav.syfo.sykmelding.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.syfo.identendring.db.Merknad
+import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.model.ValidationResult
 import no.nav.syfo.objectMapper
 import java.sql.ResultSet
@@ -19,7 +20,8 @@ fun ResultSet.toSendtSykmeldingDbModel(): EnkelSykmeldingDbModel {
         behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
         status = getStatus(),
         fnr = getString("pasient_fnr"),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) }
+        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
     )
 }
 
@@ -32,20 +34,8 @@ fun ResultSet.toEnkelSykmeldingDbModel(): EnkelSykmeldingDbModel {
         behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
         status = getSimpleStatus(),
         fnr = getString("pasient_fnr"),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) }
-    )
-}
-
-fun ResultSet.toEnkelSykmeldingDbModelUtenStatus(): EnkelSykmeldingDbModel {
-    return EnkelSykmeldingDbModel(
-        sykmeldingsDokument = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java),
-        id = getString("id"),
-        mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
-        legekontorOrgNr = getString("legekontor_org_nr"),
-        behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
-        status = StatusDbModel(StatusEvent.APEN.name, OffsetDateTime.now(ZoneOffset.UTC).toLocalDateTime(), null),
-        fnr = getString("pasient_fnr"),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) }
+        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
     )
 }
 
@@ -96,7 +86,8 @@ data class EnkelSykmeldingDbModel(
     val sykmeldingsDokument: Sykmelding,
     val status: StatusDbModel,
     val fnr: String,
-    val merknader: List<Merknad>?
+    val merknader: List<Merknad>?,
+    val utenlandskSykmelding: UtenlandskSykmelding?
 )
 
 data class MottattSykmeldingDbModel(

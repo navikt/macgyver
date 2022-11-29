@@ -1,5 +1,6 @@
 package no.nav.syfo.identendring.db
 
+import no.nav.syfo.model.UtenlandskSykmelding
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -23,7 +24,8 @@ data class SykmeldingDbModelUtenBehandlingsutfall(
     val legekontorOrgNr: String?,
     val sykmeldingsDokument: Sykmelding,
     val status: StatusDbModel,
-    val merknader: List<Merknad>?
+    val merknader: List<Merknad>?,
+    val utenlandskSykmelding: UtenlandskSykmelding?
 )
 
 data class Sykmelding(
