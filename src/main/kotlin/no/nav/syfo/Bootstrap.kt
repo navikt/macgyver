@@ -17,7 +17,7 @@ import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
-import no.nav.syfo.model.Sykmeldingsdokument
+import no.nav.syfo.model.ReceivedSykmelding
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
@@ -31,6 +31,7 @@ import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
+import no.nav.syfo.sykmelding.kafka.OkSykmeldingKafkaProducer
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -98,7 +99,10 @@ fun main() {
     )
     val aivenProducerProperties = KafkaUtils.getAivenKafkaConfig()
         .toProducerConfig(environment.applicationName, JacksonKafkaSerializer::class, StringSerializer::class)
-    val kafkaproducerEndringsloggSykmelding = KafkaProducer<String, Sykmeldingsdokument>(aivenProducerProperties)
+    val kafkaproducerEndringsloggSykmelding = KafkaProducer<String, String>(
+        KafkaUtils.getAivenKafkaConfig()
+            .toProducerConfig(environment.applicationName, StringSerializer::class, StringSerializer::class)
+    )
     val sykmeldingEndringsloggKafkaProducer = SykmeldingEndringsloggKafkaProducer(
         environment.aivenEndringsloggTopic,
         kafkaproducerEndringsloggSykmelding
@@ -106,13 +110,14 @@ fun main() {
 
     val statusKafkaProducer =
         SykmeldingStatusKafkaProducer(KafkaProducer(aivenProducerProperties), environment.aivenSykmeldingStatusTopic)
+    val okSykmeldingKafkaProducer = OkSykmeldingKafkaProducer(
+        kafkaproducerReceivedSykmelding = KafkaProducer<String, ReceivedSykmelding>(aivenProducerProperties),
+        okTopic = environment.okSykmeldingTopic
+    )
     val updatePeriodeService = UpdatePeriodeService(
         databasePostgres = syfosmregisterDatabase,
         sykmeldingEndringsloggKafkaProducer = sykmeldingEndringsloggKafkaProducer,
-        sykmeldingProducer = SykmeldingV2KafkaProducer(kafkaAivenProducer),
-        mottattSykmeldingTopic = environment.mottattSykmeldingV2Topic,
-        sendtSykmeldingTopic = environment.sendSykmeldingV2Topic,
-        bekreftetSykmeldingTopic = environment.bekreftSykmeldingV2KafkaTopic
+        okSykmeldingKafkaProducer = okSykmeldingKafkaProducer
     )
     val updateBehandletDatoService = UpdateBehandletDatoService(
         syfoSmRegisterDb = syfosmregisterDatabase,

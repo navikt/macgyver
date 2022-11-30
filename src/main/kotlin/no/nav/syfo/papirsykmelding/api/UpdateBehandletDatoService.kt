@@ -21,7 +21,7 @@ class UpdateBehandletDatoService(
                 "Endrer behandletDato fra ${objectMapper.writeValueAsString(sykmeldingsdokument.sykmelding.behandletTidspunkt)}" +
                     " til ${objectMapper.writeValueAsString(oppdatertBehandletTidspunkt)} for id $sykmeldingId"
             )
-            sykmeldingEndringsloggKafkaProducer.publishToKafka(sykmeldingsdokument)
+            sykmeldingEndringsloggKafkaProducer.publishToKafka(objectMapper.writeValueAsString(sykmeldingsdokument))
 
             syfoSmRegisterDb.updateBehandletTidspunkt(sykmeldingId, oppdatertBehandletTidspunkt)
 

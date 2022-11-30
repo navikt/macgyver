@@ -90,16 +90,6 @@ data class EnkelSykmeldingDbModel(
     val utenlandskSykmelding: UtenlandskSykmelding?
 )
 
-data class MottattSykmeldingDbModel(
-    val id: String,
-    val mottattTidspunkt: LocalDateTime,
-    val legekontorOrgNr: String?,
-    val behandlingsutfall: ValidationResult,
-    val sykmeldingsDokument: Sykmelding,
-    val fnr: String,
-    val merknader: List<Merknad>?
-)
-
 data class Sykmelding(
     val id: String,
     val msgId: String,

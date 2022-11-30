@@ -1,7 +1,5 @@
 package no.nav.syfo.model
 
-import no.nav.syfo.objectMapper
-import org.postgresql.util.PGobject
 import java.time.LocalDateTime
 
 data class Sykmeldingsopplysninger(
@@ -19,15 +17,11 @@ data class Sykmeldingsopplysninger(
     var mottattTidspunkt: LocalDateTime,
     val tssid: String?,
     val merknader: List<Merknad>?,
-    val partnerreferanse: String?
+    val partnerreferanse: String?,
+    val utenlandskSykmelding: UtenlandskSykmelding?
 )
 
 data class Sykmeldingsdokument(
     var id: String,
     var sykmelding: Sykmelding
 )
-
-fun Sykmelding.toPGObject() = PGobject().also {
-    it.type = "json"
-    it.value = objectMapper.writeValueAsString(this)
-}

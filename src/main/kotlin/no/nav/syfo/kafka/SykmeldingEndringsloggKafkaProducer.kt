@@ -1,16 +1,15 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.log
-import no.nav.syfo.model.Sykmeldingsdokument
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
 class SykmeldingEndringsloggKafkaProducer(
     private val endringsloggTopic: String,
-    private val kafkaproducerEndringsloggSykmelding: KafkaProducer<String, Sykmeldingsdokument>
+    private val kafkaproducerEndringsloggSykmelding: KafkaProducer<String, String>
 ) {
 
-    fun publishToKafka(sykmelding: Sykmeldingsdokument) {
+    fun publishToKafka(sykmelding: String) {
         try {
             kafkaproducerEndringsloggSykmelding.send(ProducerRecord(endringsloggTopic, sykmelding)).get()
         } catch (e: Exception) {

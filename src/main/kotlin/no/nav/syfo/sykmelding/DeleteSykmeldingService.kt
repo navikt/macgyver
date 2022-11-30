@@ -5,6 +5,7 @@ import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
+import no.nav.syfo.objectMapper
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingMedId
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -23,7 +24,7 @@ class DeleteSykmeldingService(
 
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
-            endringsloggKafkaProducer.publishToKafka(sykmelding.sykmeldingsdokument!!)
+            endringsloggKafkaProducer.publishToKafka(objectMapper.writeValueAsString(sykmelding.sykmeldingsdokument!!))
             kafkaProducer.send(
                 SykmeldingStatusKafkaEventDTO(
                     sykmeldingID,

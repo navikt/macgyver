@@ -5,6 +5,7 @@ import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
 import no.nav.syfo.db.Database
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
+import no.nav.syfo.objectMapper
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingsdokument
 import no.nav.syfo.persistering.db.postgres.updateBiDiagnose
 import no.nav.syfo.persistering.db.postgres.updateDiagnose
@@ -21,7 +22,7 @@ class DiagnoseService(
         val sykmeldingsdokument = syfosmRegisterDb.connection.hentSykmeldingsdokument(sykmeldingId)
         if (sykmeldingsdokument != null) {
             log.info("updating sykmelding dokument with sykmelding id {}", sykmeldingId)
-            endringsloggKafkaProducer.publishToKafka(sykmeldingsdokument)
+            endringsloggKafkaProducer.publishToKafka(objectMapper.writeValueAsString(sykmeldingsdokument))
 
             val sanitisertSystem = formater(system)
             val santitisertDiagnoseKode = formater(diagnoseKode)
@@ -37,7 +38,7 @@ class DiagnoseService(
         val sykmeldingsdokument = syfosmRegisterDb.connection.hentSykmeldingsdokument(sykmeldingId)
         if (sykmeldingsdokument != null) {
             log.info("updating sykmelding dokument with sykmelding id {}", sykmeldingId)
-            endringsloggKafkaProducer.publishToKafka(sykmeldingsdokument)
+            endringsloggKafkaProducer.publishToKafka(objectMapper.writeValueAsString(sykmeldingsdokument))
             val diagnoseTyper = diagnoser.map {
                 val sanitisertSystem = formater(it.system)
                 val santitisertDiagnoseKode = formater(it.kode)
