@@ -24,27 +24,17 @@ import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.api.registrerNarmestelederRequestApi
 import no.nav.syfo.oppgave.api.registerHentOppgaverApi
 import no.nav.syfo.oppgave.client.OppgaveClient
-import no.nav.syfo.papirsykmelding.DiagnoseService
-import no.nav.syfo.papirsykmelding.api.UpdateBehandletDatoService
-import no.nav.syfo.papirsykmelding.api.UpdatePeriodeService
-import no.nav.syfo.papirsykmelding.api.registrerBehandletDatoApi
-import no.nav.syfo.papirsykmelding.api.registrerPeriodeApi
 import no.nav.syfo.service.GjenapneSykmeldingService
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.smregistrering.api.registerFerdigstillRegistreringsoppgaveApi
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.api.registerDeleteSykmeldingApi
 import no.nav.syfo.sykmelding.api.registerGjenapneSykmeldingApi
-import no.nav.syfo.sykmelding.api.registerUpdateBiDiagnosisApi
-import no.nav.syfo.sykmelding.api.registerUpdateDiagnosisApi
 
 fun createApplicationEngine(
     env: Environment,
     applicationState: ApplicationState,
-    updatePeriodeService: UpdatePeriodeService,
-    updateBehandletDatoService: UpdateBehandletDatoService,
     updateFnrService: UpdateFnrService,
-    diagnoseService: DiagnoseService,
     oppgaveClient: OppgaveClient,
     deleteSykmeldingService: DeleteSykmeldingService,
     gjenapneSykmeldingService: GjenapneSykmeldingService,
@@ -74,13 +64,9 @@ fun createApplicationEngine(
             setupSwaggerDocApi()
 
             authenticate("jwt") {
-                registrerPeriodeApi(updatePeriodeService)
-                registrerBehandletDatoApi(updateBehandletDatoService)
                 registerFnrApi(updateFnrService)
                 registerGjenapneSykmeldingApi(gjenapneSykmeldingService)
-                registerUpdateDiagnosisApi(diagnoseService)
                 registerDeleteSykmeldingApi(deleteSykmeldingService)
-                registerUpdateBiDiagnosisApi(diagnoseService)
                 registerHentOppgaverApi(oppgaveClient)
                 registrerNarmestelederRequestApi(narmestelederService)
                 registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)

@@ -22,18 +22,19 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 // Hvis fnr ikke er et tall på 11 tegn så er det antakeligvis noe rart som har skjedd,
                 // og vi bør undersøke ytterligere
                 call.respond(HttpStatusCode.BadRequest, HttpMessage("fnr må være et fnr / dnr på 11 tegn"))
+                return@post
             }
 
             endreFnr.nyttFnr.length != 11 || endreFnr.nyttFnr.any { !it.isDigit() } -> {
                 call.respond(HttpStatusCode.BadRequest, HttpMessage("nyttFnr må være et fnr / dnr på 11 tegn"))
+                return@post
             }
 
             else -> {
                 try {
-
                     logNAVEpostAndActionToSecureLog(
                         getAccessTokenFromAuthHeader(call.request),
-                        "enderer fnr fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
+                        "enderer fnr for sykmeldt fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
                     )
 
                     val updateFnr = updateFnrService.updateFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)
@@ -58,14 +59,21 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 // Hvis fnr ikke er et tall på 11 tegn så er det antakeligvis noe rart som har skjedd,
                 // og vi bør undersøke ytterligere
                 call.respond(HttpStatusCode.BadRequest, HttpMessage("fnr må være et fnr / dnr på 11 tegn"))
+                return@post
             }
 
             endreFnr.nyttFnr.length != 11 || endreFnr.nyttFnr.any { !it.isDigit() } -> {
                 call.respond(HttpStatusCode.BadRequest, HttpMessage("nyttFnr må være et fnr / dnr på 11 tegn"))
+                return@post
             }
 
             else -> {
                 try {
+                    logNAVEpostAndActionToSecureLog(
+                        getAccessTokenFromAuthHeader(call.request),
+                        "enderer fnr for leder fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
+                    )
+
                     val updateNlKoblinger = updateFnrService.updateNlFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)
 
                     if (updateNlKoblinger) {
