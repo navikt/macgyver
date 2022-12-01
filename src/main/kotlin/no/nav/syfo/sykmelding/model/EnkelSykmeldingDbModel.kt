@@ -8,8 +8,6 @@ import no.nav.syfo.objectMapper
 import java.sql.ResultSet
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 fun ResultSet.toSendtSykmeldingDbModel(): EnkelSykmeldingDbModel {
     return EnkelSykmeldingDbModel(
@@ -19,20 +17,6 @@ fun ResultSet.toSendtSykmeldingDbModel(): EnkelSykmeldingDbModel {
         legekontorOrgNr = getString("legekontor_org_nr"),
         behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
         status = getStatus(),
-        fnr = getString("pasient_fnr"),
-        merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
-    )
-}
-
-fun ResultSet.toEnkelSykmeldingDbModel(): EnkelSykmeldingDbModel {
-    return EnkelSykmeldingDbModel(
-        sykmeldingsDokument = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java),
-        id = getString("id"),
-        mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
-        legekontorOrgNr = getString("legekontor_org_nr"),
-        behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"), ValidationResult::class.java),
-        status = getSimpleStatus(),
         fnr = getString("pasient_fnr"),
         merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
         utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
@@ -55,14 +39,6 @@ private fun ResultSet.getStatus(): StatusDbModel {
         else -> null
     }
     return StatusDbModel(status, status_timestamp, arbeidsgiverDbModel)
-}
-
-private fun ResultSet.getSimpleStatus(): StatusDbModel {
-    val status = getString("event") ?: StatusEvent.APEN.name
-    val statusTimestamp = getTimestamp("timestamp")?.toLocalDateTime() ?: OffsetDateTime.now(ZoneOffset.UTC).toLocalDateTime()
-    val arbeidsgiverDbModel = null
-
-    return StatusDbModel(status, statusTimestamp, arbeidsgiverDbModel)
 }
 
 data class ArbeidsgiverDbModel(
@@ -88,16 +64,6 @@ data class EnkelSykmeldingDbModel(
     val fnr: String,
     val merknader: List<Merknad>?,
     val utenlandskSykmelding: UtenlandskSykmelding?
-)
-
-data class MottattSykmeldingDbModel(
-    val id: String,
-    val mottattTidspunkt: LocalDateTime,
-    val legekontorOrgNr: String?,
-    val behandlingsutfall: ValidationResult,
-    val sykmeldingsDokument: Sykmelding,
-    val fnr: String,
-    val merknader: List<Merknad>?
 )
 
 data class Sykmelding(

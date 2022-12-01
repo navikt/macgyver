@@ -22,9 +22,6 @@ import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
-import no.nav.syfo.papirsykmelding.DiagnoseService
-import no.nav.syfo.papirsykmelding.api.UpdateBehandletDatoService
-import no.nav.syfo.papirsykmelding.api.UpdatePeriodeService
 import no.nav.syfo.service.GjenapneSykmeldingService
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
@@ -106,18 +103,6 @@ fun main() {
 
     val statusKafkaProducer =
         SykmeldingStatusKafkaProducer(KafkaProducer(aivenProducerProperties), environment.aivenSykmeldingStatusTopic)
-    val updatePeriodeService = UpdatePeriodeService(
-        databasePostgres = syfosmregisterDatabase,
-        sykmeldingEndringsloggKafkaProducer = sykmeldingEndringsloggKafkaProducer,
-        sykmeldingProducer = SykmeldingV2KafkaProducer(kafkaAivenProducer),
-        mottattSykmeldingTopic = environment.mottattSykmeldingV2Topic,
-        sendtSykmeldingTopic = environment.sendSykmeldingV2Topic,
-        bekreftetSykmeldingTopic = environment.bekreftSykmeldingV2KafkaTopic
-    )
-    val updateBehandletDatoService = UpdateBehandletDatoService(
-        syfoSmRegisterDb = syfosmregisterDatabase,
-        sykmeldingEndringsloggKafkaProducer = sykmeldingEndringsloggKafkaProducer
-    )
 
     val sendtSykmeldingKafkaProducerFnr = SykmeldingV2KafkaProducer(kafkaAivenProducer)
     val narmesteLederResponseKafkaProducer = NarmesteLederResponseKafkaProducer(
@@ -173,10 +158,7 @@ fun main() {
     val applicationEngine = createApplicationEngine(
         env = environment,
         applicationState = applicationState,
-        updatePeriodeService = updatePeriodeService,
-        updateBehandletDatoService = updateBehandletDatoService,
         updateFnrService = updateFnrService,
-        diagnoseService = DiagnoseService(syfosmregisterDatabase, sykmeldingEndringsloggKafkaProducer),
         oppgaveClient = httpClients.oppgaveClient,
         deleteSykmeldingService = deleteSykmeldingService,
         gjenapneSykmeldingService = gjenapneSykmeldingService,
