@@ -23,6 +23,7 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
         if (ids.isEmpty()) {
             log.warn("Listen med oppgaveId-er kan ikke være tom")
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Listen med oppgaveId-er kan ikke være tom"))
+            return@post
         }
 
         try {

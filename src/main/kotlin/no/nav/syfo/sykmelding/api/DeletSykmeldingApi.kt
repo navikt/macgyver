@@ -19,6 +19,7 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
 
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@delete
         }
 
         try {

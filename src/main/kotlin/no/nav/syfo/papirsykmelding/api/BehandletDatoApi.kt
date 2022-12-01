@@ -17,6 +17,7 @@ fun Route.registrerBehandletDatoApi(updateBehandletDatoService: UpdateBehandletD
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@post
         }
 
         try {

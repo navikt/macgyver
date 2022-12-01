@@ -14,15 +14,18 @@ fun Route.registrerPeriodeApi(updatePeriodeService: UpdatePeriodeService) {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@post
         }
 
         val periodeListeDTO = call.receive<PeriodeListeDTO>()
         if (periodeListeDTO.periodeliste.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Periodelisten kan ikke være tom"))
+            return@post
         }
         periodeListeDTO.periodeliste.forEach {
             if (it.tom.isBefore(it.fom)) {
                 call.respond(HttpStatusCode.BadRequest, HttpMessage("FOM må være før TOM"))
+                return@post
             }
         }
 

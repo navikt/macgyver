@@ -18,6 +18,7 @@ fun Route.registerUpdateDiagnosisApi(diagnoseService: DiagnoseService) {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@post
         }
 
         try {
@@ -36,6 +37,7 @@ fun Route.registerUpdateBiDiagnosisApi(diagnoseService: DiagnoseService) {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@post
         }
 
         val diagnoseDTO = call.receive<EndreBiDiagnoseRequest>()
@@ -55,6 +57,7 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty() || sykmeldingId == "null") {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
+            return@post
         }
 
         try {
