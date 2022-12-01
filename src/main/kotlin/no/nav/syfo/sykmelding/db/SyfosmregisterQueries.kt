@@ -16,17 +16,26 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
         connection.prepareStatement(
             """
                     SELECT opplysninger.id,
+                    pasient_fnr,
+                    lege_fnr,
                     mottatt_tidspunkt,
+                    mottak_id
                     behandlingsutfall,
                     legekontor_org_nr,
+                    legekontor_her_id,
+                    legekontor_resh_id,
                     sykmelding,
                     status.event,
                     status.timestamp,
                     arbeidsgiver.orgnummer,
                     arbeidsgiver.juridisk_orgnummer,
                     arbeidsgiver.navn,
+                    lege_helsepersonellkategori,
+                    lege_hpr,
                     merknader,
-                    utenlandsk_sykmelding
+                    utenlandsk_sykmelding,
+                    partnerreferanse,
+                    tss_id
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
                         INNER JOIN behandlingsutfall AS utfall ON opplysninger.id = utfall.id
