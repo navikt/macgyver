@@ -19,7 +19,7 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
                     pasient_fnr,
                     lege_fnr,
                     mottatt_tidspunkt,
-                    mottak_id
+                    mottak_id,
                     behandlingsutfall,
                     legekontor_org_nr,
                     legekontor_her_id,
