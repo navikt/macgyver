@@ -13,9 +13,10 @@ import no.nav.syfo.objectMapper
 import java.sql.ResultSet
 
 fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? {
-    return connection.use { connection ->
-        connection.prepareStatement(
-            """
+    try {
+        return connection.use { connection ->
+            connection.prepareStatement(
+                """
                     SELECT opplysninger.id,
                     pasient_fnr,
                     lege_fnr,
@@ -50,10 +51,14 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
                     where opplysninger.id = ?
                     and not exists(select 1 from sykmeldingstatus where sykmelding_id = opplysninger.id and event in ('SLETTET'));
                     """
-        ).use {
-            it.setString(1, id)
-            it.executeQuery().toList { toReceivedSykmeldingMedBehandlingsutfall() }.firstOrNull()
+            ).use {
+                it.setString(1, id)
+                it.executeQuery().toList { toReceivedSykmeldingMedBehandlingsutfall() }.firstOrNull()
+            }
         }
+    } catch (e: Exception) {
+        log.error("Kunne ikke hente sykmelding", e)
+        throw e
     }
 }
 
@@ -61,7 +66,7 @@ fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedB
     log.info("Mapper resultset")
     val sykmelding = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java)
     log.info("Sykmelding: $sykmelding")
-    return ReceivedSykmeldingMedBehandlingsutfall(
+    val receivedSykmelding = ReceivedSykmeldingMedBehandlingsutfall(
         receivedSykmelding = ReceivedSykmelding(
             sykmelding = sykmelding,
             personNrPasient = getString("pasient_fnr"),
@@ -86,4 +91,6 @@ fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedB
         ),
         behandlingsutfall = objectMapper.readValue<Behandlingsutfall>(getString("behandlingsutfall"))
     )
+    log.info("ReceivedSykmelding: $receivedSykmelding")
+    return receivedSykmelding
 }

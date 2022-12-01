@@ -22,7 +22,6 @@ class UpdatePeriodeService(
 ) {
     fun updatePeriode(sykmeldingId: String, periodeliste: List<Periode>) {
         val sykmeldingMedBehandlingsutfall = databasePostgres.getSykmelding(sykmeldingId)
-        log.info("Hentet sykmelding")
 
         if (sykmeldingMedBehandlingsutfall != null) {
             if (sykmeldingMedBehandlingsutfall.behandlingsutfall.behandlingsutfall.status == Status.INVALID) {
