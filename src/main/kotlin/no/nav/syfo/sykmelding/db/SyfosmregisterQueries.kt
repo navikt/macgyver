@@ -3,6 +3,7 @@ package no.nav.syfo.sykmelding.db
 import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
+import no.nav.syfo.log
 import no.nav.syfo.model.Behandlingsutfall
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.ReceivedSykmelding
@@ -57,7 +58,9 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
 }
 
 fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedBehandlingsutfall {
+    log.info("Mapper resultset")
     val sykmelding = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java)
+    log.info("Sykmelding: $sykmelding")
     return ReceivedSykmeldingMedBehandlingsutfall(
         receivedSykmelding = ReceivedSykmelding(
             sykmelding = sykmelding,
