@@ -7,16 +7,20 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import no.nav.syfo.application.HttpMessage
+import no.nav.syfo.log
 import no.nav.syfo.sykmelding.model.Periode
 
 fun Route.registrerPeriodeApi(updatePeriodeService: UpdatePeriodeService) {
     post("/api/papirsykmelding/{sykmeldingId}/periode") {
+        log.info("Mottatt kall for å oppdatere periode for sykmelding")
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
             return@post
         }
 
+        log.info("Body: ${call.receive<String>()}")
+        
         val periodeListeDTO = call.receive<PeriodeListeDTO>()
         if (periodeListeDTO.periodeliste.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Periodelisten kan ikke være tom"))
