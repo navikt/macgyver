@@ -9,6 +9,7 @@ import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.ReceivedSykmelding
 import no.nav.syfo.model.Sykmelding
 import no.nav.syfo.model.UtenlandskSykmelding
+import no.nav.syfo.model.ValidationResult
 import no.nav.syfo.objectMapper
 import java.sql.ResultSet
 
@@ -63,9 +64,7 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
 }
 
 fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedBehandlingsutfall {
-    log.info("Mapper resultset")
     val sykmelding = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java)
-    log.info("Sykmelding: $sykmelding")
     val receivedSykmelding = ReceivedSykmeldingMedBehandlingsutfall(
         receivedSykmelding = ReceivedSykmelding(
             sykmelding = sykmelding,
@@ -89,7 +88,7 @@ fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedB
             fellesformat = "",
             tssid = getString("tss_id")
         ),
-        behandlingsutfall = objectMapper.readValue<Behandlingsutfall>(getString("behandlingsutfall"))
+        behandlingsutfall = Behandlingsutfall(id = sykmelding.id, behandlingsutfall = objectMapper.readValue<ValidationResult>(getString("behandlingsutfall")))
     )
     log.info("ReceivedSykmelding: $receivedSykmelding")
     return receivedSykmelding
