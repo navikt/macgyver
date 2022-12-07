@@ -181,7 +181,5 @@ fun main() {
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 
-    gamleSykmeldingService.getGamleSykmeldingIdsAndWriteToTopic()
-
     applicationServer.start()
 }
