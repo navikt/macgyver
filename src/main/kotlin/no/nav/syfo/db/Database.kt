@@ -28,10 +28,8 @@ class Database(
                 jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
                 username = dbUsername
                 password = dbPassword
-                maximumPoolSize = 10
-                minimumIdle = 3
-                idleTimeout = 10000
-                maxLifetime = 300000
+                maximumPoolSize = 1
+                minimumIdle = 1
                 isAutoCommit = false
                 transactionIsolation = "TRANSACTION_REPEATABLE_READ"
                 validate()
