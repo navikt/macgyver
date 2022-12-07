@@ -15,6 +15,7 @@ import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
+import no.nav.syfo.kafka.toConsumerConfig
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.model.Sykmeldingsdokument
@@ -29,11 +30,15 @@ import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.gamlesykmeldinger.GamleSykmeldingerService
-import no.nav.syfo.sykmelding.gamlesykmeldinger.kafka.SykmeldingIdKafkaProducer
+import no.nav.syfo.sykmelding.gamlesykmeldinger.db.model.ReceivedSykmeldingMedBehandlingsutfall
+import no.nav.syfo.sykmelding.gamlesykmeldinger.kafka.GamleSykmeldingerKafkaProducer
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -157,14 +162,28 @@ fun main() {
 
     val smregistreringService = SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)
 
-    val sykmeldingIdKafkaProducer = SykmeldingIdKafkaProducer(
-        KafkaProducer<String, String>(
+    val gamleSykmeldingerKafkaProducer = GamleSykmeldingerKafkaProducer(
+        KafkaProducer<String, ReceivedSykmeldingMedBehandlingsutfall>(
             KafkaUtils.getAivenKafkaConfig()
-                .toProducerConfig("macgyver-producer", StringSerializer::class, StringSerializer::class)
+                .toProducerConfig("macgyver-producer", JacksonKafkaSerializer::class, StringSerializer::class)
         ),
-        environment.sykmeldingIdTopic
+        environment.gamleSykmeldingerTopic
     )
-    val gamleSykmeldingService = GamleSykmeldingerService(syfosmregisterDatabase, sykmeldingIdKafkaProducer)
+    val kafkaConsumer = KafkaConsumer(
+        KafkaUtils.getAivenKafkaConfig().also {
+            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
+            it[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = 100
+        }.toConsumerConfig("macgyver-consumer", StringDeserializer::class),
+        StringDeserializer(),
+        StringDeserializer()
+    )
+    val gamleSykmeldingService = GamleSykmeldingerService(
+        kafkaConsumer = kafkaConsumer,
+        topic = environment.sykmeldingIdTopic,
+        db = syfosmregisterDatabase,
+        gamleSykmeldingerKafkaProducer = gamleSykmeldingerKafkaProducer,
+        applicationState = applicationState
+    )
 
     val applicationEngine = createApplicationEngine(
         env = environment,
@@ -180,6 +199,8 @@ fun main() {
         smregistreringService = smregistreringService
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
+
+    gamleSykmeldingService.consume()
 
     applicationServer.start()
 }
