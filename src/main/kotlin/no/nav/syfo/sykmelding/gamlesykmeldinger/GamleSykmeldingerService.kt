@@ -38,7 +38,7 @@ class GamleSykmeldingerService(
                 try {
                     getSykmeldingFromDbAndWriteToKafka()
                 } catch (e: Exception) {
-                    log.error("Noe gikk galt", e)
+                    log.error("Noe gikk galt")
                     throw e
                 }
             }
@@ -50,9 +50,14 @@ class GamleSykmeldingerService(
             val records = kafkaConsumer.poll(java.time.Duration.ZERO)
             records.forEach {
                 sykmeldingCount++
-                val receivedSykmeldingMedBehandlingsutfall = db.getSykmelding(it.value())
-                if (receivedSykmeldingMedBehandlingsutfall != null) {
-                    gamleSykmeldingerKafkaProducer.send(it.value(), receivedSykmeldingMedBehandlingsutfall)
+                try {
+                    val receivedSykmeldingMedBehandlingsutfall = db.getSykmelding(it.value())
+                    if (receivedSykmeldingMedBehandlingsutfall != null) {
+                        gamleSykmeldingerKafkaProducer.send(it.value(), receivedSykmeldingMedBehandlingsutfall)
+                    }
+                } catch (e: Exception) {
+                    log.error("Noe gikk galt med id ${it.value()}")
+                    throw e
                 }
             }
         }
