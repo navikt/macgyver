@@ -28,6 +28,8 @@ import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
+import no.nav.syfo.sykmelding.gamlesykmeldinger.GamleSykmeldingerService
+import no.nav.syfo.sykmelding.gamlesykmeldinger.kafka.SykmeldingIdKafkaProducer
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -155,6 +157,15 @@ fun main() {
 
     val smregistreringService = SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)
 
+    val sykmeldingIdKafkaProducer = SykmeldingIdKafkaProducer(
+        KafkaProducer<String, String>(
+            KafkaUtils.getAivenKafkaConfig()
+                .toProducerConfig("macgyver-producer", StringSerializer::class, StringSerializer::class)
+        ),
+        environment.sykmeldingIdTopic
+    )
+    val gamleSykmeldingService = GamleSykmeldingerService(syfosmregisterDatabase, sykmeldingIdKafkaProducer)
+
     val applicationEngine = createApplicationEngine(
         env = environment,
         applicationState = applicationState,
@@ -169,6 +180,8 @@ fun main() {
         smregistreringService = smregistreringService
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
+
+    gamleSykmeldingService.getGamleSykmeldingIdsAndWriteToTopic()
 
     applicationServer.start()
 }
