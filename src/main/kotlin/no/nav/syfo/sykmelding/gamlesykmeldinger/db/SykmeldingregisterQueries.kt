@@ -9,7 +9,6 @@ import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.ReceivedSykmelding
 import no.nav.syfo.model.Sykmelding
 import no.nav.syfo.model.UtenlandskSykmelding
-import no.nav.syfo.model.ValidationResult
 import no.nav.syfo.objectMapper
 import no.nav.syfo.sykmelding.gamlesykmeldinger.db.model.ReceivedSykmeldingMedBehandlingsutfall
 import java.sql.ResultSet
@@ -54,7 +53,7 @@ fun Database.getSykmelding(id: String): ReceivedSykmeldingMedBehandlingsutfall? 
 
 fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedBehandlingsutfall {
     val sykmelding = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java)
-    val receivedSykmelding = ReceivedSykmeldingMedBehandlingsutfall(
+    return ReceivedSykmeldingMedBehandlingsutfall(
         receivedSykmelding = ReceivedSykmelding(
             sykmelding = sykmelding,
             personNrPasient = getString("pasient_fnr"),
@@ -70,15 +69,20 @@ fun ResultSet.toReceivedSykmeldingMedBehandlingsutfall(): ReceivedSykmeldingMedB
             legekontorOrgName = "",
             mottattDato = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
             rulesetVersion = null,
-            merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-            utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) },
+            merknader = getString("merknader")?.let<String, List<Merknad>> { objectMapper.readValue(it) },
+            utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let<String, UtenlandskSykmelding> {
+                objectMapper.readValue(
+                    it
+                )
+            },
             partnerreferanse = getString("partnerreferanse"),
             vedlegg = emptyList(),
             fellesformat = "",
             tssid = getString("tss_id")
         ),
-        behandlingsutfall = Behandlingsutfall(id = sykmelding.id, behandlingsutfall = objectMapper.readValue<ValidationResult>(getString("behandlingsutfall")))
+        behandlingsutfall = Behandlingsutfall(
+            id = sykmelding.id,
+            behandlingsutfall = objectMapper.readValue(getString("behandlingsutfall"))
+        )
     )
-    log.info("ReceivedSykmelding: $receivedSykmelding")
-    return receivedSykmelding
 }
