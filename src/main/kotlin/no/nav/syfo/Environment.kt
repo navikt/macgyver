@@ -35,9 +35,7 @@ data class Environment(
     val smregistreringDatabaseHost: String = getEnvVar("NAIS_DATABASE_MACGYVER_HOST"),
     val smregistreringDatabasePort: String = getEnvVar("NAIS_DATABASE_MACGYVER_PORT"),
     val smregistreringDatabaseName: String = getEnvVar("SMREGISTRERING_DB_NAME"),
-    val smregisteringDatabaseCloudSqlInstance: String = getEnvVar("SMREGISTRERING_CLOUD_SQL_INSTANCE"),
-    val sykmeldingIdTopic: String = "teamsykmelding.gamle-sykmeldinger-id",
-    val gamleSykmeldingerTopic: String = "teamsykmelding.gamle-sykmeldinger"
+    val smregisteringDatabaseCloudSqlInstance: String = getEnvVar("SMREGISTRERING_CLOUD_SQL_INSTANCE")
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =

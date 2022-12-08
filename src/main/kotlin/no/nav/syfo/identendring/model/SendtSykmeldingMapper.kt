@@ -24,7 +24,9 @@ import no.nav.syfo.model.sykmelding.model.ArbeidsrelatertArsakDTO
 import no.nav.syfo.model.sykmelding.model.ArbeidsrelatertArsakTypeDTO
 import no.nav.syfo.model.sykmelding.model.GradertDTO
 import no.nav.syfo.model.sykmelding.model.PeriodetypeDTO
-import no.nav.syfo.sykmelding.sykmelding.model.getUtcTime
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 fun SykmeldingDbModelUtenBehandlingsutfall.toArbeidsgiverSykmelding(): ArbeidsgiverSykmelding {
     return ArbeidsgiverSykmelding(
@@ -144,4 +146,8 @@ private fun Prognose?.toPrognoseAGDTO(): PrognoseAGDTO? {
             )
         }
     }
+}
+
+fun getUtcTime(tidspunkt: LocalDateTime): OffsetDateTime {
+    return tidspunkt.atOffset(ZoneOffset.UTC)
 }
