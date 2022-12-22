@@ -150,7 +150,7 @@ fun main() {
 
     val deleteLegeerklaeringService = DeleteLegeerklaeringService(
         tombstoneProducer,
-        listOf(environment.legeerklaringTopic),
+        listOf(environment.legeerklaringTopic)
     )
 
     val smregistreringService = SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)

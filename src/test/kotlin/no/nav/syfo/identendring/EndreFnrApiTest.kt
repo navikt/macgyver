@@ -38,9 +38,7 @@ import java.nio.file.Paths
 internal class EndreFnrApiTest {
     @Test
     internal fun `Test endre fnr`() {
-
         with(TestApplicationEngine()) {
-
             val path = "src/test/resources/jwkset.json"
             val uri = Paths.get(path).toUri().toURL()
             val jwkProvider = JwkProviderBuilder(uri).build()

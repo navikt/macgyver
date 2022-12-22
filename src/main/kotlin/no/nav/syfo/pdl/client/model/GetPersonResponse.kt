@@ -2,7 +2,7 @@ package no.nav.syfo.pdl.client.model
 
 data class PdlResponse(
     val hentIdenter: Identliste?,
-    val person: PersonResponse?,
+    val person: PersonResponse?
 )
 data class PersonResponse(
     val navn: List<Navn>?

@@ -21,7 +21,7 @@ class NarmestelederService(
 ) {
     suspend fun sendNewNlRequest(nlRequestDto: NlRequestDTO) = withContext(Dispatchers.IO) {
         val person = pdlService.getPdlPerson(
-            fnr = nlRequestDto.fnr,
+            fnr = nlRequestDto.fnr
         )
         val nlRequest = NlRequestKafkaMessage(
             nlRequest = NlRequest(
@@ -29,7 +29,7 @@ class NarmestelederService(
                 sykmeldingId = nlRequestDto.sykmeldingId,
                 fnr = nlRequestDto.fnr,
                 orgnr = nlRequestDto.orgnummer,
-                name = person.navn,
+                name = person.navn
             ),
             metadata = NlKafkaMetadata(
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),

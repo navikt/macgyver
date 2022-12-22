@@ -21,7 +21,8 @@ class SykmeldingStatusKafkaProducer(
             timestamp = OffsetDateTime.now(
                 ZoneOffset.UTC
             ),
-            fnr = fnr, source = source
+            fnr = fnr,
+            source = source
         )
 
         val sykmeldingStatusKafkaMessageDTO = SykmeldingStatusKafkaMessageDTO(metadataDTO, sykmeldingStatusKafkaEventDTO)

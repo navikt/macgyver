@@ -15,7 +15,6 @@ import java.util.UUID
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {
-
         val callId = UUID.randomUUID().toString()
 
         val ids = call.receive<List<Int>>()
