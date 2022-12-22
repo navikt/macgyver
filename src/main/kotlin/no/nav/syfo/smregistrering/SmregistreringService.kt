@@ -37,7 +37,7 @@ class SmregistreringService(
             ),
             journalpostId = journalpostId
         )
-        databasePostgres.ferdigstillRegistreringsoppgave(oppgaveId)
+        databasePostgres.slettRegistreringsoppgave(oppgaveId)
         log.info("Ferdigstilt oppgave for journalpostId $journalpostId")
     }
 

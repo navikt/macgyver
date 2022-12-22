@@ -18,12 +18,11 @@ fun Database.getApenRegistreringsoppgave(journalpostId: String): Int? =
         }
     }
 
-fun Database.ferdigstillRegistreringsoppgave(oppgaveId: Int) {
+fun Database.slettRegistreringsoppgave(oppgaveId: Int) {
     connection.use { connection ->
         connection.prepareStatement(
             """
-                UPDATE MANUELLOPPGAVE 
-                SET ferdigstilt = true
+                DELETE FROM MANUELLOPPGAVE 
                 WHERE oppgave_id = ?;
                 """
         ).use {
