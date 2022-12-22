@@ -50,7 +50,7 @@ class SmregistreringServiceTest {
 
             smregistreringService.ferdigstillOppgave(journalpostId, "Z989898")
 
-            verify { database.ferdigstillRegistreringsoppgave(oppgaveId) }
+            verify { database.slettRegistreringsoppgave(oppgaveId) }
             coVerify { oppgaveClient.hentOppgave(oppgaveId, journalpostId) }
             coVerify { oppgaveClient.ferdigstillOppgave(match { it.status == "FERDIGSTILT" && it.tilordnetRessurs == "Z989898" && it.tildeltEnhetsnr == "2822" }, journalpostId) }
         }
@@ -63,7 +63,7 @@ class SmregistreringServiceTest {
 
             smregistreringService.ferdigstillOppgave(journalpostId, "Z989898")
 
-            verify(exactly = 0) { database.ferdigstillRegistreringsoppgave(any()) }
+            verify(exactly = 0) { database.slettRegistreringsoppgave(any()) }
             coVerify(exactly = 0) { oppgaveClient.hentOppgave(any(), any()) }
             coVerify(exactly = 0) { oppgaveClient.ferdigstillOppgave(any(), any()) }
         }

@@ -20,7 +20,6 @@ class DeleteSykmeldingService(
 
 ) {
     fun deleteSykmelding(sykmeldingID: String) {
-
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
             endringsloggKafkaProducer.publishToKafka(sykmelding.sykmeldingsdokument!!)

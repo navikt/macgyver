@@ -6,12 +6,11 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class DeleteLegeerklaeringService(
     val tombstoneProducer: KafkaProducer<String, Any?>,
-    val topics: List<String>,
+    val topics: List<String>
 
 ) {
     fun deleteLegeerklaering(legeerklaeringId: String) {
         try {
-
             topics.forEach { topic ->
                 tombstoneProducer.send(ProducerRecord(topic, legeerklaeringId, null)).get()
             }

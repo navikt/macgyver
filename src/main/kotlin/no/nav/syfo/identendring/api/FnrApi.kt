@@ -15,7 +15,6 @@ import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
     post("/api/sykmelding/fnr") {
-
         val endreFnr = call.receive<EndreFnr>()
         when {
             endreFnr.fnr.length != 11 || endreFnr.fnr.any { !it.isDigit() } -> {
@@ -52,7 +51,6 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
     }
 
     post("/api/leder/fnr") {
-
         val endreFnr = call.receive<EndreFnr>()
         when {
             endreFnr.fnr.length != 11 || endreFnr.fnr.any { !it.isDigit() } -> {

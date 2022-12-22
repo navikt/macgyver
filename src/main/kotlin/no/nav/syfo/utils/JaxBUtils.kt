@@ -15,7 +15,7 @@ val fellesformatJaxBContext: JAXBContext = JAXBContext.newInstance(
     XMLEIFellesformat::class.java,
     XMLMsgHead::class.java,
     XMLMottakenhetBlokk::class.java,
-    HelseOpplysningerArbeidsuforhet::class.java,
+    HelseOpplysningerArbeidsuforhet::class.java
 
 )
 

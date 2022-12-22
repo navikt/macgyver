@@ -11,7 +11,6 @@ import java.net.URISyntaxException
 val sikkerlogg = LoggerFactory.getLogger("securelog")
 
 @Throws(IOException::class, URISyntaxException::class)
-
 fun getAccessTokenFromAuthHeader(request: ApplicationRequest): String {
     val authHeader = request.parseAuthorizationHeader()
         ?: throw UnauthorizedException()

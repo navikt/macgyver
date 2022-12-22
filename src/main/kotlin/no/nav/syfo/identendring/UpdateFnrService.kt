@@ -102,7 +102,6 @@ class UpdateFnrService(
     }
 
     suspend fun updateFnr(fnr: String, nyttFnr: String): Boolean {
-
         val pdlPerson = pdlPersonService.getPdlPerson(fnr)
 
         when {

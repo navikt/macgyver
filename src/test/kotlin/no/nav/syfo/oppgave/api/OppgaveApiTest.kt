@@ -30,9 +30,7 @@ import java.time.LocalDate
 internal class OppgaveApiTest {
     @Test
     internal fun `Test endre fnr`() {
-
         with(TestApplicationEngine()) {
-
             val path = "src/test/resources/jwkset.json"
             val uri = Paths.get(path).toUri().toURL()
             val jwkProvider = JwkProviderBuilder(uri).build()
