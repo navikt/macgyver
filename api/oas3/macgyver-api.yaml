@@ -5,7 +5,7 @@ info:
   description: API for syfo-MacGyver. Husk å velge riktig url! :)
   version: 1.0.0
 servers:
-  - url: 'https://macgyver.dev.intern.nav.no'
+  - url: 'https://macgyver.intern.dev.nav.no'
   - url: 'https://macgyver.intern.nav.no'
 paths:
   /api/sykmelding/fnr:

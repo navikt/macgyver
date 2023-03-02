@@ -59,7 +59,7 @@ spec:
     - secret: macgyver-secrets
     - secret: google-sql-smregistrering-backend-smregistrering-macgy-e6d883fe
   ingresses:
-    - "https://macgyver.dev.intern.nav.no"
+    - "https://macgyver.intern.dev.nav.no"
   env:
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.dev-fss-pub.nais.io/graphql
