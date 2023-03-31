@@ -85,23 +85,41 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: naiserator-dev.yaml
           VAR: image=${{ needs.build.outputs.image }}
-      - name: Deploy network policy to dev-gcp
+      - name: Deploy smregister network policy to dev-gcp
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLUSTER: dev-gcp
           TEAM: teamsykmelding
-          RESOURCE: network-policy-dev.yaml
+          RESOURCE: network-policy-smregister-dev.yaml
           PRINT_PAYLOAD: true
-      - name: Deploy network policy to prod
+      - name: Deploy smregistering network policy to dev-gcp
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLUSTER: dev-gcp
+          TEAM: teamsykmelding
+          RESOURCE: network-policy-smregistering-dev.yaml
+          PRINT_PAYLOAD: true
+      - name: Deploy smregister network policy to prod
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLUSTER: prod-gcp
           TEAM: teamsykmelding
-          RESOURCE: network-policy-prod.yaml
+          RESOURCE: network-policy-smregister-prod.yaml
+          PRINT_PAYLOAD: true
+      - name: Deploy smregistering network policy to prod
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLUSTER: prod-gcp
+          TEAM: teamsykmelding
+          RESOURCE: network-policy-smregistering-prod.yaml
           PRINT_PAYLOAD: true
       - name: Deploy app to prod
         uses: nais/deploy/actions/deploy@master

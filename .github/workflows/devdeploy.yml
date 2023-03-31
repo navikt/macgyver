@@ -66,14 +66,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Deploy network policy to dev-gcp
+      - name: Deploy smregister network policy to dev-gcp
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLUSTER: dev-gcp
           TEAM: teamsykmelding
-          RESOURCE: network-policy-dev.yaml
+          RESOURCE: network-policy-smregister-dev.yaml
+          PRINT_PAYLOAD: true
+      - name: Deploy smregistering network policy to dev-gcp
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY_TEAMSYKMELDING }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLUSTER: dev-gcp
+          TEAM: teamsykmelding
+          RESOURCE: network-policy-smregistering-dev.yaml
           PRINT_PAYLOAD: true
       - name: Deploy app to dev
         uses: nais/deploy/actions/deploy@master
