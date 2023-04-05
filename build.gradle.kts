@@ -28,7 +28,7 @@ val javaTimeAdapterVersion = "1.1.3"
 val postgresVersion = "42.5.2"
 val confluentVersion = "6.2.2"
 val swaggerUiVersion = "4.15.0"
-val kotlinVersion = "1.8.10"
+val kotlinVersion = "1.8.20"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.8.0"
 val junitVersion = "5.9.0"
@@ -36,10 +36,10 @@ val nimbusdsVersion = "9.25.6"
 
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
     id("org.jmailen.kotlinter") version "3.12.0"
     id("com.diffplug.spotless") version "6.11.0"
-    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.18.2" apply true
 }
 
