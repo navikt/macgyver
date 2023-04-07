@@ -10,7 +10,7 @@ val ktorVersion = "2.2.4"
 val logbackVersion = "1.4.6"
 val logstashEncoderVersion = "7.3"
 val prometheusVersion = "0.16.0"
-val nimbusjosejwtVersion = "9.25.6"
+val nimbusjosejwtVersion = "9.31"
 val hikariVersion = "5.0.1"
 val jaxbBasicAntVersion = "1.11.1"
 val javaxAnnotationApiVersion = "1.3.2"
@@ -32,7 +32,7 @@ val kotlinVersion = "1.8.20"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.8.0"
 val junitVersion = "5.9.2"
-val nimbusdsVersion = "9.25.6"
+val nimbusdsVersion = "9.31"
 
 
 plugins {
