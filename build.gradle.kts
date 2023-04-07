@@ -31,7 +31,7 @@ val swaggerUiVersion = "4.15.0"
 val kotlinVersion = "1.8.20"
 val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.8.0"
-val junitVersion = "5.9.0"
+val junitVersion = "5.9.2"
 val nimbusdsVersion = "9.25.6"
 
 
