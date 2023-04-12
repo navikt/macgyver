@@ -30,7 +30,7 @@ val confluentVersion = "6.2.2"
 val swaggerUiVersion = "4.18.2"
 val kotlinVersion = "1.8.20"
 val kotestVersion = "5.4.1"
-val googlePostgresVersion = "1.11.0"
+val googlePostgresVersion = "1.11.1"
 val junitVersion = "5.9.2"
 val nimbusdsVersion = "9.31"
 
