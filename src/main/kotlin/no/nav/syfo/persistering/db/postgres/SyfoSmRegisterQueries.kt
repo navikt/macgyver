@@ -16,7 +16,7 @@ fun Connection.hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? =
                 select * from sykmeldingsopplysninger sm 
                 INNER JOIN sykmeldingsdokument sd on sm.id = sd.id
                 WHERE sm.id = ?
-            """
+            """,
         ).use {
             it.setString(1, sykmeldingId)
             it.executeQuery().toSykmelding()
@@ -44,7 +44,7 @@ fun ResultSet.toSykmelding(): SykmeldingDbModel? {
             tssid = getString("tss_id"),
             merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
             partnerreferanse = getString("partnerreferanse"),
-            utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
+            utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) },
         )
         return SykmeldingDbModel(sykmeldingsopplysninger, sykmeldingsdokument)
     }

@@ -56,7 +56,7 @@ internal class EndreFnrApiTest {
             application.setupAuth(
                 jwkProvider,
                 "tokenxissuer",
-                "clientId"
+                "clientId",
             )
             application.routing {
                 registerFnrApi(
@@ -66,8 +66,8 @@ internal class EndreFnrApiTest {
                         sendtSykmeldingKafkaProducer,
                         narmesteLederResponseKafkaProducer,
                         narmestelederClient,
-                        "topic"
-                    )
+                        "topic",
+                    ),
                 )
             }
 
@@ -83,9 +83,9 @@ internal class EndreFnrApiTest {
                 listOf(
                     IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
                     IdentInformasjon("12345678912", true, "FOLKEREGISTERIDENT"),
-                    IdentInformasjon("12345", false, "AKTORID")
+                    IdentInformasjon("12345", false, "AKTORID"),
                 ),
-                "navn navn"
+                "navn navn",
             )
             coEvery { narmestelederClient.getNarmesteledere(any()) } returns emptyList()
 
@@ -98,7 +98,7 @@ internal class EndreFnrApiTest {
                     addHeader("Content-Type", "application/json")
                     addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                     setBody(objectMapper.writeValueAsString(endreFnr))
-                }
+                },
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
                 response.content shouldBeEqualTo "{\"message\":\"Vellykket oppdatering.\"}"

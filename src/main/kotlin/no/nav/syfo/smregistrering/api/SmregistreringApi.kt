@@ -28,7 +28,7 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
         try {
             logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
-                "Ferdigstille smregistreringsoppgave for journalpostId $journalpostId"
+                "Ferdigstille smregistreringsoppgave for journalpostId $journalpostId",
             )
             smregistreringService.ferdigstillOppgave(journalpostId = journalpostId, ferdigstiltAv = ferdigstiltAv)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket ferdigstilling."))

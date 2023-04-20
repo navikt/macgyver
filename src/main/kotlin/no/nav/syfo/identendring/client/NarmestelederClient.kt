@@ -15,7 +15,7 @@ class NarmestelederClient(
     private val httpClient: HttpClient,
     private val accessTokenClientV2: AccessTokenClientV2,
     private val baseUrl: String,
-    private val resource: String
+    private val resource: String,
 ) {
 
     suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder> {
@@ -59,5 +59,5 @@ data class NarmesteLeder(
     val narmesteLederEpost: String,
     val aktivFom: LocalDate,
     val aktivTom: LocalDate?,
-    val arbeidsgiverForskutterer: Boolean?
+    val arbeidsgiverForskutterer: Boolean?,
 )

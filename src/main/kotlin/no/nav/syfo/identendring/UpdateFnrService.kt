@@ -35,7 +35,7 @@ class UpdateFnrService(
     private val sendtSykmeldingKafkaProducer: SykmeldingV2KafkaProducer,
     private val narmesteLederResponseKafkaProducer: NarmesteLederResponseKafkaProducer,
     private val narmestelederClient: NarmestelederClient,
-    private val sendtSykmeldingTopic: String
+    private val sendtSykmeldingTopic: String,
 ) {
 
     private val log = LoggerFactory.getLogger(UpdateFnrService::class.java)
@@ -65,11 +65,11 @@ class UpdateFnrService(
                             nlAvbrutt = NlAvbrutt(
                                 orgnummer = it.orgnummer,
                                 sykmeldtFnr = it.fnr,
-                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC)
-                            )
+                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
+                            ),
 
                         ),
-                        it.orgnummer
+                        it.orgnummer,
                     )
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
@@ -82,17 +82,17 @@ class UpdateFnrService(
                                     mobil = it.narmesteLederTelefonnummer,
                                     epost = it.narmesteLederEpost,
                                     fornavn = null,
-                                    etternavn = null
+                                    etternavn = null,
                                 ),
                                 sykmeldt = Sykmeldt(
                                     fnr = it.fnr,
-                                    navn = null
+                                    navn = null,
                                 ),
                                 aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
-                                aktivTom = null
-                            )
+                                aktivTom = null,
+                            ),
                         ),
-                        it.orgnummer
+                        it.orgnummer,
                     )
                 }
                 log.info("Alle aktive nl-koblinger er oppdatert")
@@ -127,7 +127,7 @@ class UpdateFnrService(
                     sendtSykmeldingKafkaProducer.sendSykmelding(
                         sykmeldingKafkaMessage = getKafkaMessage(it, nyttFnr),
                         sykmeldingId = it.id,
-                        topic = sendtSykmeldingTopic
+                        topic = sendtSykmeldingTopic,
                     )
                 }
                 log.info("Bryter og gjenoppretter ${aktiveNarmesteledere.size} nl-koblinger")
@@ -139,11 +139,11 @@ class UpdateFnrService(
                             nlAvbrutt = NlAvbrutt(
                                 orgnummer = it.orgnummer,
                                 sykmeldtFnr = fnr,
-                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC)
-                            )
+                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
+                            ),
 
                         ),
-                        it.orgnummer
+                        it.orgnummer,
                     )
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
@@ -156,17 +156,17 @@ class UpdateFnrService(
                                     mobil = it.narmesteLederTelefonnummer,
                                     epost = it.narmesteLederEpost,
                                     fornavn = null,
-                                    etternavn = null
+                                    etternavn = null,
                                 ),
                                 sykmeldt = Sykmeldt(
                                     fnr = nyttFnr,
-                                    navn = null
+                                    navn = null,
                                 ),
                                 aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
-                                aktivTom = null
-                            )
+                                aktivTom = null,
+                            ),
                         ),
-                        it.orgnummer
+                        it.orgnummer,
                     )
                 }
                 log.info("Oppdaterer register-databasen")
@@ -187,7 +187,7 @@ private fun getKafkaMessage(sykmelding: SykmeldingDbModelUtenBehandlingsutfall, 
         sykmeldingId = sykmelding.id,
         timestamp = sykmelding.status.statusTimestamp,
         source = "macgyver",
-        fnr = nyttFnr
+        fnr = nyttFnr,
     )
     val sendEvent = SykmeldingStatusKafkaEventDTO(
         metadata.sykmeldingId,
@@ -196,16 +196,16 @@ private fun getKafkaMessage(sykmelding: SykmeldingDbModelUtenBehandlingsutfall, 
         ArbeidsgiverStatusDTO(
             sykmelding.status.arbeidsgiver!!.orgnummer,
             sykmelding.status.arbeidsgiver.juridiskOrgnummer,
-            sykmelding.status.arbeidsgiver.orgNavn
+            sykmelding.status.arbeidsgiver.orgNavn,
         ),
         listOf(
             SporsmalOgSvarDTO(
                 tekst = "Jeg er sykmeldt fra",
                 shortName = ShortNameDTO.ARBEIDSSITUASJON,
                 svartype = SvartypeDTO.ARBEIDSSITUASJON,
-                svar = "ARBEIDSTAKER"
-            )
-        )
+                svar = "ARBEIDSTAKER",
+            ),
+        ),
     )
     return SykmeldingV2KafkaMessage(sendtSykmelding, metadata, sendEvent)
 }

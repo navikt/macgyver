@@ -11,7 +11,7 @@ import java.time.ZoneOffset
 
 class GjenapneSykmeldingService(
     private val sykmeldingStatusKafkaProducer: SykmeldingStatusKafkaProducer,
-    private val syfoSmRegisterDb: Database
+    private val syfoSmRegisterDb: Database,
 ) {
     fun gjenapneSykmelding(sykmeldingId: String) {
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingId)
@@ -22,7 +22,7 @@ class GjenapneSykmeldingService(
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
                 statusEvent = STATUS_APEN,
                 arbeidsgiver = null,
-                sporsmals = null
+                sporsmals = null,
             )
             sykmeldingStatusKafkaProducer.send(sykmeldingStatusKafkaEventDTO, "migrering", sykmelding.sykmeldingsopplysninger.pasientFnr)
             log.info("Sendt statusendring")

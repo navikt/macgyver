@@ -39,12 +39,12 @@ internal class LegeerklaeringApiTest {
             application.setupAuth(
                 jwkProvider,
                 "issuer",
-                "clientId"
+                "clientId",
             )
 
             application.routing {
                 registerDeleteLegeerklaeringApi(
-                    deleteLegeerklaeringServiceMock
+                    deleteLegeerklaeringServiceMock,
                 )
             }
 
@@ -64,7 +64,7 @@ internal class LegeerklaeringApiTest {
             with(
                 handleRequest(HttpMethod.Delete, "/api/legeerklaering/$legeerklaeringId") {
                     addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
-                }
+                },
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
                 response.content shouldBeEqualTo objectMapper.writeValueAsString(HttpMessage("Vellykket sletting"))
@@ -85,12 +85,12 @@ internal class LegeerklaeringApiTest {
             application.setupAuth(
                 jwkProvider,
                 "issuer",
-                "clientId"
+                "clientId",
             )
 
             application.routing {
                 registerDeleteLegeerklaeringApi(
-                    deleteLegeerklaeringServiceMock
+                    deleteLegeerklaeringServiceMock,
                 )
             }
 
@@ -104,7 +104,7 @@ internal class LegeerklaeringApiTest {
             }
 
             with(
-                handleRequest(HttpMethod.Delete, "/api/legeerklaering/${null}") {}
+                handleRequest(HttpMethod.Delete, "/api/legeerklaering/${null}") {},
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.Unauthorized
                 response.content shouldBeEqualTo objectMapper.writeValueAsString(HttpMessage("Unauthorized"))

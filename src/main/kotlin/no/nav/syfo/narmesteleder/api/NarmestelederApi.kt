@@ -16,7 +16,7 @@ fun Route.registrerNarmestelederRequestApi(narmestelederService: NarmestelederSe
         val nlRequest = call.receive<NlRequestDTO>()
         logNAVEpostAndActionToSecureLog(
             getAccessTokenFromAuthHeader(call.request),
-            "Sender ny NL-request til altinn for sykmelding med id: ${nlRequest.sykmeldingId}"
+            "Sender ny NL-request til altinn for sykmelding med id: ${nlRequest.sykmeldingId}",
         )
         narmestelederService.sendNewNlRequest(nlRequest)
         call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))

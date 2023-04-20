@@ -14,8 +14,8 @@ val nimbusjosejwtVersion = "9.31"
 val hikariVersion = "5.0.1"
 val jaxbBasicAntVersion = "1.11.1"
 val javaxAnnotationApiVersion = "1.3.2"
-val jaxwsToolsVersion = "4.0.1"
-val jaxbRuntimeVersion = "4.0.2"
+val jaxwsToolsVersion = "2.3.1"
+val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.3.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
@@ -33,12 +33,12 @@ val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.11.1"
 val junitVersion = "5.9.2"
 val nimbusdsVersion = "9.31"
+val commonsCodecVersion = "1.15"
 
 
 plugins {
     kotlin("jvm") version "1.8.20"
     id("org.jmailen.kotlinter") version "3.14.0"
-    id("com.diffplug.spotless") version "6.18.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.19.2" apply true
 }
@@ -74,6 +74,11 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    // override transient version 1.11 from io.ktor:ktor-client-apache due to security vulnerability
+    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/
+    implementation("commons-codec:commons-codec:$commonsCodecVersion")
+    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")

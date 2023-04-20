@@ -45,7 +45,7 @@ class SmregistreringServiceTest {
                 status = "AAPNET",
                 aktivDato = LocalDate.now(),
                 prioritet = "HOY",
-                tilordnetRessurs = "X121212"
+                tilordnetRessurs = "X121212",
             )
 
             smregistreringService.ferdigstillOppgave(journalpostId, "Z989898")
@@ -75,7 +75,7 @@ class SmregistreringServiceTest {
         val beskrivelse = smregistreringService.getBeskrivelse(
             opprinneligBeskrivelse = null,
             ferdigstiltAv = "Z989898",
-            tidspunkt = tidspunkt
+            tidspunkt = tidspunkt,
         )
 
         beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n"
@@ -87,7 +87,7 @@ class SmregistreringServiceTest {
         val beskrivelse = smregistreringService.getBeskrivelse(
             opprinneligBeskrivelse = "--- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave.",
             ferdigstiltAv = "Z989898",
-            tidspunkt = tidspunkt
+            tidspunkt = tidspunkt,
         )
 
         beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n --- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave."

@@ -44,11 +44,11 @@ internal class OppgaveApiTest {
             application.setupAuth(
                 jwkProvider,
                 "issuer",
-                "clientId"
+                "clientId",
             )
             application.routing {
                 registerHentOppgaverApi(
-                    oppgaveClient
+                    oppgaveClient,
                 )
             }
 
@@ -78,7 +78,7 @@ internal class OppgaveApiTest {
                 fristFerdigstillelse = null,
                 prioritet = "HØY",
                 status = null,
-                mappeId = null
+                mappeId = null,
             )
 
             val oppgaverid = listOf(121321312)
@@ -88,7 +88,7 @@ internal class OppgaveApiTest {
                     addHeader("Content-Type", "application/json")
                     addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                     setBody(objectMapper.writeValueAsString(oppgaverid))
-                }
+                },
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
             }

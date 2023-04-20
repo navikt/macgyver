@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class SykmeldingEndringsloggKafkaProducer(
     private val endringsloggTopic: String,
-    private val kafkaproducerEndringsloggSykmelding: KafkaProducer<String, Sykmeldingsdokument>
+    private val kafkaproducerEndringsloggSykmelding: KafkaProducer<String, Sykmeldingsdokument>,
 ) {
 
     fun publishToKafka(sykmelding: Sykmeldingsdokument) {

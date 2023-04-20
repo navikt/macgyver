@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 
 class SmregistreringService(
     private val oppgaveClient: OppgaveClient,
-    private val databasePostgres: Database
+    private val databasePostgres: Database,
 ) {
     suspend fun ferdigstillOppgave(journalpostId: String, ferdigstiltAv: String) {
         val oppgaveId = databasePostgres.getApenRegistreringsoppgave(journalpostId)
@@ -32,10 +32,10 @@ class SmregistreringService(
                 mappeId = null,
                 beskrivelse = getBeskrivelse(
                     opprinneligBeskrivelse = oppgave.beskrivelse,
-                    ferdigstiltAv = ferdigstiltAv
-                )
+                    ferdigstiltAv = ferdigstiltAv,
+                ),
             ),
-            journalpostId = journalpostId
+            journalpostId = journalpostId,
         )
         databasePostgres.slettRegistreringsoppgave(oppgaveId)
         log.info("Ferdigstilt oppgave for journalpostId $journalpostId")
@@ -44,7 +44,7 @@ class SmregistreringService(
     fun getBeskrivelse(
         opprinneligBeskrivelse: String?,
         ferdigstiltAv: String,
-        tidspunkt: LocalDateTime = LocalDateTime.now()
+        tidspunkt: LocalDateTime = LocalDateTime.now(),
     ): String {
         val endringsbeskrivelse = "--- ${formaterDato(tidspunkt)} $ferdigstiltAv, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n"
         return if (opprinneligBeskrivelse.isNullOrEmpty()) {

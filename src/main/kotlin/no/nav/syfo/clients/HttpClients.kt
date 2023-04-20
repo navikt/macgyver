@@ -53,14 +53,14 @@ class HttpClients(environment: Environment) {
         environment.aadAccessTokenV2Url,
         environment.clientIdV2,
         environment.clientSecretV2,
-        httpClient
+        httpClient,
     )
 
     private val pdlClient = PdlClient(
         httpClient = httpClient,
         basePath = environment.pdlGraphqlPath,
         graphQlQuery = PdlClient::class.java.getResource("/graphql/getPerson.graphql").readText().replace(Regex("[\n\t]"), ""),
-        graphQlQueryAktorids = PdlClient::class.java.getResource("/graphql/getAktorids.graphql").readText().replace(Regex("[\n\t]"), "")
+        graphQlQueryAktorids = PdlClient::class.java.getResource("/graphql/getAktorids.graphql").readText().replace(Regex("[\n\t]"), ""),
     )
 
     val pdlService = PdlPersonService(pdlClient, accessTokenClientV2, environment.pdlScope)

@@ -12,7 +12,7 @@ class Database(
     dbPort: String,
     dbName: String,
     dbUsername: String,
-    dbPassword: String
+    dbPassword: String,
 ) : DatabaseInterface {
     private val dataSource: HikariDataSource
     override val connection: Connection
@@ -33,7 +33,7 @@ class Database(
                 isAutoCommit = false
                 transactionIsolation = "TRANSACTION_REPEATABLE_READ"
                 validate()
-            }
+            },
         )
     }
 }

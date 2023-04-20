@@ -28,7 +28,7 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
         try {
             logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
-                "Henter oppgaver fra Oppgave-api ider: $ids"
+                "Henter oppgaver fra Oppgave-api ider: $ids",
             )
             val toList = ids.map {
                 oppgaveClient.hentOppgave(oppgaveId = it, msgId = callId)

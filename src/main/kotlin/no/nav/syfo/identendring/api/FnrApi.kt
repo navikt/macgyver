@@ -33,7 +33,7 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 try {
                     logNAVEpostAndActionToSecureLog(
                         getAccessTokenFromAuthHeader(call.request),
-                        "enderer fnr for sykmeldt fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
+                        "enderer fnr for sykmeldt fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}",
                     )
 
                     val updateFnr = updateFnrService.updateFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)
@@ -69,7 +69,7 @@ fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
                 try {
                     logNAVEpostAndActionToSecureLog(
                         getAccessTokenFromAuthHeader(call.request),
-                        "enderer fnr for leder fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}"
+                        "enderer fnr for leder fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}",
                     )
 
                     val updateNlKoblinger = updateFnrService.updateNlFnr(fnr = endreFnr.fnr, nyttFnr = endreFnr.nyttFnr)

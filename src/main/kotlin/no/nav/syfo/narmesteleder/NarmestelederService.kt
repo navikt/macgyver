@@ -17,11 +17,11 @@ import java.util.UUID
 class NarmestelederService(
     private val pdlService: PdlPersonService,
     private val narmestelederRequestProducer: KafkaProducer<String, NlRequestKafkaMessage>,
-    private val topic: String
+    private val topic: String,
 ) {
     suspend fun sendNewNlRequest(nlRequestDto: NlRequestDTO) = withContext(Dispatchers.IO) {
         val person = pdlService.getPdlPerson(
-            fnr = nlRequestDto.fnr
+            fnr = nlRequestDto.fnr,
         )
         val nlRequest = NlRequestKafkaMessage(
             nlRequest = NlRequest(
@@ -29,12 +29,12 @@ class NarmestelederService(
                 sykmeldingId = nlRequestDto.sykmeldingId,
                 fnr = nlRequestDto.fnr,
                 orgnr = nlRequestDto.orgnummer,
-                name = person.navn
+                name = person.navn,
             ),
             metadata = NlKafkaMetadata(
                 timestamp = OffsetDateTime.now(ZoneOffset.UTC),
-                source = "macgyver"
-            )
+                source = "macgyver",
+            ),
         )
 
         narmestelederRequestProducer.send(ProducerRecord(topic, nlRequest.nlRequest.orgnr, nlRequest)).get()

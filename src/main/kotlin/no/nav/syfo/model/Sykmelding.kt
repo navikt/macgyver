@@ -18,10 +18,10 @@ data class Sykmeldingsopplysninger(
     val tssid: String?,
     val merknader: List<Merknad>?,
     val partnerreferanse: String?,
-    val utenlandskSykmelding: UtenlandskSykmelding?
+    val utenlandskSykmelding: UtenlandskSykmelding?,
 )
 
 data class Sykmeldingsdokument(
     var id: String,
-    var sykmelding: Sykmelding
+    var sykmelding: Sykmelding,
 )

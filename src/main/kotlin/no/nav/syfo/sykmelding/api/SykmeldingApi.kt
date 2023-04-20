@@ -22,7 +22,7 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
         try {
             logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
-                "gjenåpne sykmelding med id $sykmeldingId"
+                "gjenåpne sykmelding med id $sykmeldingId",
             )
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))

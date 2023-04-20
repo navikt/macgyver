@@ -65,7 +65,7 @@ fun main() {
         dbPort = environment.syfosmregisterDatabasePort,
         dbName = environment.syfosmregisterDatabaseName,
         dbUsername = environment.syfosmregisterDatabaseUsername,
-        dbPassword = environment.syfosmregisterDatabasePassword
+        dbPassword = environment.syfosmregisterDatabasePassword,
     )
 
     val smregistreringDatabase = Database(
@@ -74,7 +74,7 @@ fun main() {
         dbPort = environment.smregistreringDatabasePort,
         dbName = environment.smregistreringDatabaseName,
         dbUsername = environment.smregistreringDatabaseUsername,
-        dbPassword = environment.smregistreringDatabasePassword
+        dbPassword = environment.smregistreringDatabasePassword,
     )
 
     val httpClients = HttpClients(environment)
@@ -87,18 +87,18 @@ fun main() {
                 this[ProducerConfig.ACKS_CONFIG] = "1"
                 this[ProducerConfig.RETRIES_CONFIG] = 1000
                 this[ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG] = "false"
-            }
+            },
     )
     val kafkaAivenNarmestelederRequestProducer = KafkaProducer<String, NlRequestKafkaMessage>(
         KafkaUtils.getAivenKafkaConfig()
-            .toProducerConfig("macgyver-producer", JacksonKafkaSerializer::class, StringSerializer::class)
+            .toProducerConfig("macgyver-producer", JacksonKafkaSerializer::class, StringSerializer::class),
     )
     val aivenProducerProperties = KafkaUtils.getAivenKafkaConfig()
         .toProducerConfig(environment.applicationName, JacksonKafkaSerializer::class, StringSerializer::class)
     val kafkaproducerEndringsloggSykmelding = KafkaProducer<String, Sykmeldingsdokument>(aivenProducerProperties)
     val sykmeldingEndringsloggKafkaProducer = SykmeldingEndringsloggKafkaProducer(
         environment.aivenEndringsloggTopic,
-        kafkaproducerEndringsloggSykmelding
+        kafkaproducerEndringsloggSykmelding,
     )
 
     val statusKafkaProducer =
@@ -110,8 +110,8 @@ fun main() {
         KafkaProducer<String, NlResponseKafkaMessage>(
             KafkaUtils
                 .getAivenKafkaConfig()
-                .toProducerConfig("macgyver-producer", JacksonNullableKafkaSerializer::class, StringSerializer::class)
-        )
+                .toProducerConfig("macgyver-producer", JacksonNullableKafkaSerializer::class, StringSerializer::class),
+        ),
     )
 
     val updateFnrService = UpdateFnrService(
@@ -120,13 +120,13 @@ fun main() {
         sendtSykmeldingKafkaProducer = sendtSykmeldingKafkaProducerFnr,
         narmesteLederResponseKafkaProducer = narmesteLederResponseKafkaProducer,
         narmestelederClient = httpClients.narmestelederClient,
-        sendtSykmeldingTopic = environment.sendSykmeldingV2Topic
+        sendtSykmeldingTopic = environment.sendSykmeldingV2Topic,
     )
 
     val tombstoneProducer = KafkaProducer<String, Any?>(
         KafkaUtils
             .getAivenKafkaConfig()
-            .toProducerConfig("macgyver-tobstone-producer", JacksonNullableKafkaSerializer::class)
+            .toProducerConfig("macgyver-tobstone-producer", JacksonNullableKafkaSerializer::class),
     )
 
     val deleteSykmeldingService = DeleteSykmeldingService(
@@ -134,23 +134,23 @@ fun main() {
         statusKafkaProducer,
         sykmeldingEndringsloggKafkaProducer,
         tombstoneProducer,
-        listOf(environment.manuellTopic, environment.papirSmRegistreringTopic)
+        listOf(environment.manuellTopic, environment.papirSmRegistreringTopic),
     )
 
     val gjenapneSykmeldingService = GjenapneSykmeldingService(
         statusKafkaProducer,
-        syfosmregisterDatabase
+        syfosmregisterDatabase,
     )
 
     val narmestelederService = NarmestelederService(
         pdlService = httpClients.pdlService,
         kafkaAivenNarmestelederRequestProducer,
-        environment.narmestelederRequestTopic
+        environment.narmestelederRequestTopic,
     )
 
     val deleteLegeerklaeringService = DeleteLegeerklaeringService(
         tombstoneProducer,
-        listOf(environment.legeerklaringTopic)
+        listOf(environment.legeerklaringTopic),
     )
 
     val smregistreringService = SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)
@@ -166,7 +166,7 @@ fun main() {
         jwkProvider = jwkProvider,
         issuer = environment.jwtIssuer,
         deleteLegeerklaeringService = deleteLegeerklaeringService,
-        smregistreringService = smregistreringService
+        smregistreringService = smregistreringService,
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 

@@ -9,7 +9,7 @@ import no.nav.syfo.pdl.model.PdlPerson
 class PdlPersonService(
     private val pdlClient: PdlClient,
     private val accessTokenClientV2: AccessTokenClientV2,
-    private val pdlScope: String
+    private val pdlScope: String,
 ) {
     suspend fun getPdlPerson(fnr: String): PdlPerson {
         val token = accessTokenClientV2.getAccessTokenV2(pdlScope)

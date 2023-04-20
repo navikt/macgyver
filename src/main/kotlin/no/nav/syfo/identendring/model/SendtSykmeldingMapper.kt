@@ -49,7 +49,7 @@ fun SykmeldingDbModelUtenBehandlingsutfall.toArbeidsgiverSykmelding(): Arbeidsgi
         papirsykmelding = sykmeldingsDokument.avsenderSystem.navn == "Papirsykmelding",
         harRedusertArbeidsgiverperiode = sykmeldingsDokument.medisinskVurdering.getHarRedusertArbeidsgiverperiode(sykmeldingsDokument.perioder),
         merknader = merknader?.map { Merknad(type = it.type, beskrivelse = it.beskrivelse) },
-        utenlandskSykmelding = utenlandskSykmelding?.let { UtenlandskSykmeldingAGDTO(land = it.land) }
+        utenlandskSykmelding = utenlandskSykmelding?.let { UtenlandskSykmeldingAGDTO(land = it.land) },
     )
 }
 
@@ -60,7 +60,7 @@ private fun Behandler.toBehandlerAGDTO(): BehandlerAGDTO {
         hpr = hpr,
         tlf = tlf,
         etternavn = etternavn,
-        adresse = AdresseDTO(adresse.gate, adresse.postnummer, adresse.kommune, adresse.postboks, adresse.land)
+        adresse = AdresseDTO(adresse.gate, adresse.postnummer, adresse.kommune, adresse.postboks, adresse.land),
     )
 }
 
@@ -73,7 +73,7 @@ fun Periode.toSykmeldingsperiodeAGDTO(sykmeldingId: String): SykmeldingsperiodeA
         innspillTilArbeidsgiver = avventendeInnspillTilArbeidsgiver,
         type = finnPeriodetype(this, sykmeldingId),
         aktivitetIkkeMulig = aktivitetIkkeMulig?.toAktivitetIkkeMuligAGDTO(),
-        reisetilskudd = reisetilskudd
+        reisetilskudd = reisetilskudd,
     )
 }
 
@@ -91,7 +91,7 @@ private fun AktivitetIkkeMulig?.toAktivitetIkkeMuligAGDTO(): AktivitetIkkeMuligA
     return when (this) {
         null -> null
         else -> AktivitetIkkeMuligAGDTO(
-            arbeidsrelatertArsak = arbeidsrelatertArsak.toArbeidsRelatertArsakDTO()
+            arbeidsrelatertArsak = arbeidsrelatertArsak.toArbeidsRelatertArsakDTO(),
         )
     }
 }
@@ -101,7 +101,7 @@ private fun ArbeidsrelatertArsak?.toArbeidsRelatertArsakDTO(): ArbeidsrelatertAr
         null -> null
         else -> ArbeidsrelatertArsakDTO(
             beskrivelse = beskrivelse,
-            arsak = arsak.map { toArbeidsrelatertArsakTypeDTO(it) }
+            arsak = arsak.map { toArbeidsrelatertArsakTypeDTO(it) },
         )
     }
 }
@@ -118,7 +118,7 @@ private fun Gradert?.toGradertDTO(): GradertDTO? {
         null -> null
         else -> GradertDTO(
             grad = grad,
-            reisetilskudd = reisetilskudd
+            reisetilskudd = reisetilskudd,
         )
     }
 }
@@ -126,13 +126,13 @@ private fun Gradert?.toGradertDTO(): GradertDTO? {
 private fun Arbeidsgiver.toArbeidsgiverAGDTO(): ArbeidsgiverAGDTO {
     return ArbeidsgiverAGDTO(
         navn = navn,
-        yrkesbetegnelse = yrkesbetegnelse
+        yrkesbetegnelse = yrkesbetegnelse,
     )
 }
 
 private fun KontaktMedPasient.toKontaktMedPasientAGDTO(): KontaktMedPasientAGDTO {
     return KontaktMedPasientAGDTO(
-        kontaktDato = kontaktDato
+        kontaktDato = kontaktDato,
     )
 }
 
@@ -142,7 +142,7 @@ private fun Prognose?.toPrognoseAGDTO(): PrognoseAGDTO? {
         else -> {
             PrognoseAGDTO(
                 arbeidsforEtterPeriode = arbeidsforEtterPeriode,
-                hensynArbeidsplassen = hensynArbeidsplassen
+                hensynArbeidsplassen = hensynArbeidsplassen,
             )
         }
     }

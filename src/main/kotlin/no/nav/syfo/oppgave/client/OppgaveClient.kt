@@ -17,7 +17,7 @@ class OppgaveClient(
     private val url: String,
     private val accessTokenClientV2: AccessTokenClientV2,
     private val scope: String,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
 ) {
     suspend fun hentOppgave(oppgaveId: Int, msgId: String): Oppgave {
         val httpResponse = httpClient.get("$url/$oppgaveId") {
@@ -80,7 +80,7 @@ data class Oppgave(
     val fristFerdigstillelse: LocalDate? = null,
     val prioritet: String,
     val status: String? = null,
-    val mappeId: Int? = null
+    val mappeId: Int? = null,
 )
 
 data class FerdigstillOppgave(
@@ -90,5 +90,5 @@ data class FerdigstillOppgave(
     val tilordnetRessurs: String,
     val tildeltEnhetsnr: String,
     val mappeId: Int?,
-    val beskrivelse: String? = null
+    val beskrivelse: String? = null,
 )

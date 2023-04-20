@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class NarmesteLederResponseKafkaProducer(
     private val topic: String,
-    private val kafkaProducerNlResponse: KafkaProducer<String, NlResponseKafkaMessage>
+    private val kafkaProducerNlResponse: KafkaProducer<String, NlResponseKafkaMessage>,
 ) {
 
     fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String) {
@@ -16,8 +16,8 @@ class NarmesteLederResponseKafkaProducer(
                 ProducerRecord(
                     topic,
                     orgnummer,
-                    nlResponseKafkaMessage
-                )
+                    nlResponseKafkaMessage,
+                ),
             ).get()
         } catch (e: Exception) {
             log.error("Noe gikk galt ved skriving av nlResponse: ${e.message}")

@@ -14,7 +14,7 @@ import no.nav.syfo.log
 fun Application.setupAuth(
     jwkProvider: JwkProvider,
     issuer: String,
-    clientIdV2: String
+    clientIdV2: String,
 ) {
     install(Authentication) {
         jwt(name = "jwt") {
@@ -35,7 +35,7 @@ fun unauthorized(credentials: JWTCredential): Principal? {
     log.warn(
         "Auth: Unexpected audience for jwt {}, {}",
         StructuredArguments.keyValue("issuer", credentials.payload.issuer),
-        StructuredArguments.keyValue("audience", credentials.payload.audience)
+        StructuredArguments.keyValue("audience", credentials.payload.audience),
     )
     return null
 }

@@ -8,7 +8,7 @@ class ApplicationServer(private val applicationServer: ApplicationEngine, privat
             Thread {
                 applicationState.ready = false
                 this.applicationServer.stop(10_000, 10_000)
-            }
+            },
         )
     }
 

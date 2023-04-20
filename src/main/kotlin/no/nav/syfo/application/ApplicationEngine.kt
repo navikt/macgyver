@@ -12,10 +12,10 @@ import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.routing.routing
 import no.nav.syfo.Environment
 import no.nav.syfo.application.api.registerNaisApi
-import no.nav.syfo.application.api.setupSwaggerDocApi
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.legeerklaering.api.registerDeleteLegeerklaeringApi
@@ -42,7 +42,7 @@ fun createApplicationEngine(
     jwkProvider: JwkProvider,
     issuer: String,
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
-    smregistreringService: SmregistreringService
+    smregistreringService: SmregistreringService,
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -56,12 +56,12 @@ fun createApplicationEngine(
         setupAuth(
             jwkProvider = jwkProvider,
             issuer = issuer,
-            clientIdV2 = env.clientIdV2
+            clientIdV2 = env.clientIdV2,
         )
 
         routing {
             registerNaisApi(applicationState)
-            setupSwaggerDocApi()
+            swaggerUI(path = "swagger", swaggerFile = "api/oas3/macgyver-api.yaml")
 
             authenticate("jwt") {
                 registerFnrApi(updateFnrService)

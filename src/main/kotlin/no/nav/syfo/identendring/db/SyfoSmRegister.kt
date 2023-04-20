@@ -17,7 +17,7 @@ fun Database.updateFnr(fnr: String, nyttFnr: String): Int {
         connection.prepareStatement(
             """
             UPDATE sykmeldingsopplysninger set pasient_fnr = ? where pasient_fnr = ?;
-        """
+        """,
         ).use {
             it.setString(1, nyttFnr)
             it.setString(2, fnr)
@@ -59,7 +59,7 @@ private fun Connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fn
                                                                                              LIMIT 1)
                     where opplysninger.pasient_fnr = ?
                     and not exists(select 1 from sykmeldingstatus where sykmelding_id = opplysninger.id and event in ('SLETTET'));
-                    """
+                    """,
     ).use {
         it.setString(1, fnr)
         it.executeQuery().toList { toSykmeldingDbModelUtenBehandlingsutfall() }
@@ -74,7 +74,7 @@ fun ResultSet.toSykmeldingDbModelUtenBehandlingsutfall(): SykmeldingDbModelUtenB
         legekontorOrgNr = getString("legekontor_org_nr"),
         status = getStatus(mottattTidspunkt),
         merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) }
+        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) },
     )
 }
 
@@ -87,7 +87,7 @@ private fun ResultSet.getStatus(mottattTidspunkt: OffsetDateTime): StatusDbModel
                 StatusEvent.SENDT.name -> ArbeidsgiverDbModel(
                     orgnummer = getString("orgnummer"),
                     juridiskOrgnummer = getString("juridisk_orgnummer"),
-                    orgNavn = getString("navn")
+                    orgNavn = getString("navn"),
                 )
                 else -> null
             }

@@ -25,7 +25,7 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
         try {
             logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
-                "slette sykmelding med id $sykmeldingId"
+                "slette sykmelding med id $sykmeldingId",
             )
 
             deleteSykmeldingService.deleteSykmelding(sykmeldingId)

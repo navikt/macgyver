@@ -19,7 +19,7 @@ fun Route.registerDeleteLegeerklaeringApi(deleteLegeerklaeringService: DeleteLeg
         try {
             logNAVEpostAndActionToSecureLog(
                 getAccessTokenFromAuthHeader(call.request),
-                "slette legeerklaering med id $legeerklaeringId"
+                "slette legeerklaering med id $legeerklaeringId",
             )
 
             deleteLegeerklaeringService.deleteLegeerklaering(legeerklaeringId)
@@ -32,7 +32,7 @@ fun Route.registerDeleteLegeerklaeringApi(deleteLegeerklaeringService: DeleteLeg
             log.error("Kastet exception ved sletting av legeerklaering med id $legeerklaeringId", e)
             call.respond(
                 HttpStatusCode.InternalServerError,
-                HttpMessage("Noe gikk galt ved sletting av legeerklaering, prøv igjen")
+                HttpMessage("Noe gikk galt ved sletting av legeerklaering, prøv igjen"),
             )
         }
     }

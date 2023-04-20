@@ -16,7 +16,7 @@ class DeleteSykmeldingService(
     val kafkaProducer: SykmeldingStatusKafkaProducer,
     val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer,
     val tombstoneProducer: KafkaProducer<String, Any?>,
-    val topics: List<String>
+    val topics: List<String>,
 
 ) {
     fun deleteSykmelding(sykmeldingID: String) {
@@ -29,10 +29,10 @@ class DeleteSykmeldingService(
                     OffsetDateTime.now(ZoneOffset.UTC),
                     STATUS_SLETTET,
                     null,
-                    null
+                    null,
                 ),
                 "macgyver",
-                sykmelding.sykmeldingsopplysninger.pasientFnr
+                sykmelding.sykmeldingsopplysninger.pasientFnr,
             )
             try {
                 topics.forEach { topic ->

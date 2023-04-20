@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class DeleteLegeerklaeringService(
     val tombstoneProducer: KafkaProducer<String, Any?>,
-    val topics: List<String>
+    val topics: List<String>,
 
 ) {
     fun deleteLegeerklaering(legeerklaeringId: String) {
@@ -17,7 +17,7 @@ class DeleteLegeerklaeringService(
         } catch (exception: Exception) {
             log.error(
                 "Noe gikk galt med sletting av legeerklæring, legeerklaeringId $legeerklaeringId: {}",
-                exception.message
+                exception.message,
             )
             throw exception
         }

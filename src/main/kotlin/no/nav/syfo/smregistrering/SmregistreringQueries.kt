@@ -11,7 +11,7 @@ fun Database.getApenRegistreringsoppgave(journalpostId: String): Int? =
                 FROM MANUELLOPPGAVE 
                 WHERE journalpost_id = ? 
                 AND ferdigstilt = false;
-                """
+                """,
         ).use {
             it.setString(1, journalpostId)
             it.executeQuery().toList { it.resultSet.getInt("oppgave_id") }.firstOrNull()
@@ -24,7 +24,7 @@ fun Database.slettRegistreringsoppgave(oppgaveId: Int) {
             """
                 DELETE FROM MANUELLOPPGAVE 
                 WHERE oppgave_id = ?;
-                """
+                """,
         ).use {
             it.setInt(1, oppgaveId)
             it.executeUpdate()

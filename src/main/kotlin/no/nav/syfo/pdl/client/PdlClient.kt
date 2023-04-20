@@ -18,7 +18,7 @@ class PdlClient(
     private val httpClient: HttpClient,
     private val basePath: String,
     private val graphQlQuery: String,
-    private val graphQlQueryAktorids: String
+    private val graphQlQueryAktorids: String,
 ) {
 
     private val temaHeader = "TEMA"
