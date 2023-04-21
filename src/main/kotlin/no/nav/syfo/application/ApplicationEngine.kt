@@ -61,7 +61,7 @@ fun createApplicationEngine(
 
         routing {
             registerNaisApi(applicationState)
-            swaggerUI(path = "swagger", swaggerFile = "api/oas3/macgyver-api.yaml")
+            swaggerUI(path = "/api/v1/docs/", swaggerFile = "/api/oas3/macgyver-api.yaml")
 
             authenticate("jwt") {
                 registerFnrApi(updateFnrService)
