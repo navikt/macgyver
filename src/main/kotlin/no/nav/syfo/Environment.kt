@@ -21,7 +21,7 @@ data class Environment(
     val oppgaveScope: String = getEnvVar("OPPGAVE_SCOPE"),
     val pdlGraphqlPath: String = getEnvVar("PDL_GRAPHQL_PATH"),
     val pdlScope: String = getEnvVar("PDL_SCOPE"),
-    val narmestelederUrl: String = getEnvVar("NARMESTELEDER_URL"),
+    val narmestelederUrl: String = "http://narmesteleder",
     val narmestelederScope: String = getEnvVar("NARMESTELEDER_SCOPE"),
     val syfosmregisterDatabaseUsername: String = getEnvVar("DB_MACGYVER_USERNAME"),
     val syfosmregisterDatabasePassword: String = getEnvVar("DB_MACGYVER_PASSWORD"),

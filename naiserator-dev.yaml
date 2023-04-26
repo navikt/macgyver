@@ -47,6 +47,13 @@ spec:
         - application: macgyver-frontend
           namespace: teamsykmelding
           cluster: dev-gcp
+    outbound:
+      rules:
+        - application: narmesteleder
+      external:
+        - host: saf.dev-fss-pub.nais.io
+        - host: pdl-api.dev-fss-pub.nais.io
+        - host: oppgave-q1.dev-fss-pub.nais.io
   azure:
     application:
       allowAllUsers: true
@@ -71,8 +78,6 @@ spec:
       value: https://oppgave-q1.dev-fss-pub.nais.io/api/v1/oppgaver
     - name: OPPGAVE_SCOPE
       value: api://dev-fss.oppgavehandtering.oppgave-q1/.default
-    - name: NARMESTELEDER_URL
-      value: https://narmesteleder.dev.intern.nav.no
     - name: NARMESTELEDER_SCOPE
       value: api://dev-gcp.teamsykmelding.narmesteleder/.default
     - name: SYFOSMREGISTER_CLOUD_SQL_INSTANCE
@@ -83,3 +88,7 @@ spec:
       value: teamsykmelding-dev-1d34:europe-north1:smregistrering-instance
     - name: SMREGISTRERING_DB_NAME
       value: smregistrering
+    - name: SAF_URL
+      value: https://saf.dev-fss-pub.nais.io
+    - name: SAF_SCOPE
+      value: api://dev-fss.teamdokumenthandtering.saf-q1/.default
