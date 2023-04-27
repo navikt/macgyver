@@ -126,7 +126,7 @@ dependencies {
 
 swaggerSources {
     create("macgyver").apply {
-        setInputFile(file("api/oas3/macgyver-api.yaml"))
+        setInputFile(file("src/main/resources/openapi/documentation.yaml"))
     }
 }
 

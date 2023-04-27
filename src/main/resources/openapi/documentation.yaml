@@ -1,0 +1,425 @@
+openapi: "3.0.3"
+info:
+  title: "macgyver API"
+  description: "macgyver API"
+  version: "1.0.0"
+servers:
+- url: "https://macgyver"
+paths:
+  /api/journalposter:
+    get:
+      description: ""
+      parameters:
+      - name: "fnr"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Journalposter"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/leder/fnr:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/EndreFnr"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "304":
+          description: "Not Modified"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/legeerklaering/{legeerklaeringId}:
+    delete:
+      description: ""
+      parameters:
+      - name: "legeerklaeringId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/narmesteleder/request:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/NlRequestDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/oppgave/list:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: "array"
+              items:
+                type: "integer"
+                format: "int32"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Oppgave"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/smregistrering/{journalpostId}/ferdigstill:
+    post:
+      description: ""
+      parameters:
+      - name: "journalpostId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/FerdigstillSmregOppgave"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/sykmelding/{sykmeldingId}:
+    delete:
+      description: ""
+      parameters:
+      - name: "sykmeldingId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/sykmelding/{sykmeldingId}/gjenapne:
+    post:
+      description: ""
+      parameters:
+      - name: "sykmeldingId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /api/sykmelding/fnr:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/EndreFnr"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "304":
+          description: "Not Modified"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HttpMessage"
+  /internal/is_alive:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "I'm alive! :)"
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "I'm dead x_x"
+  /internal/is_ready:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "I'm ready! :)"
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Please wait! I'm not ready :("
+  /internal/prometheus:
+    get:
+      description: ""
+      parameters:
+      - name: "name[]"
+        in: "query"
+        required: false
+        schema:
+          type: "array"
+          items:
+            type: "string"
+components:
+  schemas:
+    HttpMessage:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+    Journalposter:
+      type: "object"
+      properties:
+        journalpostId:
+          type: "string"
+        tittel:
+          type: "string"
+        journalstatus:
+          type: "string"
+          enum:
+          - "FERDIGSTILT"
+          - "JOURNALFOERT"
+          - "EKSPEDERT"
+    EndreFnr:
+      type: "object"
+      properties:
+        fnr:
+          type: "string"
+        nyttFnr:
+          type: "string"
+    NlRequestDTO:
+      type: "object"
+      properties:
+        fnr:
+          type: "string"
+        orgnummer:
+          type: "string"
+        sykmeldingId:
+          type: "string"
+    Oppgave:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        versjon:
+          type: "integer"
+          format: "int32"
+        tildeltEnhetsnr:
+          type: "string"
+        opprettetAvEnhetsnr:
+          type: "string"
+        aktoerId:
+          type: "string"
+        journalpostId:
+          type: "string"
+        behandlesAvApplikasjon:
+          type: "string"
+        saksreferanse:
+          type: "string"
+        tilordnetRessurs:
+          type: "string"
+        beskrivelse:
+          type: "string"
+        tema:
+          type: "string"
+        oppgavetype:
+          type: "string"
+        behandlingstype:
+          type: "string"
+        aktivDato:
+          type: "string"
+          format: "date"
+        fristFerdigstillelse:
+          type: "string"
+          format: "date"
+        prioritet:
+          type: "string"
+        status:
+          type: "string"
+        mappeId:
+          type: "integer"
+          format: "int32"
+    FerdigstillSmregOppgave:
+      type: "object"
+      properties:
+        ferdigstiltAv:
+          type: "string"

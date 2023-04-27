@@ -20,6 +20,8 @@ import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.service.PdlPersonService
+import no.nav.syfo.saf.client.SafClient
+import no.nav.syfo.saf.service.SafService
 
 class HttpClients(environment: Environment) {
     private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
@@ -59,8 +61,8 @@ class HttpClients(environment: Environment) {
     private val pdlClient = PdlClient(
         httpClient = httpClient,
         basePath = environment.pdlGraphqlPath,
-        graphQlQuery = PdlClient::class.java.getResource("/graphql/getPerson.graphql").readText().replace(Regex("[\n\t]"), ""),
-        graphQlQueryAktorids = PdlClient::class.java.getResource("/graphql/getAktorids.graphql").readText().replace(Regex("[\n\t]"), ""),
+        graphQlQuery = PdlClient::class.java.getResource("/graphql/getPerson.graphql")!!.readText().replace(Regex("[\n\t]"), ""),
+        graphQlQueryAktorids = PdlClient::class.java.getResource("/graphql/getAktorids.graphql")!!.readText().replace(Regex("[\n\t]"), ""),
     )
 
     val pdlService = PdlPersonService(pdlClient, accessTokenClientV2, environment.pdlScope)
@@ -68,4 +70,12 @@ class HttpClients(environment: Environment) {
     val oppgaveClient = OppgaveClient(environment.oppgavebehandlingUrl, accessTokenClientV2, environment.oppgaveScope, httpClient)
 
     val narmestelederClient = NarmestelederClient(httpClient, accessTokenClientV2, environment.narmestelederUrl, environment.narmestelederScope)
+
+    private val safClient = SafClient(
+        httpClient = httpClient,
+        basePath = environment.safGraphqlPath,
+        graphQlQuery = SafClient::class.java.getResource("/graphql/dokumentoversiktBruker.graphql")!!.readText().replace(Regex("[\n\t]"), ""),
+    )
+
+    val safService = SafService(safClient, accessTokenClientV2, environment.safScope)
 }

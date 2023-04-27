@@ -167,6 +167,7 @@ fun main() {
         issuer = environment.jwtIssuer,
         deleteLegeerklaeringService = deleteLegeerklaeringService,
         smregistreringService = smregistreringService,
+        safService = httpClients.safService,
     )
     val applicationServer = ApplicationServer(applicationEngine, applicationState)
 

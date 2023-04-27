@@ -36,6 +36,8 @@ data class Environment(
     val smregistreringDatabasePort: String = getEnvVar("NAIS_DATABASE_MACGYVER_PORT"),
     val smregistreringDatabaseName: String = getEnvVar("SMREGISTRERING_DB_NAME"),
     val smregisteringDatabaseCloudSqlInstance: String = getEnvVar("SMREGISTRERING_CLOUD_SQL_INSTANCE"),
+    val safGraphqlPath: String = getEnvVar("SAF_GRAPHQL_PATH"),
+    val safScope: String = getEnvVar("SAF_SCOPE"),
 
 )
 fun getEnvVar(varName: String, defaultValue: String? = null) =

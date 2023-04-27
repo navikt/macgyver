@@ -24,6 +24,8 @@ import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.api.registrerNarmestelederRequestApi
 import no.nav.syfo.oppgave.api.registerHentOppgaverApi
 import no.nav.syfo.oppgave.client.OppgaveClient
+import no.nav.syfo.saf.api.registerJournalpostApi
+import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.service.GjenapneSykmeldingService
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.smregistrering.api.registerFerdigstillRegistreringsoppgaveApi
@@ -43,6 +45,7 @@ fun createApplicationEngine(
     issuer: String,
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
     smregistreringService: SmregistreringService,
+    safService: SafService,
 ): ApplicationEngine =
     embeddedServer(Netty, env.applicationPort) {
         install(ContentNegotiation) {
@@ -61,7 +64,7 @@ fun createApplicationEngine(
 
         routing {
             registerNaisApi(applicationState)
-            swaggerUI(path = "docs", swaggerFile = "api/oas3/macgyver-api.yaml")
+            swaggerUI(path = "docs", swaggerFile = "openapi/documentation.yaml")
 
             authenticate("jwt") {
                 registerFnrApi(updateFnrService)
@@ -71,6 +74,7 @@ fun createApplicationEngine(
                 registrerNarmestelederRequestApi(narmestelederService)
                 registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
                 registerFerdigstillRegistreringsoppgaveApi(smregistreringService)
+                registerJournalpostApi(safService)
             }
         }
     }

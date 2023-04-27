@@ -88,7 +88,7 @@ spec:
       value: teamsykmelding-dev-1d34:europe-north1:smregistrering-instance
     - name: SMREGISTRERING_DB_NAME
       value: smregistrering
-    - name: SAF_URL
-      value: https://saf.dev-fss-pub.nais.io
+    - name: SAF_GRAPHQL_PATH
+      value: https://saf.dev-fss-pub.nais.io/graphql
     - name: SAF_SCOPE
       value: api://dev-fss.teamdokumenthandtering.saf-q1/.default

@@ -1,0 +1,9 @@
+query($brukerId: BrukerIdInput!) {
+    dokumentoversiktBruker(brukerId: $brukerId) {
+        journalposter {
+            journalpostId
+            tittel
+            journalstatus
+        }
+    }
+}
