@@ -24,8 +24,7 @@ class SafClient(
             query = graphQlQuery,
             variables = Variables(brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR), foerste = 100),
         )
-        val response: String = getGraphQLResponse(getDokumentoversiktBrukerRequest, token)
-        log.info("response is: $response")
+
         return getGraphQLResponse(getDokumentoversiktBrukerRequest, token)
     }
 
