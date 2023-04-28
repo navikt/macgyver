@@ -21,7 +21,7 @@ class SafClient(
     suspend fun getDokumentoversiktBruker(fnr: String, token: String): GetDokumentoversiktBrukerResponse {
         val getDokumentoversiktBrukerRequest = GetDokumentoversiktBrukerRequest(
             query = graphQlQuery,
-            variables = Variables( brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR), foerste = 100)
+            variables = Variables(brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR), foerste = 100),
         )
         return getGraphQLResponse(getDokumentoversiktBrukerRequest, token)
     }

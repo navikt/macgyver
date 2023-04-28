@@ -5,4 +5,4 @@ data class GetDokumentoversiktBrukerRequest(val query: String, val variables: Va
 data class Variables(
     val brukerId: BrukerIdInput,
     val foerste: Int,
-    )
+)

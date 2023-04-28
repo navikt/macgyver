@@ -21,11 +21,11 @@ class SafService(
                 log.error("SAF kastet error: {} ", it)
             }
         }
-        if (getDokumentoversiktBrukerResponse.data.journalposter.isNullOrEmpty()) {
+        if (getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter.isNullOrEmpty()) {
             log.error("Fant ikke journalposter i SAF")
             throw JournalposterNotFoundException("Fant ikke journalposter i SAF")
         }
 
-        return getDokumentoversiktBrukerResponse.data.journalposter
+        return getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter
     }
 }
