@@ -4,7 +4,7 @@ info:
   description: "macgyver API"
   version: "1.0.0"
 servers:
-- url: "https://macgyver"
+- url: "https://macgyver.intern.dev.nav.no"
 paths:
   /api/journalposter:
     get:
