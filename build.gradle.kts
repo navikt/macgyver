@@ -126,7 +126,7 @@ dependencies {
 
 swaggerSources {
     create("macgyver").apply {
-        setInputFile(file("api/oas3/documentation.yaml"))
+        setInputFile(file("documentation.yaml"))
     }
 }
 
@@ -148,7 +148,7 @@ tasks {
     }
 
     withType<org.hidetake.gradle.swagger.generator.GenerateSwaggerUI> {
-        outputDir = File(buildDir.path + "/resources/main/api")
+        outputDir = File(buildDir.path + "/resources/main/openapi")
     }
 
     withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
