@@ -9,24 +9,17 @@ data class GetDokumentoversiktBrukerResponse(
 )
 
 data class ResponseData(
-    val dokumentoversiktBruker: Journalposter?,
+    val dokumentoversiktBruker: DokumentoversiktBruker?,
 )
 
-data class Journalposter(
+data class DokumentoversiktBruker(
     val journalposter: List<Journalpost>?,
 )
 
 data class Journalpost(
     val journalpostId: String,
     val tittel: String?,
-    val journalstatus: Journalstatus,
 )
-
-enum class Journalstatus {
-    FERDIGSTILT,
-    JOURNALFOERT,
-    EKSPEDERT,
-}
 
 data class ResponseError(
     val message: String?,

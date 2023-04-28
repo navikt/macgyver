@@ -1,9 +1,8 @@
 query dokumentoversiktBruker($brukerId: BrukerIdInput!, $foerste: Int!) {
-    dokumentoversiktBruker(brukerId: $brukerId, $foerste: Int!) {
+    dokumentoversiktBruker(brukerId: $brukerId, foerste: $foerste) {
         journalposter {
             journalpostId
             tittel
-            journalstatus
         }
     }
 }
