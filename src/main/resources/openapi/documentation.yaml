@@ -4,14 +4,14 @@ info:
   description: "macgyver API"
   version: "1.0.0"
 servers:
-- url: "https://macgyver.intern.dev.nav.no"
+- url: "https://macgyver"
 paths:
   /api/journalposter:
     get:
       description: ""
       parameters:
       - name: "fnr"
-        in: "query"
+        in: "header"
         required: false
         schema:
           type: "string"

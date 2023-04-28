@@ -13,7 +13,7 @@ import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerJournalpostApi(safService: SafService) {
     get("/api/journalposter") {
-        val fnr = call.request.queryParameters["fnr"]
+        val fnr = call.request.headers["fnr"]
 
         if (fnr.isNullOrEmpty()) {
             log.warn("fnr kan ikke være null eller tom")
