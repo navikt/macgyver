@@ -64,7 +64,7 @@ fun createApplicationEngine(
 
         routing {
             registerNaisApi(applicationState)
-            swaggerUI(path = "docs", swaggerFile = "api/oas3/documentation.yaml")
+            swaggerUI(path = "docs", swaggerFile = "openapi/documentation.yaml")
 
             authenticate("jwt") {
                 registerFnrApi(updateFnrService)
