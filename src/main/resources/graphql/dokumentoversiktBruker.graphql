@@ -1,4 +1,4 @@
-query($brukerId: BrukerIdInput!, $foerste: Int!) {
+query dokumentoversiktBruker($brukerId: BrukerIdInput!, $foerste: Int!) {
     dokumentoversiktBruker(brukerId: $brukerId, $foerste: Int!) {
         journalposter {
             journalpostId
