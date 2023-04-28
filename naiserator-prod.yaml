@@ -87,6 +87,6 @@ spec:
     - name: SMREGISTRERING_DB_NAME
       value: smregistrering
     - name: SAF_GRAPHQL_PATH
-      value: https://saf.prod-fss-pub.nais.io
+      value: https://saf.prod-fss-pub.nais.io/graphql
     - name: SAF_SCOPE
       value: api://prod-fss.teamdokumenthandtering.saf/.default
