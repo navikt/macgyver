@@ -28,8 +28,13 @@ fun Route.registerJournalpostApi(safService: SafService) {
             )
             val journalposter = safService.getDokumentoversiktBruker(fnr)
 
-            log.info("Sender http OK status tilbake, for henting av journalposter fra saf-api")
-            call.respond(HttpStatusCode.OK, journalposter)
+            if (journalposter == null) {
+                log.info("Sender http OK status tilbake, for henting av journalposter fra saf-api")
+                call.respond(HttpStatusCode.NotFound, "Fant ingen journalposter")
+            } else {
+                log.info("Sender http OK status tilbake, for henting av journalposter fra saf-api")
+                call.respond(HttpStatusCode.OK, journalposter)
+            }
         } catch (e: Exception) {
             log.error("Kastet exception ved henting av journalposter fra saf-api", e)
             call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved henting av journalposter"))

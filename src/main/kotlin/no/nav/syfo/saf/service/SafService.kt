@@ -4,7 +4,7 @@ import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.log
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.error.JournalposterNotFoundException
-import no.nav.syfo.saf.model.Journalposter
+import no.nav.syfo.saf.model.Journalpost
 
 class SafService(
     private val safClient: SafClient,
@@ -12,7 +12,7 @@ class SafService(
     private val safScope: String,
 ) {
 
-    suspend fun getDokumentoversiktBruker(fnr: String): List<Journalposter> {
+    suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
         val token = accessTokenClientV2.getAccessTokenV2(safScope)
         val getDokumentoversiktBrukerResponse = safClient.getDokumentoversiktBruker(fnr = fnr, token = token)
 
@@ -21,11 +21,13 @@ class SafService(
                 log.error("SAF kastet error: {} ", it)
             }
         }
-        if (getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter.isNullOrEmpty()) {
+        if (getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker != null &&
+            getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter.isNullOrEmpty()
+        ) {
             log.error("Fant ikke journalposter i SAF")
             throw JournalposterNotFoundException("Fant ikke journalposter i SAF")
+        } else {
+            return getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker?.journalposter
         }
-
-        return getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter
     }
 }

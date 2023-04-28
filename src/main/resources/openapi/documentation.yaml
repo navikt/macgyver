@@ -6,13 +6,13 @@ info:
 servers:
 - url: "https://macgyver"
 paths:
-  /api/journalposter:
+  /api/journalposter/{fnr}:
     get:
       description: ""
       parameters:
       - name: "fnr"
-        in: "header"
-        required: false
+        in: "path"
+        required: true
         schema:
           type: "string"
       responses:
@@ -22,6 +22,15 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/HttpMessage"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Fant ingen journalposter"
         "200":
           description: "OK"
           content:
@@ -29,7 +38,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Journalposter"
+                  $ref: "#/components/schemas/Journalpost"
         "500":
           description: "Internal Server Error"
           content:
@@ -345,7 +354,7 @@ components:
       properties:
         message:
           type: "string"
-    Journalposter:
+    Journalpost:
       type: "object"
       properties:
         journalpostId:

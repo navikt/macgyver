@@ -9,11 +9,11 @@ data class GetDokumentoversiktBrukerResponse(
 )
 
 data class ResponseData(
-    val dokumentoversiktBruker: Journalposter,
+    val dokumentoversiktBruker: Journalposter?,
 )
 
 data class Journalposter(
-    val journalposter: List<Journalposter>?,
+    val journalposter: List<Journalpost>?,
 )
 
 data class Journalpost(
