@@ -6,10 +6,11 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpHeaders
-import no.nav.syfo.saf.model.BrukerIdInput
+import no.nav.syfo.saf.model.BrukerId
 import no.nav.syfo.saf.model.BrukerIdType
 import no.nav.syfo.saf.model.GetDokumentoversiktBrukerRequest
 import no.nav.syfo.saf.model.GetDokumentoversiktBrukerResponse
+import no.nav.syfo.saf.model.Variables
 
 class SafClient(
     private val httpClient: HttpClient,
@@ -20,7 +21,7 @@ class SafClient(
     suspend fun getDokumentoversiktBruker(fnr: String, token: String): GetDokumentoversiktBrukerResponse {
         val getDokumentoversiktBrukerRequest = GetDokumentoversiktBrukerRequest(
             query = graphQlQuery,
-            variables = BrukerIdInput(id = fnr, type = BrukerIdType.FNR),
+            variables = Variables( brukerId = BrukerId(id = fnr, type = BrukerIdType.FNR), foerste = 100)
         )
         return getGraphQLResponse(getDokumentoversiktBrukerRequest, token)
     }
