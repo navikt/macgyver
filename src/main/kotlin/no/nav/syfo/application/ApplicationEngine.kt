@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.install
 import io.ktor.server.auth.authenticate
@@ -12,6 +13,7 @@ import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.routing.routing
 import no.nav.syfo.Environment
@@ -61,6 +63,11 @@ fun createApplicationEngine(
             issuer = issuer,
             clientIdV2 = env.clientIdV2,
         )
+
+        install(CORS) {
+            anyHost()
+            allowHeader(HttpHeaders.ContentType)
+        }
 
         routing {
             registerNaisApi(applicationState)
