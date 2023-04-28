@@ -12,8 +12,8 @@ import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerJournalpostApi(safService: SafService) {
-    get("/api/journalposter") {
-        val fnr = call.request.headers["fnr"]
+    get("/api/journalposter/{fnr}") {
+        val fnr = call.parameters["fnr"]
 
         if (fnr.isNullOrEmpty()) {
             log.warn("fnr kan ikke være null eller tom")
