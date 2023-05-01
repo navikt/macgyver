@@ -26,6 +26,7 @@ This the high level flow of the application
       macgyver --- PDL;
       macgyver --- oppgave;
       macgyver --- narmesteleder;
+      macgyver --- saf;
 ```
 
 ## Getting started
