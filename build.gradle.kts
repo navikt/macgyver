@@ -5,7 +5,6 @@ version = "1.0.0"
 
 val coroutinesVersion = "1.6.4"
 val jacksonVersion = "2.15.0"
-val kluentVersion = "1.73"
 val ktorVersion = "2.3.0"
 val logbackVersion = "1.4.6"
 val logstashEncoderVersion = "7.3"
@@ -20,16 +19,15 @@ val javaxJaxwsApiVersion = "2.3.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
 val mockkVersion = "1.13.5"
-val smCommonVersion = "1.dec4861"
-val sykmeldingVersion = "2019.09.09-08-50-693492ddc1d3f98e70c1638c94dcb95a66036d12"
-val fellesformatVersion = "2019.07.30-12-26-5c924ef4f04022bbb850aaf299eb8e4464c1ca6a"
-val kithHodemeldingVersion = "2019.09.09-08-50-693492ddc1d3f98e70c1638c94dcb95a66036d12"
+val smCommonVersion = "1.0.1"
+val sykmeldingVersion = "1.0.3"
+val fellesformatVersion = "1.0.3"
+val kithHodemeldingVersion = "1.0.3"
 val javaTimeAdapterVersion = "1.1.3"
 val postgresVersion = "42.6.0"
 val confluentVersion = "6.2.2"
 val swaggerUiVersion = "4.18.2"
 val kotlinVersion = "1.8.21"
-val kotestVersion = "5.4.1"
 val googlePostgresVersion = "1.11.1"
 val junitVersion = "5.9.3"
 val nimbusdsVersion = "9.31"
@@ -119,7 +117,6 @@ dependencies {
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusjosejwtVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")

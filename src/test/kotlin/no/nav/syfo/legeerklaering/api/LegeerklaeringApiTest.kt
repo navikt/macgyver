@@ -21,7 +21,7 @@ import no.nav.syfo.application.setupAuth
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.objectMapper
 import no.nav.syfo.testutil.generateJWT
-import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 
@@ -66,8 +66,8 @@ internal class LegeerklaeringApiTest {
                     addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 },
             ) {
-                response.status() shouldBeEqualTo HttpStatusCode.OK
-                response.content shouldBeEqualTo objectMapper.writeValueAsString(HttpMessage("Vellykket sletting"))
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals(objectMapper.writeValueAsString(HttpMessage("Vellykket sletting")), response.content)
             }
         }
     }
@@ -106,8 +106,8 @@ internal class LegeerklaeringApiTest {
             with(
                 handleRequest(HttpMethod.Delete, "/api/legeerklaering/${null}") {},
             ) {
-                response.status() shouldBeEqualTo HttpStatusCode.Unauthorized
-                response.content shouldBeEqualTo objectMapper.writeValueAsString(HttpMessage("Unauthorized"))
+                assertEquals(HttpStatusCode.Unauthorized, response.status())
+                assertEquals(objectMapper.writeValueAsString(HttpMessage("Unauthorized")), response.content)
             }
         }
     }

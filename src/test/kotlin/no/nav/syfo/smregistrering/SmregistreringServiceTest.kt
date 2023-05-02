@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.syfo.db.Database
 import no.nav.syfo.oppgave.client.Oppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
-import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -77,8 +77,7 @@ class SmregistreringServiceTest {
             ferdigstiltAv = "Z989898",
             tidspunkt = tidspunkt,
         )
-
-        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n"
+        assertEquals("--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n", beskrivelse)
     }
 
     @Test
@@ -89,7 +88,6 @@ class SmregistreringServiceTest {
             ferdigstiltAv = "Z989898",
             tidspunkt = tidspunkt,
         )
-
-        beskrivelse shouldBeEqualTo "--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n --- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave."
+        assertEquals("--- 25.11.2022 15:30 Z989898, 2822 ---\nSykmelding er slettet og oppgaven lukket.\n\n --- 20.11.2022 15:00 srvsmreg, 9999 ---\nOpprettet registreringsoppgave.", beskrivelse)
     }
 }

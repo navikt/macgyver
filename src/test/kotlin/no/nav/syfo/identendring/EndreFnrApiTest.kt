@@ -31,7 +31,7 @@ import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.model.EndreFnr
 import no.nav.syfo.testutil.generateJWT
-import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 
@@ -100,8 +100,8 @@ internal class EndreFnrApiTest {
                     setBody(objectMapper.writeValueAsString(endreFnr))
                 },
             ) {
-                response.status() shouldBeEqualTo HttpStatusCode.OK
-                response.content shouldBeEqualTo "{\"message\":\"Vellykket oppdatering.\"}"
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("{\"message\":\"Vellykket oppdatering.\"}", response.content)
             }
         }
     }

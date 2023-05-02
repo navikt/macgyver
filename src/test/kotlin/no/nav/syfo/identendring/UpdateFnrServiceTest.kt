@@ -38,7 +38,7 @@ import no.nav.syfo.pdl.model.PdlPerson
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sm.Diagnosekoder
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
-import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -49,13 +49,13 @@ import java.util.UUID
 import kotlin.test.assertFailsWith
 
 internal class UpdateFnrServiceTest {
-    val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
-    val db = mockk<Database>(relaxed = true)
-    val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
-    val narmesteLederResponseKafkaProducer = mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
-    val narmestelederClient = mockk<NarmestelederClient>()
+    private val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
+    private val db = mockk<Database>(relaxed = true)
+    private val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
+    private val narmesteLederResponseKafkaProducer = mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
+    private val narmestelederClient = mockk<NarmestelederClient>()
 
-    val updateFnrService = UpdateFnrService(
+    private val updateFnrService = UpdateFnrService(
         pdlPersonService,
         db,
         sendtSykmeldingKafkaProducer,
@@ -85,10 +85,13 @@ internal class UpdateFnrServiceTest {
         every { db.updateFnr(any(), any()) } returns 1
 
         runBlocking {
-            updateFnrService.updateFnr(
-                fnr = "12345678912",
-                nyttFnr = "12345678913",
-            ) shouldBeEqualTo true
+            assertEquals(
+                true,
+                updateFnrService.updateFnr(
+                    fnr = "12345678912",
+                    nyttFnr = "12345678913",
+                ),
+            )
         }
     }
 
@@ -112,7 +115,7 @@ internal class UpdateFnrServiceTest {
                     nyttFnr = "12345678914",
                 )
             }
-            assertFailsWith.message shouldBeEqualTo "Oppdatering av fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
+            assertEquals("Oppdatering av fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL", assertFailsWith.message)
         }
     }
 
@@ -136,7 +139,7 @@ internal class UpdateFnrServiceTest {
                     nyttFnr = "12345678913",
                 )
             }
-            assertFailsWith.message shouldBeEqualTo "Oppdatering av fnr feilet, fnr er ikke historisk for aktør"
+            assertEquals("Oppdatering av fnr feilet, fnr er ikke historisk for aktør", assertFailsWith.message)
         }
     }
 
@@ -156,10 +159,13 @@ internal class UpdateFnrServiceTest {
         every { db.updateFnr(any(), any()) } returns 1
 
         runBlocking {
-            updateFnrService.updateFnr(
-                fnr = "12345678912",
-                nyttFnr = "12345678913",
-            ) shouldBeEqualTo true
+            assertEquals(
+                true,
+                updateFnrService.updateFnr(
+                    fnr = "12345678912",
+                    nyttFnr = "12345678913",
+                ),
+            )
 
             coVerify {
                 sendtSykmeldingKafkaProducer.sendSykmelding(
@@ -184,7 +190,7 @@ internal class UpdateFnrServiceTest {
     }
 
     @Test
-    internal fun `Oppdaterer kun sendte sykmeldinger fra de siste fire måneder og kun aktiv NL-relasjon`() {
+    internal fun `Oppdaterer kun sendte sykmeldinger fra de siste fire maaneder og kun aktiv NL-relasjon`() {
         coEvery { pdlPersonService.getPdlPerson(any()) } returns PdlPerson(
             listOf(
                 IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
@@ -218,10 +224,13 @@ internal class UpdateFnrServiceTest {
         every { db.updateFnr(any(), any()) } returns 1
 
         runBlocking {
-            updateFnrService.updateFnr(
-                fnr = "12345678912",
-                nyttFnr = "12345678913",
-            ) shouldBeEqualTo true
+            assertEquals(
+                true,
+                updateFnrService.updateFnr(
+                    fnr = "12345678912",
+                    nyttFnr = "12345678913",
+                ),
+            )
 
             coVerify(exactly = 1) {
                 sendtSykmeldingKafkaProducer.sendSykmelding(
@@ -263,7 +272,7 @@ internal class UpdateFnrServiceTest {
                     nyttFnr = "12345678914",
                 )
             }
-            assertFailsWith.message shouldBeEqualTo "Oppdatering av leders fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
+            assertEquals("Oppdatering av leders fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL", assertFailsWith.message)
         }
     }
 
@@ -285,7 +294,7 @@ internal class UpdateFnrServiceTest {
                     nyttFnr = "12345678913",
                 )
             }
-            assertFailsWith.message shouldBeEqualTo "Oppdatering av leders fnr feilet, fnr er ikke historisk for aktør"
+            assertEquals("Oppdatering av leders fnr feilet, fnr er ikke historisk for aktør", assertFailsWith.message)
         }
     }
 
@@ -307,10 +316,13 @@ internal class UpdateFnrServiceTest {
         )
 
         runBlocking {
-            updateFnrService.updateNlFnr(
-                fnr = "12345678912",
-                nyttFnr = "12345678913",
-            ) shouldBeEqualTo true
+            assertEquals(
+                true,
+                updateFnrService.updateNlFnr(
+                    fnr = "12345678912",
+                    nyttFnr = "12345678913",
+                ),
+            )
 
             coVerify(exactly = 1) {
                 narmesteLederResponseKafkaProducer.publishToKafka(

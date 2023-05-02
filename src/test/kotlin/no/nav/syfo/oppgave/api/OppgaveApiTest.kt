@@ -22,7 +22,7 @@ import no.nav.syfo.objectMapper
 import no.nav.syfo.oppgave.client.Oppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.testutil.generateJWT
-import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 import java.time.LocalDate
@@ -90,7 +90,7 @@ internal class OppgaveApiTest {
                     setBody(objectMapper.writeValueAsString(oppgaverid))
                 },
             ) {
-                response.status() shouldBeEqualTo HttpStatusCode.OK
+                assertEquals(HttpStatusCode.OK, response.status())
             }
         }
     }

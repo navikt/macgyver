@@ -6,7 +6,6 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpHeaders
-import no.nav.syfo.log
 import no.nav.syfo.saf.model.BrukerIdInput
 import no.nav.syfo.saf.model.BrukerIdType
 import no.nav.syfo.saf.model.GetDokumentoversiktBrukerRequest
