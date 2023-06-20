@@ -9,9 +9,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.log
-import java.time.LocalDate
 
 class OppgaveClient(
     private val url: String,
@@ -20,41 +20,48 @@ class OppgaveClient(
     private val httpClient: HttpClient,
 ) {
     suspend fun hentOppgave(oppgaveId: Int, msgId: String): Oppgave {
-        val httpResponse = httpClient.get("$url/$oppgaveId") {
-            contentType(ContentType.Application.Json)
-            val token = accessTokenClientV2.getAccessTokenV2(scope)
-            header("Authorization", "Bearer $token")
-            header("X-Correlation-ID", msgId)
-        }
+        val httpResponse =
+            httpClient.get("$url/$oppgaveId") {
+                contentType(ContentType.Application.Json)
+                val token = accessTokenClientV2.getAccessTokenV2(scope)
+                header("Authorization", "Bearer $token")
+                header("X-Correlation-ID", msgId)
+            }
 
         return when (httpResponse.status) {
             HttpStatusCode.OK -> {
                 httpResponse.body<Oppgave>()
             }
             else -> {
-                val msg = "OppgaveClient hentOppgave kastet feil ${httpResponse.status} ved hentOppgave av oppgave, response: ${httpResponse.body<String>()}"
+                val msg =
+                    "OppgaveClient hentOppgave kastet feil ${httpResponse.status} ved hentOppgave av oppgave, response: ${httpResponse.body<String>()}"
                 throw RuntimeException(msg)
             }
         }
     }
 
-    suspend fun ferdigstillOppgave(ferdigstilloppgave: FerdigstillOppgave, journalpostId: String): Oppgave {
+    suspend fun ferdigstillOppgave(
+        ferdigstilloppgave: FerdigstillOppgave,
+        journalpostId: String
+    ): Oppgave {
         log.info("Ferdigstiller oppgave for journalpostId $journalpostId")
 
-        val httpResponse = httpClient.patch(url + "/" + ferdigstilloppgave.id) {
-            contentType(ContentType.Application.Json)
-            val token = accessTokenClientV2.getAccessTokenV2(scope)
-            header("Authorization", "Bearer $token")
-            header("X-Correlation-ID", journalpostId)
-            setBody(ferdigstilloppgave)
-        }
+        val httpResponse =
+            httpClient.patch(url + "/" + ferdigstilloppgave.id) {
+                contentType(ContentType.Application.Json)
+                val token = accessTokenClientV2.getAccessTokenV2(scope)
+                header("Authorization", "Bearer $token")
+                header("X-Correlation-ID", journalpostId)
+                setBody(ferdigstilloppgave)
+            }
 
         return when (httpResponse.status) {
             HttpStatusCode.OK -> {
                 httpResponse.body<Oppgave>()
             }
             else -> {
-                val msg = "OppgaveClient ferdigstillOppgave kastet feil ${httpResponse.status} ved ferdigstilling av oppgave, response: ${httpResponse.body<String>()}"
+                val msg =
+                    "OppgaveClient ferdigstillOppgave kastet feil ${httpResponse.status} ved ferdigstilling av oppgave, response: ${httpResponse.body<String>()}"
                 log.error(msg)
                 throw RuntimeException(msg)
             }

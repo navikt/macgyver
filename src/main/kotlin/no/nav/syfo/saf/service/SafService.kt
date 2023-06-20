@@ -14,15 +14,18 @@ class SafService(
 
     suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
         val token = accessTokenClientV2.getAccessTokenV2(safScope)
-        val getDokumentoversiktBrukerResponse = safClient.getDokumentoversiktBruker(fnr = fnr, token = token)
+        val getDokumentoversiktBrukerResponse =
+            safClient.getDokumentoversiktBruker(fnr = fnr, token = token)
 
         if (getDokumentoversiktBrukerResponse.errors != null) {
             getDokumentoversiktBrukerResponse.errors.forEach {
                 log.error("SAF kastet error: {} ", it)
             }
         }
-        if (getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker != null &&
-            getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter.isNullOrEmpty()
+        if (
+            getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker != null &&
+                getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter
+                    .isNullOrEmpty()
         ) {
             log.error("Fant ikke journalposter i SAF")
             throw JournalposterNotFoundException("Fant ikke journalposter i SAF")

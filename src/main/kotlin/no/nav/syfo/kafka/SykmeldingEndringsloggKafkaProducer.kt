@@ -12,7 +12,9 @@ class SykmeldingEndringsloggKafkaProducer(
 
     fun publishToKafka(sykmelding: Sykmeldingsdokument) {
         try {
-            kafkaproducerEndringsloggSykmelding.send(ProducerRecord(endringsloggTopic, sykmelding)).get()
+            kafkaproducerEndringsloggSykmelding
+                .send(ProducerRecord(endringsloggTopic, sykmelding))
+                .get()
         } catch (e: Exception) {
             log.error("Noe gikk galt ved skriving til endringslogg-topic: ", e.cause)
             throw e

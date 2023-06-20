@@ -16,11 +16,12 @@ class PdlPersonService(
         val pdlResponse = pdlClient.getPerson(fnr = fnr, token = token)
 
         if (pdlResponse.errors != null) {
-            pdlResponse.errors.forEach {
-                log.error("PDL kastet error: {} ", it)
-            }
+            pdlResponse.errors.forEach { log.error("PDL kastet error: {} ", it) }
         }
-        if (pdlResponse.data.hentIdenter == null || pdlResponse.data.hentIdenter.identer.isNullOrEmpty()) {
+        if (
+            pdlResponse.data.hentIdenter == null ||
+                pdlResponse.data.hentIdenter.identer.isNullOrEmpty()
+        ) {
             log.error("Fant ikke aktørid i PDL {}")
             throw AktoerNotFoundException("Fant ikke aktørId i PDL")
         }
@@ -29,7 +30,10 @@ class PdlPersonService(
             throw AktoerNotFoundException("Fant ikke aktørId i PDL")
         }
 
-        return PdlPerson(identer = pdlResponse.data.hentIdenter.identer, navn = toFormattedNameString(pdlNavn.fornavn, pdlNavn.mellomnavn, pdlNavn.etternavn))
+        return PdlPerson(
+            identer = pdlResponse.data.hentIdenter.identer,
+            navn = toFormattedNameString(pdlNavn.fornavn, pdlNavn.mellomnavn, pdlNavn.etternavn)
+        )
     }
 
     suspend fun getFnrs(identer: List<String>, narmesteLederId: String): Map<String, String?> {
@@ -41,18 +45,27 @@ class PdlPersonService(
                 log.error("PDL returnerte error {}, {}", it, narmesteLederId)
             }
         }
-        if (pdlResponse.data.hentIdenterBolk == null || pdlResponse.data.hentIdenterBolk.isNullOrEmpty()) {
+        if (
+            pdlResponse.data.hentIdenterBolk == null ||
+                pdlResponse.data.hentIdenterBolk.isNullOrEmpty()
+        ) {
             log.error("Fant ikke identer i PDL {}", narmesteLederId)
             throw IllegalStateException("Fant ingen identer i PDL, skal ikke kunne skje!")
         }
         pdlResponse.data.hentIdenterBolk.forEach {
             if (it.code != "ok") {
-                log.warn("Mottok feilkode ${it.code} fra PDL for en eller flere identer, {}", narmesteLederId)
+                log.warn(
+                    "Mottok feilkode ${it.code} fra PDL for en eller flere identer, {}",
+                    narmesteLederId
+                )
             }
         }
-        return pdlResponse.data.hentIdenterBolk.map {
-            it.ident to it.identer?.firstOrNull { ident -> ident.gruppe == "FOLKEREGISTERIDENT" }?.ident
-        }.toMap()
+        return pdlResponse.data.hentIdenterBolk
+            .map {
+                it.ident to
+                    it.identer?.firstOrNull { ident -> ident.gruppe == "FOLKEREGISTERIDENT" }?.ident
+            }
+            .toMap()
     }
 }
 
@@ -65,8 +78,11 @@ private fun toFormattedNameString(fornavn: String, mellomnavn: String?, etternav
 }
 
 private fun capitalizeFirstLetter(string: String): String {
-    return string.lowercase()
-        .split(" ").joinToString(" ") { it.replaceFirstChar { char -> char.titlecaseChar() } }
-        .split("-").joinToString("-") { it.replaceFirstChar { char -> char.titlecaseChar() } }
+    return string
+        .lowercase()
+        .split(" ")
+        .joinToString(" ") { it.replaceFirstChar { char -> char.titlecaseChar() } }
+        .split("-")
+        .joinToString("-") { it.replaceFirstChar { char -> char.titlecaseChar() } }
         .trimEnd()
 }

@@ -1,42 +1,48 @@
 package no.nav.syfo.identendring.db
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import java.sql.Connection
+import java.sql.ResultSet
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
 import no.nav.syfo.log
 import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.objectMapper
-import java.sql.Connection
-import java.sql.ResultSet
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 fun Database.updateFnr(fnr: String, nyttFnr: String): Int {
     connection.use { connection ->
         var updated: Int
-        connection.prepareStatement(
-            """
+        connection
+            .prepareStatement(
+                """
             UPDATE sykmeldingsopplysninger set pasient_fnr = ? where pasient_fnr = ?;
         """,
-        ).use {
-            it.setString(1, nyttFnr)
-            it.setString(2, fnr)
-            updated = it.executeUpdate()
-            log.info("Updated {} sykmeldingsdokument", updated)
-        }
+            )
+            .use {
+                it.setString(1, nyttFnr)
+                it.setString(2, fnr)
+                updated = it.executeUpdate()
+                log.info("Updated {} sykmeldingsdokument", updated)
+            }
         connection.commit()
         return updated
     }
 }
 
-fun Database.getSykmeldingerMedFnrUtenBehandlingsutfall(fnr: String): List<SykmeldingDbModelUtenBehandlingsutfall> =
+fun Database.getSykmeldingerMedFnrUtenBehandlingsutfall(
+    fnr: String
+): List<SykmeldingDbModelUtenBehandlingsutfall> =
     connection.use { connection ->
         return connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fnr)
     }
 
-private fun Connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fnr: String): List<SykmeldingDbModelUtenBehandlingsutfall> =
+private fun Connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(
+    fnr: String
+): List<SykmeldingDbModelUtenBehandlingsutfall> =
     this.prepareStatement(
-        """
+            """
                     SELECT opplysninger.id,
                     mottatt_tidspunkt,
                     legekontor_org_nr,
@@ -60,21 +66,26 @@ private fun Connection.getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fn
                     where opplysninger.pasient_fnr = ?
                     and not exists(select 1 from sykmeldingstatus where sykmelding_id = opplysninger.id and event in ('SLETTET'));
                     """,
-    ).use {
-        it.setString(1, fnr)
-        it.executeQuery().toList { toSykmeldingDbModelUtenBehandlingsutfall() }
-    }
+        )
+        .use {
+            it.setString(1, fnr)
+            it.executeQuery().toList { toSykmeldingDbModelUtenBehandlingsutfall() }
+        }
 
 fun ResultSet.toSykmeldingDbModelUtenBehandlingsutfall(): SykmeldingDbModelUtenBehandlingsutfall {
     val mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toInstant().atOffset(ZoneOffset.UTC)
     return SykmeldingDbModelUtenBehandlingsutfall(
-        sykmeldingsDokument = objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java),
+        sykmeldingsDokument =
+            objectMapper.readValue(getString("sykmelding"), Sykmelding::class.java),
         id = getString("id"),
         mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toInstant().atOffset(ZoneOffset.UTC),
         legekontorOrgNr = getString("legekontor_org_nr"),
         status = getStatus(mottattTidspunkt),
         merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-        utenlandskSykmelding = getString("utenlandsk_sykmelding")?.let { objectMapper.readValue<UtenlandskSykmelding>(it) },
+        utenlandskSykmelding =
+            getString("utenlandsk_sykmelding")?.let {
+                objectMapper.readValue<UtenlandskSykmelding>(it)
+            },
     )
 }
 
@@ -83,14 +94,16 @@ private fun ResultSet.getStatus(mottattTidspunkt: OffsetDateTime): StatusDbModel
         null -> StatusDbModel(StatusEvent.APEN.name, mottattTidspunkt, null)
         else -> {
             val status_timestamp = getTimestamp("timestamp").toInstant().atOffset(ZoneOffset.UTC)
-            val arbeidsgiverDbModel = when (status) {
-                StatusEvent.SENDT.name -> ArbeidsgiverDbModel(
-                    orgnummer = getString("orgnummer"),
-                    juridiskOrgnummer = getString("juridisk_orgnummer"),
-                    orgNavn = getString("navn"),
-                )
-                else -> null
-            }
+            val arbeidsgiverDbModel =
+                when (status) {
+                    StatusEvent.SENDT.name ->
+                        ArbeidsgiverDbModel(
+                            orgnummer = getString("orgnummer"),
+                            juridiskOrgnummer = getString("juridisk_orgnummer"),
+                            orgNavn = getString("navn"),
+                        )
+                    else -> null
+                }
             return StatusDbModel(status, status_timestamp, arbeidsgiverDbModel)
         }
     }

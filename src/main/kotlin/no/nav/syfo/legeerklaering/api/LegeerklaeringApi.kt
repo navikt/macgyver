@@ -12,7 +12,9 @@ import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
-fun Route.registerDeleteLegeerklaeringApi(deleteLegeerklaeringService: DeleteLegeerklaeringService) {
+fun Route.registerDeleteLegeerklaeringApi(
+    deleteLegeerklaeringService: DeleteLegeerklaeringService
+) {
     delete("/api/legeerklaering/{legeerklaeringId}") {
         val legeerklaeringId = call.parameters["legeerklaeringId"]!!
 
@@ -23,7 +25,9 @@ fun Route.registerDeleteLegeerklaeringApi(deleteLegeerklaeringService: DeleteLeg
             )
 
             deleteLegeerklaeringService.deleteLegeerklaering(legeerklaeringId)
-            log.info("Sender http OK status tilbake for sletting av legeerklaering med id $legeerklaeringId")
+            log.info(
+                "Sender http OK status tilbake for sletting av legeerklaering med id $legeerklaeringId"
+            )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
         } catch (unauthorizedException: UnauthorizedException) {
             log.warn("Fant ikkje authorization header: ", unauthorizedException)

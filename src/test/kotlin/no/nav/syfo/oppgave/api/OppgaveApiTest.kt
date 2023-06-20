@@ -17,6 +17,8 @@ import io.ktor.server.testing.setBody
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import java.nio.file.Paths
+import java.time.LocalDate
 import no.nav.syfo.application.setupAuth
 import no.nav.syfo.objectMapper
 import no.nav.syfo.oppgave.client.Oppgave
@@ -24,8 +26,6 @@ import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.testutil.generateJWT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
-import java.time.LocalDate
 
 internal class OppgaveApiTest {
     @Test
@@ -60,26 +60,27 @@ internal class OppgaveApiTest {
                 }
             }
 
-            coEvery { oppgaveClient.hentOppgave(any(), any()) } returns Oppgave(
-                id = 1,
-                versjon = null,
-                tildeltEnhetsnr = null,
-                opprettetAvEnhetsnr = null,
-                aktoerId = null,
-                journalpostId = null,
-                behandlesAvApplikasjon = null,
-                saksreferanse = null,
-                tilordnetRessurs = null,
-                beskrivelse = null,
-                tema = "SYK",
-                oppgavetype = "BEHANDLE SYKMELDING",
-                behandlingstype = null,
-                aktivDato = LocalDate.now(),
-                fristFerdigstillelse = null,
-                prioritet = "HØY",
-                status = null,
-                mappeId = null,
-            )
+            coEvery { oppgaveClient.hentOppgave(any(), any()) } returns
+                Oppgave(
+                    id = 1,
+                    versjon = null,
+                    tildeltEnhetsnr = null,
+                    opprettetAvEnhetsnr = null,
+                    aktoerId = null,
+                    journalpostId = null,
+                    behandlesAvApplikasjon = null,
+                    saksreferanse = null,
+                    tilordnetRessurs = null,
+                    beskrivelse = null,
+                    tema = "SYK",
+                    oppgavetype = "BEHANDLE SYKMELDING",
+                    behandlingstype = null,
+                    aktivDato = LocalDate.now(),
+                    fristFerdigstillelse = null,
+                    prioritet = "HØY",
+                    status = null,
+                    mappeId = null,
+                )
 
             val oppgaverid = listOf(121321312)
 

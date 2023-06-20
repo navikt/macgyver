@@ -22,24 +22,26 @@ class Database(
         val properties = Properties()
         properties.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
         properties.setProperty("cloudSqlInstance", cloudSqlInstance)
-        dataSource = HikariDataSource(
-            HikariConfig().apply {
-                dataSourceProperties = properties
-                jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
-                username = dbUsername
-                password = dbPassword
-                maximumPoolSize = 1
-                minimumIdle = 1
-                isAutoCommit = false
-                transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-                validate()
-            },
-        )
+        dataSource =
+            HikariDataSource(
+                HikariConfig().apply {
+                    dataSourceProperties = properties
+                    jdbcUrl = "jdbc:postgresql://$dbHost:$dbPort/$dbName"
+                    username = dbUsername
+                    password = dbPassword
+                    maximumPoolSize = 1
+                    minimumIdle = 1
+                    isAutoCommit = false
+                    transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+                    validate()
+                },
+            )
     }
 }
 
-fun <T> ResultSet.toList(mapper: ResultSet.() -> T) = mutableListOf<T>().apply {
-    while (next()) {
-        add(mapper())
+fun <T> ResultSet.toList(mapper: ResultSet.() -> T) =
+    mutableListOf<T>().apply {
+        while (next()) {
+            add(mapper())
+        }
     }
-}

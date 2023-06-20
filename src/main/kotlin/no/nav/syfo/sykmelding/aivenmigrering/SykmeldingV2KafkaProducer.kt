@@ -7,7 +7,11 @@ import org.apache.kafka.clients.producer.ProducerRecord
 class SykmeldingV2KafkaProducer(
     private val kafkaProducer: KafkaProducer<String, SykmeldingV2KafkaMessage?>,
 ) {
-    fun sendSykmelding(sykmeldingKafkaMessage: SykmeldingV2KafkaMessage?, sykmeldingId: String, topic: String) {
+    fun sendSykmelding(
+        sykmeldingKafkaMessage: SykmeldingV2KafkaMessage?,
+        sykmeldingId: String,
+        topic: String
+    ) {
         try {
             kafkaProducer.send(ProducerRecord(topic, sykmeldingId, sykmeldingKafkaMessage)).get()
         } catch (e: Exception) {

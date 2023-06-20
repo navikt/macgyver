@@ -18,6 +18,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import java.nio.file.Paths
 import no.nav.syfo.application.setupAuth
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.api.registerFnrApi
@@ -33,7 +34,6 @@ import no.nav.syfo.sykmelding.api.model.EndreFnr
 import no.nav.syfo.testutil.generateJWT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
 
 internal class EndreFnrApiTest {
     @Test
@@ -45,7 +45,8 @@ internal class EndreFnrApiTest {
 
             val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
             val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
-            val narmesteLederResponseKafkaProducer = mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
+            val narmesteLederResponseKafkaProducer =
+                mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
             val narmestelederClient = mockk<NarmestelederClient>()
 
             mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
@@ -79,14 +80,15 @@ internal class EndreFnrApiTest {
                 }
             }
 
-            coEvery { pdlPersonService.getPdlPerson(any()) } returns PdlPerson(
-                listOf(
-                    IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
-                    IdentInformasjon("12345678912", true, "FOLKEREGISTERIDENT"),
-                    IdentInformasjon("12345", false, "AKTORID"),
-                ),
-                "navn navn",
-            )
+            coEvery { pdlPersonService.getPdlPerson(any()) } returns
+                PdlPerson(
+                    listOf(
+                        IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
+                        IdentInformasjon("12345678912", true, "FOLKEREGISTERIDENT"),
+                        IdentInformasjon("12345", false, "AKTORID"),
+                    ),
+                    "navn navn",
+                )
             coEvery { narmestelederClient.getNarmesteledere(any()) } returns emptyList()
 
             every { db.updateFnr(any(), any()) } returns 1

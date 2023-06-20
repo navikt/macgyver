@@ -29,17 +29,25 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
             )
 
             deleteSykmeldingService.deleteSykmelding(sykmeldingId)
-            log.info("Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId")
+            log.info(
+                "Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId"
+            )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
         } catch (unauthorizedException: UnauthorizedException) {
             log.warn("Fant ikkje authorization header: ", unauthorizedException)
             call.respond(HttpStatusCode.Unauthorized, HttpMessage("Unauthorized"))
         } catch (deleteSykmeldingException: DeleteSykmeldingException) {
             log.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
-            call.respond(HttpStatusCode.NotFound, HttpMessage("Fant ikkje sykmelding med sykmeldingid: $sykmeldingId"))
+            call.respond(
+                HttpStatusCode.NotFound,
+                HttpMessage("Fant ikkje sykmelding med sykmeldingid: $sykmeldingId")
+            )
         } catch (e: Exception) {
             log.error("Kastet exception ved sletting av sykmelding med id $sykmeldingId", e)
-            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved sletting av sykmelding, prøv igjen"))
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                HttpMessage("Noe gikk galt ved sletting av sykmelding, prøv igjen")
+            )
         }
     }
 }

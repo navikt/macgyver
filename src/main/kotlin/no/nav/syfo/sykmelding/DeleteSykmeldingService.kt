@@ -1,5 +1,7 @@
 package no.nav.syfo.sykmelding
 
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.log
@@ -8,8 +10,6 @@ import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingMedId
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class DeleteSykmeldingService(
     val syfoSmRegisterDb: Database,
@@ -17,7 +17,6 @@ class DeleteSykmeldingService(
     val endringsloggKafkaProducer: SykmeldingEndringsloggKafkaProducer,
     val tombstoneProducer: KafkaProducer<String, Any?>,
     val topics: List<String>,
-
 ) {
     fun deleteSykmelding(sykmeldingID: String) {
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
@@ -39,7 +38,10 @@ class DeleteSykmeldingService(
                     tombstoneProducer.send(ProducerRecord(topic, sykmeldingID, null)).get()
                 }
             } catch (e: Exception) {
-                log.error("Kunne ikke skrive tombstone til topic for sykmeldingid $sykmeldingID: {}", e.message)
+                log.error(
+                    "Kunne ikke skrive tombstone til topic for sykmeldingid $sykmeldingID: {}",
+                    e.message
+                )
                 throw e
             }
         } else {

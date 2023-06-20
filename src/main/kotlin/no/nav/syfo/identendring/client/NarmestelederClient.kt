@@ -7,9 +7,9 @@ import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.log
-import java.time.LocalDate
 
 class NarmestelederClient(
     private val httpClient: HttpClient,
@@ -21,13 +21,15 @@ class NarmestelederClient(
     suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder> {
         try {
             val token = accessTokenClientV2.getAccessTokenV2(resource)
-            return httpClient.get("$baseUrl/sykmeldt/narmesteledere") {
-                headers {
-                    append(HttpHeaders.Authorization, "Bearer $token")
-                    append("Sykmeldt-Fnr", fnr)
+            return httpClient
+                .get("$baseUrl/sykmeldt/narmesteledere") {
+                    headers {
+                        append(HttpHeaders.Authorization, "Bearer $token")
+                        append("Sykmeldt-Fnr", fnr)
+                    }
+                    accept(ContentType.Application.Json)
                 }
-                accept(ContentType.Application.Json)
-            }.body<List<NarmesteLeder>>()
+                .body<List<NarmesteLeder>>()
         } catch (e: Exception) {
             log.error("Noe gikk galt ved henting av nærmeste leder")
             throw e
@@ -37,13 +39,15 @@ class NarmestelederClient(
     suspend fun getNarmestelederKoblingerForLeder(lederFnr: String): List<NarmesteLeder> {
         try {
             val token = accessTokenClientV2.getAccessTokenV2(resource)
-            return httpClient.get("$baseUrl/leder/narmesteleder/aktive") {
-                headers {
-                    append(HttpHeaders.Authorization, "Bearer $token")
-                    append("Narmeste-Leder-Fnr", lederFnr)
+            return httpClient
+                .get("$baseUrl/leder/narmesteleder/aktive") {
+                    headers {
+                        append(HttpHeaders.Authorization, "Bearer $token")
+                        append("Narmeste-Leder-Fnr", lederFnr)
+                    }
+                    accept(ContentType.Application.Json)
                 }
-                accept(ContentType.Application.Json)
-            }.body<List<NarmesteLeder>>()
+                .body<List<NarmesteLeder>>()
         } catch (e: Exception) {
             log.error("Noe gikk galt ved henting av nærmesteleder-koblinger for leder")
             throw e

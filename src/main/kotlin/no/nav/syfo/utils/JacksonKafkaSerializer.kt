@@ -22,7 +22,8 @@ class JacksonKafkaSerializer : Serializer<Any> {
         }
     }
 
-    override fun serialize(topic: String?, data: Any?): ByteArray = objectMapper.writeValueAsBytes(data)
+    override fun serialize(topic: String?, data: Any?): ByteArray =
+        objectMapper.writeValueAsBytes(data)
 
     override fun close() {}
 

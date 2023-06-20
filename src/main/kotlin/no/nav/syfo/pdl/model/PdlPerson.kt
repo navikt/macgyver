@@ -6,7 +6,8 @@ data class PdlPerson(
     val identer: List<IdentInformasjon>,
     val navn: String,
 ) {
-    val fnr: String? = identer.firstOrNull { it.gruppe == "FOLKEREGISTERIDENT" && !it.historisk }?.ident
+    val fnr: String? =
+        identer.firstOrNull { it.gruppe == "FOLKEREGISTERIDENT" && !it.historisk }?.ident
     val aktorId: String? = identer.firstOrNull { it.gruppe == "AKTORID" && !it.historisk }?.ident
 
     fun harHistoriskFnr(fnr: String): Boolean {

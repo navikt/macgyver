@@ -37,7 +37,10 @@ fun Route.registerJournalpostApi(safService: SafService) {
             }
         } catch (e: Exception) {
             log.error("Kastet exception ved henting av journalposter fra saf-api", e)
-            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved henting av journalposter"))
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                HttpMessage("Noe gikk galt ved henting av journalposter")
+            )
         }
     }
 }

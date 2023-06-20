@@ -1,5 +1,8 @@
 package no.nav.syfo.identendring
 
+import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.Periode
@@ -25,9 +28,6 @@ import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import org.slf4j.LoggerFactory
-import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class UpdateFnrService(
     private val pdlPersonService: PdlPersonService,
@@ -44,7 +44,8 @@ class UpdateFnrService(
         val pdlPerson = pdlPersonService.getPdlPerson(fnr)
         when {
             pdlPerson.fnr != nyttFnr -> {
-                val msg = "Oppdatering av leders fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
+                val msg =
+                    "Oppdatering av leders fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
                 log.error(msg)
                 throw UpdateIdentException(msg)
             }
@@ -60,37 +61,42 @@ class UpdateFnrService(
                 aktiveNlKoblinger.forEach {
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
-                            kafkaMetadata = KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
+                            kafkaMetadata =
+                                KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
                             nlResponse = null,
-                            nlAvbrutt = NlAvbrutt(
-                                orgnummer = it.orgnummer,
-                                sykmeldtFnr = it.fnr,
-                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
-                            ),
-
+                            nlAvbrutt =
+                                NlAvbrutt(
+                                    orgnummer = it.orgnummer,
+                                    sykmeldtFnr = it.fnr,
+                                    aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
+                                ),
                         ),
                         it.orgnummer,
                     )
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
-                            kafkaMetadata = KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
-                            nlResponse = NlResponse(
-                                orgnummer = it.orgnummer,
-                                utbetalesLonn = it.arbeidsgiverForskutterer,
-                                leder = Leder(
-                                    fnr = nyttFnr,
-                                    mobil = it.narmesteLederTelefonnummer,
-                                    epost = it.narmesteLederEpost,
-                                    fornavn = null,
-                                    etternavn = null,
+                            kafkaMetadata =
+                                KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
+                            nlResponse =
+                                NlResponse(
+                                    orgnummer = it.orgnummer,
+                                    utbetalesLonn = it.arbeidsgiverForskutterer,
+                                    leder =
+                                        Leder(
+                                            fnr = nyttFnr,
+                                            mobil = it.narmesteLederTelefonnummer,
+                                            epost = it.narmesteLederEpost,
+                                            fornavn = null,
+                                            etternavn = null,
+                                        ),
+                                    sykmeldt =
+                                        Sykmeldt(
+                                            fnr = it.fnr,
+                                            navn = null,
+                                        ),
+                                    aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
+                                    aktivTom = null,
                                 ),
-                                sykmeldt = Sykmeldt(
-                                    fnr = it.fnr,
-                                    navn = null,
-                                ),
-                                aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
-                                aktivTom = null,
-                            ),
                         ),
                         it.orgnummer,
                     )
@@ -106,7 +112,8 @@ class UpdateFnrService(
 
         when {
             pdlPerson.fnr != nyttFnr -> {
-                val msg = "Oppdatering av fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
+                val msg =
+                    "Oppdatering av fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
                 log.error(msg)
                 throw UpdateIdentException(msg)
             }
@@ -118,10 +125,14 @@ class UpdateFnrService(
             else -> {
                 log.info("Oppdaterer fnr for person")
                 val sykmeldinger = syfoSmRegisterDb.getSykmeldingerMedFnrUtenBehandlingsutfall(fnr)
-                val sendteSykmeldingerSisteFireMnd = sykmeldinger.filter {
-                    it.status.statusEvent == STATUS_SENDT && finnSisteTom(it.sykmeldingsDokument.perioder).isAfter(LocalDate.now().minusMonths(4))
-                }
-                val aktiveNarmesteledere = narmestelederClient.getNarmesteledere(fnr).filter { it.aktivTom == null }
+                val sendteSykmeldingerSisteFireMnd =
+                    sykmeldinger.filter {
+                        it.status.statusEvent == STATUS_SENDT &&
+                            finnSisteTom(it.sykmeldingsDokument.perioder)
+                                .isAfter(LocalDate.now().minusMonths(4))
+                    }
+                val aktiveNarmesteledere =
+                    narmestelederClient.getNarmesteledere(fnr).filter { it.aktivTom == null }
                 log.info("Resender ${sendteSykmeldingerSisteFireMnd.size} sendte sykmeldinger")
                 sendteSykmeldingerSisteFireMnd.forEach {
                     sendtSykmeldingKafkaProducer.sendSykmelding(
@@ -134,37 +145,42 @@ class UpdateFnrService(
                 aktiveNarmesteledere.forEach {
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
-                            kafkaMetadata = KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
+                            kafkaMetadata =
+                                KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
                             nlResponse = null,
-                            nlAvbrutt = NlAvbrutt(
-                                orgnummer = it.orgnummer,
-                                sykmeldtFnr = fnr,
-                                aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
-                            ),
-
+                            nlAvbrutt =
+                                NlAvbrutt(
+                                    orgnummer = it.orgnummer,
+                                    sykmeldtFnr = fnr,
+                                    aktivTom = OffsetDateTime.now(ZoneOffset.UTC),
+                                ),
                         ),
                         it.orgnummer,
                     )
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
-                            kafkaMetadata = KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
-                            nlResponse = NlResponse(
-                                orgnummer = it.orgnummer,
-                                utbetalesLonn = it.arbeidsgiverForskutterer,
-                                leder = Leder(
-                                    fnr = it.narmesteLederFnr,
-                                    mobil = it.narmesteLederTelefonnummer,
-                                    epost = it.narmesteLederEpost,
-                                    fornavn = null,
-                                    etternavn = null,
+                            kafkaMetadata =
+                                KafkaMetadata(OffsetDateTime.now(ZoneOffset.UTC), "macgyver"),
+                            nlResponse =
+                                NlResponse(
+                                    orgnummer = it.orgnummer,
+                                    utbetalesLonn = it.arbeidsgiverForskutterer,
+                                    leder =
+                                        Leder(
+                                            fnr = it.narmesteLederFnr,
+                                            mobil = it.narmesteLederTelefonnummer,
+                                            epost = it.narmesteLederEpost,
+                                            fornavn = null,
+                                            etternavn = null,
+                                        ),
+                                    sykmeldt =
+                                        Sykmeldt(
+                                            fnr = nyttFnr,
+                                            navn = null,
+                                        ),
+                                    aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
+                                    aktivTom = null,
                                 ),
-                                sykmeldt = Sykmeldt(
-                                    fnr = nyttFnr,
-                                    navn = null,
-                                ),
-                                aktivFom = it.aktivFom.atStartOfDay().atOffset(ZoneOffset.UTC),
-                                aktivTom = null,
-                            ),
                         ),
                         it.orgnummer,
                     )
@@ -178,35 +194,41 @@ class UpdateFnrService(
 }
 
 private fun finnSisteTom(perioder: List<Periode>): LocalDate {
-    return perioder.maxByOrNull { it.tom }?.tom ?: throw IllegalStateException("Skal ikke kunne ha periode uten tom")
+    return perioder.maxByOrNull { it.tom }?.tom
+        ?: throw IllegalStateException("Skal ikke kunne ha periode uten tom")
 }
 
-private fun getKafkaMessage(sykmelding: SykmeldingDbModelUtenBehandlingsutfall, nyttFnr: String): SykmeldingV2KafkaMessage {
+private fun getKafkaMessage(
+    sykmelding: SykmeldingDbModelUtenBehandlingsutfall,
+    nyttFnr: String
+): SykmeldingV2KafkaMessage {
     val sendtSykmelding = sykmelding.toArbeidsgiverSykmelding()
-    val metadata = KafkaMetadataDTO(
-        sykmeldingId = sykmelding.id,
-        timestamp = sykmelding.status.statusTimestamp,
-        source = "macgyver",
-        fnr = nyttFnr,
-    )
-    val sendEvent = SykmeldingStatusKafkaEventDTO(
-        metadata.sykmeldingId,
-        metadata.timestamp,
-        STATUS_SENDT,
-        ArbeidsgiverStatusDTO(
-            sykmelding.status.arbeidsgiver!!.orgnummer,
-            sykmelding.status.arbeidsgiver.juridiskOrgnummer,
-            sykmelding.status.arbeidsgiver.orgNavn,
-        ),
-        listOf(
-            SporsmalOgSvarDTO(
-                tekst = "Jeg er sykmeldt fra",
-                shortName = ShortNameDTO.ARBEIDSSITUASJON,
-                svartype = SvartypeDTO.ARBEIDSSITUASJON,
-                svar = "ARBEIDSTAKER",
+    val metadata =
+        KafkaMetadataDTO(
+            sykmeldingId = sykmelding.id,
+            timestamp = sykmelding.status.statusTimestamp,
+            source = "macgyver",
+            fnr = nyttFnr,
+        )
+    val sendEvent =
+        SykmeldingStatusKafkaEventDTO(
+            metadata.sykmeldingId,
+            metadata.timestamp,
+            STATUS_SENDT,
+            ArbeidsgiverStatusDTO(
+                sykmelding.status.arbeidsgiver!!.orgnummer,
+                sykmelding.status.arbeidsgiver.juridiskOrgnummer,
+                sykmelding.status.arbeidsgiver.orgNavn,
             ),
-        ),
-    )
+            listOf(
+                SporsmalOgSvarDTO(
+                    tekst = "Jeg er sykmeldt fra",
+                    shortName = ShortNameDTO.ARBEIDSSITUASJON,
+                    svartype = SvartypeDTO.ARBEIDSSITUASJON,
+                    svar = "ARBEIDSTAKER",
+                ),
+            ),
+        )
     return SykmeldingV2KafkaMessage(sendtSykmelding, metadata, sendEvent)
 }
 

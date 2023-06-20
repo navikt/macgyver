@@ -21,7 +21,10 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
         }
         val ferdigstiltAv = call.receive<FerdigstillSmregOppgave>().ferdigstiltAv
         if (ferdigstiltAv.length != 7) {
-            call.respond(HttpStatusCode.BadRequest, HttpMessage("FerdigstiltAv må være en ident som består av 7 tegn"))
+            call.respond(
+                HttpStatusCode.BadRequest,
+                HttpMessage("FerdigstiltAv må være en ident som består av 7 tegn")
+            )
             return@post
         }
 
@@ -30,11 +33,19 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
                 getAccessTokenFromAuthHeader(call.request),
                 "Ferdigstille smregistreringsoppgave for journalpostId $journalpostId",
             )
-            smregistreringService.ferdigstillOppgave(journalpostId = journalpostId, ferdigstiltAv = ferdigstiltAv)
+            smregistreringService.ferdigstillOppgave(
+                journalpostId = journalpostId,
+                ferdigstiltAv = ferdigstiltAv
+            )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket ferdigstilling."))
         } catch (e: Exception) {
-            log.error("Kastet exception ved ferdigstilling av registreringsoppgave for journalpostId $journalpostId, ${e.message}")
-            call.respond(HttpStatusCode.InternalServerError, HttpMessage("Noe gikk galt ved ferdigstilling av registreringsoppgave"))
+            log.error(
+                "Kastet exception ved ferdigstilling av registreringsoppgave for journalpostId $journalpostId, ${e.message}"
+            )
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                HttpMessage("Noe gikk galt ved ferdigstilling av registreringsoppgave")
+            )
         }
     }
 }

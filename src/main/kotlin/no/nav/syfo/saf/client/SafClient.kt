@@ -18,20 +18,30 @@ class SafClient(
     private val graphQlQuery: String,
 ) {
 
-    suspend fun getDokumentoversiktBruker(fnr: String, token: String): GetDokumentoversiktBrukerResponse {
-        val getDokumentoversiktBrukerRequest = GetDokumentoversiktBrukerRequest(
-            query = graphQlQuery,
-            variables = Variables(brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR), foerste = 100),
-        )
+    suspend fun getDokumentoversiktBruker(
+        fnr: String,
+        token: String
+    ): GetDokumentoversiktBrukerResponse {
+        val getDokumentoversiktBrukerRequest =
+            GetDokumentoversiktBrukerRequest(
+                query = graphQlQuery,
+                variables =
+                    Variables(
+                        brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR),
+                        foerste = 100
+                    ),
+            )
 
         return getGraphQLResponse(getDokumentoversiktBrukerRequest, token)
     }
 
     private suspend inline fun <reified R> getGraphQLResponse(graphQlBody: Any, token: String): R {
-        return httpClient.post(basePath) {
-            setBody(graphQlBody)
-            header(HttpHeaders.Authorization, "Bearer $token")
-            header(HttpHeaders.ContentType, "application/json")
-        }.body()
+        return httpClient
+            .post(basePath) {
+                setBody(graphQlBody)
+                header(HttpHeaders.Authorization, "Bearer $token")
+                header(HttpHeaders.ContentType, "application/json")
+            }
+            .body()
     }
 }

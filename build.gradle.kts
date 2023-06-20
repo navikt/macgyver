@@ -32,11 +32,12 @@ val googlePostgresVersion = "1.12.0"
 val junitVersion = "5.9.3"
 val nimbusdsVersion = "9.31"
 val commonsCodecVersion = "1.15"
+val ktfmtVersion = "0.44"
 
 
 plugins {
     kotlin("jvm") version "1.8.22"
-    id("org.jmailen.kotlinter") version "3.15.0"
+    id("com.diffplug.spotless") version "6.19.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.19.2" apply true
 }
@@ -169,7 +170,12 @@ tasks {
         }
     }
 
-    "check" {
-        dependsOn("formatKotlin", "generateSwaggerUI")
+    spotless {
+        kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
+        check {
+            dependsOn("spotlessApply")
+            dependsOn("generateSwaggerUI")
+        }
     }
+
 }

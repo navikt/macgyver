@@ -16,6 +16,7 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.mockk.coEvery
 import io.mockk.mockk
+import java.nio.file.Paths
 import no.nav.syfo.application.HttpMessage
 import no.nav.syfo.application.setupAuth
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
@@ -23,7 +24,6 @@ import no.nav.syfo.objectMapper
 import no.nav.syfo.testutil.generateJWT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
 
 internal class LegeerklaeringApiTest {
     @Test
@@ -67,7 +67,10 @@ internal class LegeerklaeringApiTest {
                 },
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals(objectMapper.writeValueAsString(HttpMessage("Vellykket sletting")), response.content)
+                assertEquals(
+                    objectMapper.writeValueAsString(HttpMessage("Vellykket sletting")),
+                    response.content
+                )
             }
         }
     }
@@ -107,7 +110,10 @@ internal class LegeerklaeringApiTest {
                 handleRequest(HttpMethod.Delete, "/api/legeerklaering/${null}") {},
             ) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
-                assertEquals(objectMapper.writeValueAsString(HttpMessage("Unauthorized")), response.content)
+                assertEquals(
+                    objectMapper.writeValueAsString(HttpMessage("Unauthorized")),
+                    response.content
+                )
             }
         }
     }

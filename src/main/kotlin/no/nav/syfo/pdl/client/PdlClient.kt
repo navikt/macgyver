@@ -25,21 +25,28 @@ class PdlClient(
     private val tema = "SYM"
 
     suspend fun getPerson(fnr: String, token: String): GraphQLResponse<PdlResponse> {
-        val getPersonRequest = GetPersonRequest(query = graphQlQuery, variables = GetPersonVariables(ident = fnr))
+        val getPersonRequest =
+            GetPersonRequest(query = graphQlQuery, variables = GetPersonVariables(ident = fnr))
         return getGraphQLResponse(getPersonRequest, token)
     }
 
     suspend fun getFnrs(aktorids: List<String>, token: String): GetAktoridsResponse {
-        val getAktoridsRequest = GetAktoridsRequest(query = graphQlQueryAktorids, variables = GetAktoridsVariables(identer = aktorids))
+        val getAktoridsRequest =
+            GetAktoridsRequest(
+                query = graphQlQueryAktorids,
+                variables = GetAktoridsVariables(identer = aktorids)
+            )
         return getGraphQLResponse(getAktoridsRequest, token)
     }
 
     private suspend inline fun <reified R> getGraphQLResponse(graphQlBody: Any, token: String): R {
-        return httpClient.post(basePath) {
-            setBody(graphQlBody)
-            header(HttpHeaders.Authorization, "Bearer $token")
-            header(temaHeader, tema)
-            header(HttpHeaders.ContentType, "application/json")
-        }.body()
+        return httpClient
+            .post(basePath) {
+                setBody(graphQlBody)
+                header(HttpHeaders.Authorization, "Bearer $token")
+                header(temaHeader, tema)
+                header(HttpHeaders.ContentType, "application/json")
+            }
+            .body()
     }
 }

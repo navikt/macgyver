@@ -21,7 +21,8 @@ fun Application.setupAuth(
             verifier(jwkProvider, issuer)
             validate { credentials ->
                 when {
-                    hasMacgyverClientIdAudience(credentials, clientIdV2) -> JWTPrincipal(credentials.payload)
+                    hasMacgyverClientIdAudience(credentials, clientIdV2) ->
+                        JWTPrincipal(credentials.payload)
                     else -> {
                         unauthorized(credentials)
                     }

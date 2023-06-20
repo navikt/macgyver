@@ -12,13 +12,15 @@ class NarmesteLederResponseKafkaProducer(
 
     fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String) {
         try {
-            kafkaProducerNlResponse.send(
-                ProducerRecord(
-                    topic,
-                    orgnummer,
-                    nlResponseKafkaMessage,
-                ),
-            ).get()
+            kafkaProducerNlResponse
+                .send(
+                    ProducerRecord(
+                        topic,
+                        orgnummer,
+                        nlResponseKafkaMessage,
+                    ),
+                )
+                .get()
         } catch (e: Exception) {
             log.error("Noe gikk galt ved skriving av nlResponse: ${e.message}")
             throw e
