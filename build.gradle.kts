@@ -31,7 +31,7 @@ val kotlinVersion = "1.8.22"
 val googlePostgresVersion = "1.12.0"
 val junitVersion = "5.9.3"
 val nimbusdsVersion = "9.31"
-val commonsCodecVersion = "1.15"
+val commonsCodecVersion = "1.16.0"
 val ktfmtVersion = "0.44"
 
 
