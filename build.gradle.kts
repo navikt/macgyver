@@ -3,41 +3,49 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val coroutinesVersion = "1.7.1"
-val jacksonVersion = "2.15.2"
-val ktorVersion = "2.3.1"
-val logbackVersion = "1.4.8"
-val logstashEncoderVersion = "7.4"
-val prometheusVersion = "0.16.0"
-val nimbusjosejwtVersion = "9.31"
-val hikariVersion = "5.0.1"
-val jaxbBasicAntVersion = "1.11.1"
-val javaxAnnotationApiVersion = "1.3.2"
-val jaxwsToolsVersion = "2.3.1"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
-val javaxJaxwsApiVersion = "2.3.1"
-val jaxbApiVersion = "2.4.0-b180830.0359"
-val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.13.5"
-val smCommonVersion = "1.0.1"
-val sykmeldingVersion = "1.0.3"
-val fellesformatVersion = "1.0.3"
-val kithHodemeldingVersion = "1.0.3"
-val javaTimeAdapterVersion = "1.1.3"
-val postgresVersion = "42.6.0"
-val confluentVersion = "6.2.2"
-val swaggerUiVersion = "5.1.0"
-val kotlinVersion = "1.8.22"
-val googlePostgresVersion = "1.12.0"
-val junitVersion = "5.9.3"
-val nimbusdsVersion = "9.31"
-val commonsCodecVersion = "1.16.0"
-val ktfmtVersion = "0.44"
+val coroutinesVersion: String by project
+val jacksonVersion: String by project
+val ktorVersion: String by project
+val logbackVersion: String by project
+val logstashEncoderVersion: String by project
+val prometheusVersion: String by project
+val nimbusjosejwtVersion: String by project
+val hikariVersion: String by project
+val jaxbBasicAntVersion: String by project
+val javaxAnnotationApiVersion: String by project
+val jaxwsToolsVersion: String by project
+val jaxbRuntimeVersion: String by project
+val javaxJaxwsApiVersion: String by project
+val jaxbApiVersion: String by project
+val javaxActivationVersion: String by project
+val mockkVersion: String by project
+val smCommonVersion: String by project
+val sykmeldingVersion: String by project
+val fellesformatVersion: String by project
+val kithHodemeldingVersion: String by project
+val javaTimeAdapterVersion: String by project
+val postgresVersion: String by project
+val confluentVersion: String by project
+val swaggerUiVersion: String by project
+val kotlinVersion: String by project
+val googlePostgresVersion: String by project
+val junitVersion: String by project
+val nimbusdsVersion: String by project
+val commonsCodecVersion: String by project
+val ktfmtVersion: String by project
+
+application {
+    mainClass.set("no.nav.syfo.ApplicationKt")
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
 
 
 plugins {
     kotlin("jvm") version "1.8.22"
     id("com.diffplug.spotless") version "6.19.0"
+    id("io.ktor.plugin") version "2.3.1"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.19.2" apply true
     id("org.cyclonedx.bom") version "1.7.4"
@@ -135,7 +143,7 @@ swaggerSources {
 
 tasks {
     withType<Jar> {
-        manifest.attributes["Main-Class"] = "no.nav.syfo.BootstrapKt"
+        manifest.attributes["Main-Class"] = "no.nav.syfo.ApplicationKt"
         dependsOn("generateSwaggerUI")
     }
 

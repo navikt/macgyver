@@ -6,8 +6,8 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import no.nav.syfo.application.HttpMessage
-import no.nav.syfo.log
+import no.nav.syfo.HttpMessage
+import no.nav.syfo.logger
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
@@ -39,7 +39,7 @@ fun Route.registerFerdigstillRegistreringsoppgaveApi(smregistreringService: Smre
             )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket ferdigstilling."))
         } catch (e: Exception) {
-            log.error(
+            logger.error(
                 "Kastet exception ved ferdigstilling av registreringsoppgave for journalpostId $journalpostId, ${e.message}"
             )
             call.respond(

@@ -3,7 +3,7 @@ package no.nav.syfo.smregistrering
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import no.nav.syfo.db.Database
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.oppgave.client.FerdigstillOppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
 
@@ -15,13 +15,13 @@ class SmregistreringService(
         val oppgaveId = databasePostgres.getApenRegistreringsoppgave(journalpostId)
 
         if (oppgaveId == null) {
-            log.info(
+            logger.info(
                 "Oppgave for journalpostid $journalpostId finnes ikke eller er allerede ferdigstilt"
             )
             return
         }
 
-        log.info("Henter oppgave med id $oppgaveId for journalpostid $journalpostId")
+        logger.info("Henter oppgave med id $oppgaveId for journalpostid $journalpostId")
         val oppgave = oppgaveClient.hentOppgave(oppgaveId, journalpostId)
         oppgaveClient.ferdigstillOppgave(
             ferdigstilloppgave =
@@ -44,7 +44,7 @@ class SmregistreringService(
             journalpostId = journalpostId,
         )
         databasePostgres.slettRegistreringsoppgave(oppgaveId)
-        log.info("Ferdigstilt oppgave for journalpostId $journalpostId")
+        logger.info("Ferdigstilt oppgave for journalpostId $journalpostId")
     }
 
     fun getBeskrivelse(

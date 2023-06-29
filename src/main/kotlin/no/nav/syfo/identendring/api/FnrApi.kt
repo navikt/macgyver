@@ -6,7 +6,7 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import no.nav.syfo.application.HttpMessage
+import no.nav.syfo.HttpMessage
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.UpdateIdentException
 import no.nav.syfo.sykmelding.api.model.EndreFnr

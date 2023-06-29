@@ -14,8 +14,7 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.serialization.jackson.jackson
-import no.nav.syfo.Environment
-import no.nav.syfo.clients.exception.ServiceUnavailableException
+import no.nav.syfo.EnvironmentVariables
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.client.PdlClient
@@ -23,7 +22,7 @@ import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.service.SafService
 
-class HttpClients(environment: Environment) {
+class HttpClients(environmentVariables: EnvironmentVariables) {
     private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
         install(HttpTimeout) {
             connectTimeoutMillis = 10000
@@ -54,16 +53,16 @@ class HttpClients(environment: Environment) {
 
     private val accessTokenClientV2 =
         AccessTokenClientV2(
-            environment.aadAccessTokenV2Url,
-            environment.clientIdV2,
-            environment.clientSecretV2,
+            environmentVariables.aadAccessTokenV2Url,
+            environmentVariables.clientIdV2,
+            environmentVariables.clientSecretV2,
             httpClient,
         )
 
     private val pdlClient =
         PdlClient(
             httpClient = httpClient,
-            basePath = environment.pdlGraphqlPath,
+            basePath = environmentVariables.pdlGraphqlPath,
             graphQlQuery =
                 PdlClient::class
                     .java
@@ -78,13 +77,13 @@ class HttpClients(environment: Environment) {
                     .replace(Regex("[\n\t]"), ""),
         )
 
-    val pdlService = PdlPersonService(pdlClient, accessTokenClientV2, environment.pdlScope)
+    val pdlService = PdlPersonService(pdlClient, accessTokenClientV2, environmentVariables.pdlScope)
 
     val oppgaveClient =
         OppgaveClient(
-            environment.oppgavebehandlingUrl,
+            environmentVariables.oppgavebehandlingUrl,
             accessTokenClientV2,
-            environment.oppgaveScope,
+            environmentVariables.oppgaveScope,
             httpClient
         )
 
@@ -92,14 +91,14 @@ class HttpClients(environment: Environment) {
         NarmestelederClient(
             httpClient,
             accessTokenClientV2,
-            environment.narmestelederUrl,
-            environment.narmestelederScope
+            environmentVariables.narmestelederUrl,
+            environmentVariables.narmestelederScope
         )
 
     private val safClient =
         SafClient(
             httpClient = httpClient,
-            basePath = environment.safGraphqlPath,
+            basePath = environmentVariables.safGraphqlPath,
             graphQlQuery =
                 SafClient::class
                     .java
@@ -108,5 +107,7 @@ class HttpClients(environment: Environment) {
                     .replace(Regex("[\n\t]"), ""),
         )
 
-    val safService = SafService(safClient, accessTokenClientV2, environment.safScope)
+    val safService = SafService(safClient, accessTokenClientV2, environmentVariables.safScope)
 }
+
+class ServiceUnavailableException(message: String?) : Exception(message)

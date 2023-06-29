@@ -9,7 +9,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.log
+import no.nav.syfo.logger
 
 class NarmestelederClient(
     private val httpClient: HttpClient,
@@ -31,7 +31,7 @@ class NarmestelederClient(
                 }
                 .body<List<NarmesteLeder>>()
         } catch (e: Exception) {
-            log.error("Noe gikk galt ved henting av nærmeste leder")
+            logger.error("Noe gikk galt ved henting av nærmeste leder")
             throw e
         }
     }
@@ -49,7 +49,7 @@ class NarmestelederClient(
                 }
                 .body<List<NarmesteLeder>>()
         } catch (e: Exception) {
-            log.error("Noe gikk galt ved henting av nærmesteleder-koblinger for leder")
+            logger.error("Noe gikk galt ved henting av nærmesteleder-koblinger for leder")
             throw e
         }
     }

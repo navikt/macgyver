@@ -1,6 +1,6 @@
 package no.nav.syfo.kafka
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.model.Sykmeldingsdokument
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -16,7 +16,7 @@ class SykmeldingEndringsloggKafkaProducer(
                 .send(ProducerRecord(endringsloggTopic, sykmelding))
                 .get()
         } catch (e: Exception) {
-            log.error("Noe gikk galt ved skriving til endringslogg-topic: ", e.cause)
+            logger.error("Noe gikk galt ved skriving til endringslogg-topic: ", e.cause)
             throw e
         }
     }

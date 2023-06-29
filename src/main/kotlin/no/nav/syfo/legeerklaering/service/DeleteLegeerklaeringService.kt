@@ -1,6 +1,6 @@
 package no.nav.syfo.legeerklaering.service
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -14,7 +14,7 @@ class DeleteLegeerklaeringService(
                 tombstoneProducer.send(ProducerRecord(topic, legeerklaeringId, null)).get()
             }
         } catch (exception: Exception) {
-            log.error(
+            logger.error(
                 "Noe gikk galt med sletting av legeerklæring, legeerklaeringId $legeerklaeringId: {}",
                 exception.message,
             )

@@ -10,6 +10,7 @@ import no.nav.syfo.identendring.db.SykmeldingDbModelUtenBehandlingsutfall
 import no.nav.syfo.identendring.db.getSykmeldingerMedFnrUtenBehandlingsutfall
 import no.nav.syfo.identendring.db.updateFnr
 import no.nav.syfo.identendring.model.toArbeidsgiverSykmelding
+import no.nav.syfo.logger
 import no.nav.syfo.model.sykmeldingstatus.ArbeidsgiverStatusDTO
 import no.nav.syfo.model.sykmeldingstatus.KafkaMetadataDTO
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SENDT
@@ -46,18 +47,18 @@ class UpdateFnrService(
             pdlPerson.fnr != nyttFnr -> {
                 val msg =
                     "Oppdatering av leders fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
-                log.error(msg)
+                logger.error(msg)
                 throw UpdateIdentException(msg)
             }
             !pdlPerson.harHistoriskFnr(fnr) -> {
                 val msg = "Oppdatering av leders fnr feilet, fnr er ikke historisk for aktør"
-                log.error(msg)
+                logger.error(msg)
                 throw UpdateIdentException(msg)
             }
             else -> {
-                log.info("Oppdaterer fnr for leder")
+                logger.info("Oppdaterer fnr for leder")
                 val aktiveNlKoblinger = narmestelederClient.getNarmestelederKoblingerForLeder(fnr)
-                log.info("Bryter og gjenoppretter ${aktiveNlKoblinger.size} nl-koblinger")
+                logger.info("Bryter og gjenoppretter ${aktiveNlKoblinger.size} nl-koblinger")
                 aktiveNlKoblinger.forEach {
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
@@ -101,7 +102,7 @@ class UpdateFnrService(
                         it.orgnummer,
                     )
                 }
-                log.info("Alle aktive nl-koblinger er oppdatert")
+                logger.info("Alle aktive nl-koblinger er oppdatert")
                 return aktiveNlKoblinger.isNotEmpty()
             }
         }
@@ -114,16 +115,16 @@ class UpdateFnrService(
             pdlPerson.fnr != nyttFnr -> {
                 val msg =
                     "Oppdatering av fnr feilet, nyttFnr står ikke som aktivt fnr for aktøren i PDL"
-                log.error(msg)
+                logger.error(msg)
                 throw UpdateIdentException(msg)
             }
             !pdlPerson.harHistoriskFnr(fnr) -> {
                 val msg = "Oppdatering av fnr feilet, fnr er ikke historisk for aktør"
-                log.error(msg)
+                logger.error(msg)
                 throw UpdateIdentException(msg)
             }
             else -> {
-                log.info("Oppdaterer fnr for person")
+                logger.info("Oppdaterer fnr for person")
                 val sykmeldinger = syfoSmRegisterDb.getSykmeldingerMedFnrUtenBehandlingsutfall(fnr)
                 val sendteSykmeldingerSisteFireMnd =
                     sykmeldinger.filter {
@@ -133,7 +134,7 @@ class UpdateFnrService(
                     }
                 val aktiveNarmesteledere =
                     narmestelederClient.getNarmesteledere(fnr).filter { it.aktivTom == null }
-                log.info("Resender ${sendteSykmeldingerSisteFireMnd.size} sendte sykmeldinger")
+                logger.info("Resender ${sendteSykmeldingerSisteFireMnd.size} sendte sykmeldinger")
                 sendteSykmeldingerSisteFireMnd.forEach {
                     sendtSykmeldingKafkaProducer.sendSykmelding(
                         sykmeldingKafkaMessage = getKafkaMessage(it, nyttFnr),
@@ -141,7 +142,7 @@ class UpdateFnrService(
                         topic = sendtSykmeldingTopic,
                     )
                 }
-                log.info("Bryter og gjenoppretter ${aktiveNarmesteledere.size} nl-koblinger")
+                logger.info("Bryter og gjenoppretter ${aktiveNarmesteledere.size} nl-koblinger")
                 aktiveNarmesteledere.forEach {
                     narmesteLederResponseKafkaProducer.publishToKafka(
                         NlResponseKafkaMessage(
@@ -185,7 +186,7 @@ class UpdateFnrService(
                         it.orgnummer,
                     )
                 }
-                log.info("Oppdaterer register-databasen")
+                logger.info("Oppdaterer register-databasen")
                 val updateFnr = syfoSmRegisterDb.updateFnr(nyttFnr = nyttFnr, fnr = fnr)
                 return updateFnr > 0
             }

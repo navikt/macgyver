@@ -11,7 +11,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.log
+import no.nav.syfo.logger
 
 class OppgaveClient(
     private val url: String,
@@ -44,7 +44,7 @@ class OppgaveClient(
         ferdigstilloppgave: FerdigstillOppgave,
         journalpostId: String
     ): Oppgave {
-        log.info("Ferdigstiller oppgave for journalpostId $journalpostId")
+        logger.info("Ferdigstiller oppgave for journalpostId $journalpostId")
 
         val httpResponse =
             httpClient.patch(url + "/" + ferdigstilloppgave.id) {
@@ -62,7 +62,7 @@ class OppgaveClient(
             else -> {
                 val msg =
                     "OppgaveClient ferdigstillOppgave kastet feil ${httpResponse.status} ved ferdigstilling av oppgave, response: ${httpResponse.body<String>()}"
-                log.error(msg)
+                logger.error(msg)
                 throw RuntimeException(msg)
             }
         }

@@ -1,6 +1,6 @@
 package no.nav.syfo.narmesteleder
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -22,7 +22,7 @@ class NarmesteLederResponseKafkaProducer(
                 )
                 .get()
         } catch (e: Exception) {
-            log.error("Noe gikk galt ved skriving av nlResponse: ${e.message}")
+            logger.error("Noe gikk galt ved skriving av nlResponse: ${e.message}")
             throw e
         }
     }

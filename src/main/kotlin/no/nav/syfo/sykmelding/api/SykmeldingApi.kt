@@ -1,12 +1,12 @@
 package no.nav.syfo.sykmelding.api
 
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import no.nav.syfo.application.HttpMessage
-import no.nav.syfo.log
+import no.nav.syfo.HttpMessage
+import no.nav.syfo.logger
 import no.nav.syfo.service.GjenapneSykmeldingService
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
@@ -27,7 +27,7 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {
-            log.error(
+            logger.error(
                 "Kastet exception ved gjenåpning av sykmelding med id $sykmeldingId, ${e.message}"
             )
             call.respond(

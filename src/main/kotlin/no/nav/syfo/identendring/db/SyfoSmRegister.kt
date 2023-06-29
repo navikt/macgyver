@@ -7,7 +7,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.objectMapper
 
@@ -24,7 +24,7 @@ fun Database.updateFnr(fnr: String, nyttFnr: String): Int {
                 it.setString(1, nyttFnr)
                 it.setString(2, fnr)
                 updated = it.executeUpdate()
-                log.info("Updated {} sykmeldingsdokument", updated)
+                logger.info("Updated {} sykmeldingsdokument", updated)
             }
         connection.commit()
         return updated

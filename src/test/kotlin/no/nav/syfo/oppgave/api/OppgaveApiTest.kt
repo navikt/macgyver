@@ -19,10 +19,10 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import java.nio.file.Paths
 import java.time.LocalDate
-import no.nav.syfo.application.setupAuth
 import no.nav.syfo.objectMapper
 import no.nav.syfo.oppgave.client.Oppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
+import no.nav.syfo.setupAuth
 import no.nav.syfo.testutil.generateJWT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

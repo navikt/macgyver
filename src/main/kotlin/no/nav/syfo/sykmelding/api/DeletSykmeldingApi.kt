@@ -1,12 +1,12 @@
 package no.nav.syfo.sykmelding.api
 
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
-import no.nav.syfo.application.HttpMessage
-import no.nav.syfo.log
+import no.nav.syfo.HttpMessage
+import no.nav.syfo.logger
 import no.nav.syfo.sykmelding.DeleteSykmeldingException
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.utils.UnauthorizedException
@@ -29,21 +29,21 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
             )
 
             deleteSykmeldingService.deleteSykmelding(sykmeldingId)
-            log.info(
+            logger.info(
                 "Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId"
             )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
         } catch (unauthorizedException: UnauthorizedException) {
-            log.warn("Fant ikkje authorization header: ", unauthorizedException)
+            logger.warn("Fant ikkje authorization header: ", unauthorizedException)
             call.respond(HttpStatusCode.Unauthorized, HttpMessage("Unauthorized"))
         } catch (deleteSykmeldingException: DeleteSykmeldingException) {
-            log.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
+            logger.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
             call.respond(
                 HttpStatusCode.NotFound,
                 HttpMessage("Fant ikkje sykmelding med sykmeldingid: $sykmeldingId")
             )
         } catch (e: Exception) {
-            log.error("Kastet exception ved sletting av sykmelding med id $sykmeldingId", e)
+            logger.error("Kastet exception ved sletting av sykmelding med id $sykmeldingId", e)
             call.respond(
                 HttpStatusCode.InternalServerError,
                 HttpMessage("Noe gikk galt ved sletting av sykmelding, prøv igjen")

@@ -55,6 +55,7 @@ fun SykmeldingDbModelUtenBehandlingsutfall.toArbeidsgiverSykmelding(): Arbeidsgi
         merknader = merknader?.map { Merknad(type = it.type, beskrivelse = it.beskrivelse) },
         utenlandskSykmelding =
             utenlandskSykmelding?.let { UtenlandskSykmeldingAGDTO(land = it.land) },
+        signaturDato = getUtcTime(sykmeldingsDokument.signaturDato),
     )
 }
 

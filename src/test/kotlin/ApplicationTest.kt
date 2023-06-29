@@ -3,12 +3,14 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
-import no.nav.syfo.application.ApplicationState
-import no.nav.syfo.application.api.registerNaisApi
+import no.nav.syfo.ApplicationState
+import no.nav.syfo.nais.isalive.naisIsAliveRoute
+import no.nav.syfo.nais.isready.naisIsReadyRoute
+import no.nav.syfo.nais.prometheus.naisPrometheusRoute
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class SelfTest {
+internal class ApplicationTest {
 
     @Test
     internal fun `Returns ok on is_alive`() {
@@ -17,7 +19,7 @@ internal class SelfTest {
             val applicationState = ApplicationState()
             applicationState.ready = true
             applicationState.alive = true
-            application.routing { registerNaisApi(applicationState) }
+            application.routing { naisIsAliveRoute(applicationState) }
 
             with(handleRequest(HttpMethod.Get, "/internal/is_alive")) {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -33,7 +35,7 @@ internal class SelfTest {
             val applicationState = ApplicationState()
             applicationState.ready = true
             applicationState.alive = true
-            application.routing { registerNaisApi(applicationState) }
+            application.routing { naisIsReadyRoute(applicationState) }
 
             with(handleRequest(HttpMethod.Get, "/internal/is_ready")) {
                 assertEquals(HttpStatusCode.OK, response.status())
@@ -49,7 +51,11 @@ internal class SelfTest {
             val applicationState = ApplicationState()
             applicationState.ready = false
             applicationState.alive = false
-            application.routing { registerNaisApi(applicationState) }
+            application.routing {
+                naisIsReadyRoute(applicationState)
+                naisIsAliveRoute(applicationState)
+                naisPrometheusRoute()
+            }
 
             with(handleRequest(HttpMethod.Get, "/internal/is_alive")) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
@@ -65,7 +71,7 @@ internal class SelfTest {
             val applicationState = ApplicationState()
             applicationState.ready = false
             applicationState.alive = false
-            application.routing { registerNaisApi(applicationState) }
+            application.routing { naisIsReadyRoute(applicationState) }
             with(handleRequest(HttpMethod.Get, "/internal/is_ready")) {
                 assertEquals(HttpStatusCode.InternalServerError, response.status())
                 assertEquals("Please wait! I'm not ready :(", response.content)

@@ -1,7 +1,7 @@
 package no.nav.syfo.saf.service
 
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.error.JournalposterNotFoundException
 import no.nav.syfo.saf.model.Journalpost
@@ -19,7 +19,7 @@ class SafService(
 
         if (getDokumentoversiktBrukerResponse.errors != null) {
             getDokumentoversiktBrukerResponse.errors.forEach {
-                log.error("SAF kastet error: {} ", it)
+                logger.error("SAF kastet error: {} ", it)
             }
         }
         if (
@@ -27,7 +27,7 @@ class SafService(
                 getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker.journalposter
                     .isNullOrEmpty()
         ) {
-            log.error("Fant ikke journalposter i SAF")
+            logger.error("Fant ikke journalposter i SAF")
             throw JournalposterNotFoundException("Fant ikke journalposter i SAF")
         } else {
             return getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker?.journalposter

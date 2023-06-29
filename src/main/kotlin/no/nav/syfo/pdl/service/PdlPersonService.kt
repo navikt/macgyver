@@ -1,7 +1,7 @@
 package no.nav.syfo.pdl.service
 
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.error.AktoerNotFoundException
 import no.nav.syfo.pdl.model.PdlPerson
@@ -16,13 +16,13 @@ class PdlPersonService(
         val pdlResponse = pdlClient.getPerson(fnr = fnr, token = token)
 
         if (pdlResponse.errors != null) {
-            pdlResponse.errors.forEach { log.error("PDL kastet error: {} ", it) }
+            pdlResponse.errors.forEach { logger.error("PDL kastet error: {} ", it) }
         }
         if (
             pdlResponse.data.hentIdenter == null ||
                 pdlResponse.data.hentIdenter.identer.isNullOrEmpty()
         ) {
-            log.error("Fant ikke aktørid i PDL {}")
+            logger.error("Fant ikke aktørid i PDL {}")
             throw AktoerNotFoundException("Fant ikke aktørId i PDL")
         }
         val pdlNavn = pdlResponse.data.person?.navn?.first()
@@ -42,19 +42,19 @@ class PdlPersonService(
 
         if (pdlResponse.errors != null) {
             pdlResponse.errors.forEach {
-                log.error("PDL returnerte error {}, {}", it, narmesteLederId)
+                logger.error("PDL returnerte error {}, {}", it, narmesteLederId)
             }
         }
         if (
             pdlResponse.data.hentIdenterBolk == null ||
                 pdlResponse.data.hentIdenterBolk.isNullOrEmpty()
         ) {
-            log.error("Fant ikke identer i PDL {}", narmesteLederId)
+            logger.error("Fant ikke identer i PDL {}", narmesteLederId)
             throw IllegalStateException("Fant ingen identer i PDL, skal ikke kunne skje!")
         }
         pdlResponse.data.hentIdenterBolk.forEach {
             if (it.code != "ok") {
-                log.warn(
+                logger.warn(
                     "Mottok feilkode ${it.code} fra PDL for en eller flere identer, {}",
                     narmesteLederId
                 )

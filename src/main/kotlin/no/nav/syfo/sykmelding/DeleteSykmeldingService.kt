@@ -4,7 +4,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingMedId
@@ -38,14 +38,14 @@ class DeleteSykmeldingService(
                     tombstoneProducer.send(ProducerRecord(topic, sykmeldingID, null)).get()
                 }
             } catch (e: Exception) {
-                log.error(
+                logger.error(
                     "Kunne ikke skrive tombstone til topic for sykmeldingid $sykmeldingID: {}",
                     e.message
                 )
                 throw e
             }
         } else {
-            log.warn("Could not find sykmelding with id $sykmeldingID")
+            logger.warn("Could not find sykmelding with id $sykmeldingID")
             throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
     }
