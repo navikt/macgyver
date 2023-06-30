@@ -2,7 +2,7 @@ package no.nav.syfo.metrics
 
 import io.prometheus.client.Histogram
 
-const val METRICS_NS = "smtss"
+const val METRICS_NS = "macgyver"
 
 val HTTP_HISTOGRAM: Histogram =
     Histogram.Builder()

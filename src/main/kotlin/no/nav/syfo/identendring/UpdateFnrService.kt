@@ -28,7 +28,6 @@ import no.nav.syfo.narmesteleder.kafkamodel.Sykmeldt
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
-import org.slf4j.LoggerFactory
 
 class UpdateFnrService(
     private val pdlPersonService: PdlPersonService,
@@ -38,8 +37,6 @@ class UpdateFnrService(
     private val narmestelederClient: NarmestelederClient,
     private val sendtSykmeldingTopic: String,
 ) {
-
-    private val log = LoggerFactory.getLogger(UpdateFnrService::class.java)
 
     suspend fun updateNlFnr(fnr: String, nyttFnr: String): Boolean {
         val pdlPerson = pdlPersonService.getPdlPerson(fnr)

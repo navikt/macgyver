@@ -8,7 +8,6 @@ data class PdlPerson(
 ) {
     val fnr: String? =
         identer.firstOrNull { it.gruppe == "FOLKEREGISTERIDENT" && !it.historisk }?.ident
-    val aktorId: String? = identer.firstOrNull { it.gruppe == "AKTORID" && !it.historisk }?.ident
 
     fun harHistoriskFnr(fnr: String): Boolean {
         return finnIdent(ident = fnr, gruppe = "FOLKEREGISTERIDENT").any { it.historisk }

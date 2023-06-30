@@ -3,7 +3,7 @@ package no.nav.syfo.pdl.service
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.logger
 import no.nav.syfo.pdl.client.PdlClient
-import no.nav.syfo.pdl.error.AktoerNotFoundException
+import no.nav.syfo.pdl.error.FolkeRegistertIdentNotFoundException
 import no.nav.syfo.pdl.model.PdlPerson
 
 class PdlPersonService(
@@ -23,11 +23,13 @@ class PdlPersonService(
                 pdlResponse.data.hentIdenter.identer.isNullOrEmpty()
         ) {
             logger.error("Fant ikke aktørid i PDL {}")
-            throw AktoerNotFoundException("Fant ikke aktørId i PDL")
+            throw FolkeRegistertIdentNotFoundException("Fant ikke FolkeRegistertIdent i PDL")
         }
         val pdlNavn = pdlResponse.data.person?.navn?.first()
         if (pdlNavn == null) {
-            throw AktoerNotFoundException("Fant ikke aktørId i PDL")
+            throw FolkeRegistertIdentNotFoundException(
+                "Fant ikke FolkeRegistertIdent med navn i PDL"
+            )
         }
 
         return PdlPerson(
