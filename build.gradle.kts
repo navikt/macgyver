@@ -45,7 +45,7 @@ application {
 plugins {
     kotlin("jvm") version "1.9.0"
     id("com.diffplug.spotless") version "6.20.0"
-    id("io.ktor.plugin") version "2.3.2"
+    id("io.ktor.plugin") version "2.3.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.19.2" apply true
     id("org.cyclonedx.bom") version "1.7.4"
