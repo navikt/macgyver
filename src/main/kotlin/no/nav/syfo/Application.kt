@@ -25,6 +25,7 @@ import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.clients.HttpClients
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
+import no.nav.syfo.identendring.api.getPersonApi
 import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
@@ -43,6 +44,7 @@ import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.api.registerHentOppgaverApi
 import no.nav.syfo.oppgave.client.OppgaveClient
+import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.api.registerJournalpostApi
 import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.service.GjenapneSykmeldingService
@@ -103,6 +105,7 @@ fun Application.configureRouting(
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
     smregistreringService: SmregistreringService,
     safService: SafService,
+    pdlService: PdlPersonService,
 ) {
     setupAuth(
         jwkProvider = jwkProviderAadV2,
@@ -140,6 +143,7 @@ fun Application.configureRouting(
             registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
             registerFerdigstillRegistreringsoppgaveApi(smregistreringService)
             registerJournalpostApi(safService)
+            getPersonApi(pdlService)
         }
     }
 
@@ -340,6 +344,7 @@ fun Application.module() {
         deleteLegeerklaeringService = deleteLegeerklaeringService,
         smregistreringService = smregistreringService,
         safService = httpClients.safService,
+        pdlService = httpClients.pdlService
     )
 
     DefaultExports.initialize()
