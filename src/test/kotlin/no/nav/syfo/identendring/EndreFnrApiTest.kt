@@ -98,7 +98,7 @@ internal class EndreFnrApiTest {
             with(
                 handleRequest(HttpMethod.Post, "/api/sykmelding/fnr") {
                     addHeader("Content-Type", "application/json")
-                    addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
+                    addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId") }")
                     setBody(objectMapper.writeValueAsString(endreFnr))
                 },
             ) {

@@ -38,6 +38,7 @@ fun generateJWT(
         .withClaim("nbf", now)
         .withClaim("azp", consumerClientId)
         .withClaim("iat", now)
+        .withClaim("preferred_username", "nav.email@nav.no")
         .withClaim("exp", Date.from(expiry?.atZone(ZoneId.systemDefault())?.toInstant()))
         .sign(alg)
 }

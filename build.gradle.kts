@@ -33,6 +33,7 @@ val junitVersion: String by project
 val nimbusdsVersion: String by project
 val commonsCodecVersion: String by project
 val ktfmtVersion: String by project
+val logbacksyslog4jVersion = "1.0.0"
 
 application {
     mainClass.set("no.nav.syfo.ApplicationKt")
@@ -93,6 +94,8 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
+    implementation("com.papertrailapp:logback-syslog4j:$logbacksyslog4jVersion")
+
 
     implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")

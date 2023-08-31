@@ -6,10 +6,12 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import no.nav.syfo.HttpMessage
+import no.nav.syfo.auditlogg
+import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.logger
 import no.nav.syfo.service.GjenapneSykmeldingService
+import no.nav.syfo.sikkerlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykmeldingService) {
     post("/api/sykmelding/{sykmeldingId}/gjenapne") {
@@ -20,10 +22,18 @@ fun Route.registerGjenapneSykmeldingApi(gjenapneSykmeldingService: GjenapneSykme
         }
 
         try {
-            logNAVEpostAndActionToSecureLog(
-                getAccessTokenFromAuthHeader(call.request),
-                "gjenåpne sykmelding med id $sykmeldingId",
+            auditlogg.info(
+                AuditLogger()
+                    .createcCefMessage(
+                        fnr = null,
+                        accessToken = getAccessTokenFromAuthHeader(call.request),
+                        operation = AuditLogger.Operation.WRITE,
+                        requestPath = "/api/sykmelding/$sykmeldingId/gjenapne",
+                        permit = AuditLogger.Permit.PERMIT,
+                    ),
             )
+            sikkerlogg.info("gjenåpne sykmelding med id $sykmeldingId")
+
             gjenapneSykmeldingService.gjenapneSykmelding(sykmeldingId)
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
         } catch (e: Exception) {

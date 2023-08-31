@@ -11,7 +11,6 @@ import no.nav.syfo.sykmelding.DeleteSykmeldingException
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingService) {
     delete("/api/sykmelding/{sykmeldingId}") {
@@ -23,12 +22,9 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
         }
 
         try {
-            logNAVEpostAndActionToSecureLog(
-                getAccessTokenFromAuthHeader(call.request),
-                "slette sykmelding med id $sykmeldingId",
-            )
+            val accessToken = getAccessTokenFromAuthHeader(call.request)
 
-            deleteSykmeldingService.deleteSykmelding(sykmeldingId)
+            deleteSykmeldingService.deleteSykmelding(sykmeldingId, accessToken)
             logger.info(
                 "Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId"
             )
