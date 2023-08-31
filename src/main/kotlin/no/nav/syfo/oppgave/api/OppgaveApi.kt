@@ -8,10 +8,12 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import java.util.UUID
 import no.nav.syfo.HttpMessage
+import no.nav.syfo.auditlogg
+import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.logger
 import no.nav.syfo.oppgave.client.OppgaveClient
+import no.nav.syfo.sikkerlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {
@@ -29,10 +31,18 @@ fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
         }
 
         try {
-            logNAVEpostAndActionToSecureLog(
-                getAccessTokenFromAuthHeader(call.request),
-                "Henter oppgaver fra Oppgave-api ider: $ids",
+            auditlogg.info(
+                AuditLogger()
+                    .createcCefMessage(
+                        fnr = null,
+                        accessToken = getAccessTokenFromAuthHeader(call.request),
+                        operation = AuditLogger.Operation.WRITE,
+                        requestPath = "/api/oppgave/list",
+                        permit = AuditLogger.Permit.PERMIT,
+                    ),
             )
+            sikkerlogg.info("Henter oppgaver fra Oppgave-api ider: $ids")
+
             val toList =
                 ids.map { oppgaveClient.hentOppgave(oppgaveId = it, msgId = callId) }.toList()
             logger.info(

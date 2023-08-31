@@ -6,10 +6,12 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import no.nav.syfo.HttpMessage
+import no.nav.syfo.auditlogg
+import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.logger
 import no.nav.syfo.saf.service.SafService
+import no.nav.syfo.sikkerlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerJournalpostApi(safService: SafService) {
     get("/api/journalposter/{fnr}") {
@@ -22,10 +24,18 @@ fun Route.registerJournalpostApi(safService: SafService) {
         }
 
         try {
-            logNAVEpostAndActionToSecureLog(
-                getAccessTokenFromAuthHeader(call.request),
-                "Henter journalposter fra saf-api fnr: $fnr",
+            auditlogg.info(
+                AuditLogger()
+                    .createcCefMessage(
+                        fnr = fnr,
+                        accessToken = getAccessTokenFromAuthHeader(call.request),
+                        operation = AuditLogger.Operation.WRITE,
+                        requestPath = "/api/journalposter/$fnr",
+                        permit = AuditLogger.Permit.PERMIT,
+                    ),
             )
+            sikkerlogg.info("Henter journalposter fra saf-api fnr: $fnr")
+
             val journalposter = safService.getDokumentoversiktBruker(fnr)
 
             if (journalposter == null) {

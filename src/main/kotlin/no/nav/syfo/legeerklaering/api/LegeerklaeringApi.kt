@@ -6,11 +6,12 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import no.nav.syfo.HttpMessage
+import no.nav.syfo.auditlogg
+import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.logger
 import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logNAVEpostAndActionToSecureLog
 
 fun Route.registerDeleteLegeerklaeringApi(
     deleteLegeerklaeringService: DeleteLegeerklaeringService
@@ -19,9 +20,15 @@ fun Route.registerDeleteLegeerklaeringApi(
         val legeerklaeringId = call.parameters["legeerklaeringId"]!!
 
         try {
-            logNAVEpostAndActionToSecureLog(
-                getAccessTokenFromAuthHeader(call.request),
-                "slette legeerklaering med id $legeerklaeringId",
+            auditlogg.info(
+                AuditLogger()
+                    .createcCefMessage(
+                        fnr = null,
+                        accessToken = getAccessTokenFromAuthHeader(call.request),
+                        operation = AuditLogger.Operation.WRITE,
+                        requestPath = "/api/legeerklaering/$legeerklaeringId",
+                        permit = AuditLogger.Permit.PERMIT,
+                    ),
             )
 
             deleteLegeerklaeringService.deleteLegeerklaering(legeerklaeringId)

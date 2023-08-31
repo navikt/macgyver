@@ -27,13 +27,11 @@ import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.api.getPersonApi
 import no.nav.syfo.identendring.api.registerFnrApi
-import no.nav.syfo.kafka.SykmeldingEndringsloggKafkaProducer
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.api.registerDeleteLegeerklaeringApi
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.metrics.monitorHttpRequests
-import no.nav.syfo.model.Sykmeldingsdokument
 import no.nav.syfo.nais.isalive.naisIsAliveRoute
 import no.nav.syfo.nais.isready.naisIsReadyRoute
 import no.nav.syfo.nais.prometheus.naisPrometheusRoute
@@ -75,6 +73,8 @@ val objectMapper: ObjectMapper =
     }
 
 val logger: Logger = LoggerFactory.getLogger("no.nav.syfo.macgyver")
+val auditlogg: Logger = LoggerFactory.getLogger("auditLogger")
+val sikkerlogg: Logger = LoggerFactory.getLogger("securelog")
 
 fun main() {
 
@@ -246,13 +246,6 @@ fun Application.module() {
                 JacksonKafkaSerializer::class,
                 StringSerializer::class
             )
-    val kafkaproducerEndringsloggSykmelding =
-        KafkaProducer<String, Sykmeldingsdokument>(aivenProducerProperties)
-    val sykmeldingEndringsloggKafkaProducer =
-        SykmeldingEndringsloggKafkaProducer(
-            environmentVariables.aivenEndringsloggTopic,
-            kafkaproducerEndringsloggSykmelding,
-        )
 
     val statusKafkaProducer =
         SykmeldingStatusKafkaProducer(
@@ -297,7 +290,6 @@ fun Application.module() {
         DeleteSykmeldingService(
             syfosmregisterDatabase,
             statusKafkaProducer,
-            sykmeldingEndringsloggKafkaProducer,
             tombstoneProducer,
             listOf(
                 environmentVariables.manuellTopic,
