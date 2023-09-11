@@ -218,7 +218,7 @@ fun Application.module() {
 
     val kafkaAivenProducer =
         KafkaProducer<String, SykmeldingV2KafkaMessage?>(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("sendt-sykmelding-producer")
                 .toProducerConfig(
                     "macgyver-producer",
                     JacksonNullableKafkaSerializer::class,
@@ -232,7 +232,7 @@ fun Application.module() {
         )
     val kafkaAivenNarmestelederRequestProducer =
         KafkaProducer<String, NlRequestKafkaMessage>(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("narmesteleder-request-producer")
                 .toProducerConfig(
                     "macgyver-producer",
                     JacksonKafkaSerializer::class,
@@ -240,7 +240,7 @@ fun Application.module() {
                 ),
         )
     val aivenProducerProperties =
-        KafkaUtils.getAivenKafkaConfig()
+        KafkaUtils.getAivenKafkaConfig("sykmelding-status-producer")
             .toProducerConfig(
                 environmentVariables.applicationName,
                 JacksonKafkaSerializer::class,
@@ -258,7 +258,7 @@ fun Application.module() {
         NarmesteLederResponseKafkaProducer(
             environmentVariables.nlResponseTopic,
             KafkaProducer<String, NlResponseKafkaMessage>(
-                KafkaUtils.getAivenKafkaConfig()
+                KafkaUtils.getAivenKafkaConfig("narmesteleder-response-producer")
                     .toProducerConfig(
                         "macgyver-producer",
                         JacksonNullableKafkaSerializer::class,
@@ -279,7 +279,7 @@ fun Application.module() {
 
     val tombstoneProducer =
         KafkaProducer<String, Any?>(
-            KafkaUtils.getAivenKafkaConfig()
+            KafkaUtils.getAivenKafkaConfig("delete-sykmelding-status-producer")
                 .toProducerConfig(
                     "macgyver-tobstone-producer",
                     JacksonNullableKafkaSerializer::class
