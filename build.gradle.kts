@@ -1,7 +1,7 @@
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val coroutinesVersion="1.7.1"
+val coroutinesVersion="1.7.3"
 val jacksonVersion="2.15.2"
 val ktorVersion="2.3.4"
 val logbackVersion="1.4.8"
@@ -18,9 +18,9 @@ val jaxbApiVersion="2.4.0-b180830.0359"
 val javaxActivationVersion="1.1.1"
 val mockkVersion="1.13.5"
 val smCommonVersion="1.0.14"
-val sykmeldingVersion="1.0.3"
-val fellesformatVersion="1.0.3"
-val kithHodemeldingVersion="1.0.3"
+val sykmeldingVersion="1.0.10"
+val fellesformatVersion="1.0.10"
+val kithHodemeldingVersion="1.0.10"
 val javaTimeAdapterVersion="1.1.3"
 val postgresVersion="42.6.0"
 val confluentVersion="6.2.2"
@@ -32,6 +32,7 @@ val nimbusdsVersion="9.31"
 val commonsCodecVersion="1.16.0"
 val ktfmtVersion="0.44"
 val logbacksyslog4jVersion = "1.0.0"
+val snakeyamlVersion = "1.33"
 
 
 plugins {
@@ -123,6 +124,9 @@ dependencies {
     implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion") {
         exclude(group = "commons-codec", module = "commons-codec")
     }
+    //due to https://github.com/advisories/GHSA-3mc7-4q67-w48m
+    implementation("org.yaml:snakeyaml:$snakeyamlVersion")
+
     swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
