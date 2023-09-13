@@ -32,7 +32,7 @@ val nimbusdsVersion="9.31"
 val commonsCodecVersion="1.16.0"
 val ktfmtVersion="0.44"
 val logbacksyslog4jVersion = "1.0.0"
-val snakeyamlVersion = "1.33"
+val snakeyamlVersion = "2.0"
 
 
 plugins {
