@@ -2,32 +2,32 @@ package no.nav.syfo
 
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwk.JwkProviderBuilder
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.interfaces.DecodedJWT
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import io.ktor.http.*
-import io.ktor.serialization.jackson.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.plugins.swagger.*
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.uri
-import io.ktor.server.routing.*
-import io.ktor.util.toMap
+import io.ktor.serialization.jackson.jackson
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCallPipeline
+import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.Principal
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTCredential
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.swagger.swaggerUI
+import io.ktor.server.routing.routing
 import io.prometheus.client.hotspot.DefaultExports
 import java.net.URL
-import java.security.interfaces.RSAPublicKey
 import java.util.concurrent.TimeUnit
+import kotlin.collections.listOf
+import kotlin.collections.set
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.clients.HttpClients
 import no.nav.syfo.db.Database
@@ -129,11 +129,6 @@ fun Application.configureRouting(
         }
     }
 
-    install(CORS) {
-        anyHost()
-        allowHeader(HttpHeaders.ContentType)
-    }
-
     routing {
         naisIsAliveRoute(applicationState)
         naisIsReadyRoute(applicationState)
@@ -153,55 +148,7 @@ fun Application.configureRouting(
             getPersonApi(pdlService)
         }
     }
-    intercept(ApplicationCallPipeline.Monitoring) {
-        val excludedUris =
-            listOf("/internal/is_alive", "/internal/is_ready", "/internal/prometheus")
-        if (call.request.uri !in excludedUris) {
 
-            val authHeader = call.request.headers["Authorization"]
-            val bearerAndToken = authHeader?.split(" ")
-            val token = bearerAndToken?.get(1)
-
-            if (token != null) {
-                val jwt: DecodedJWT = JWT.decode(token)
-                try {
-                    val jwk = jwkProviderAadV2[jwt.keyId]
-                    val algorithm =
-                        when (jwt.algorithm) {
-                            "RS256" -> Algorithm.RSA256(jwk.publicKey as RSAPublicKey)
-                            "RS384" -> Algorithm.RSA384(jwk.publicKey as RSAPublicKey)
-                            "RS512" -> Algorithm.RSA512(jwk.publicKey as RSAPublicKey)
-                            else -> throw IllegalArgumentException("ukjent algorighhtm")
-                        }
-                    algorithm.verify(jwt)
-                    logger.info("Token is valid")
-                } catch (ex: IllegalArgumentException) {
-                    logger.info("Token has an unsupported algorithm")
-                } catch (ex: Exception) {
-                    logger.info("Token is not valid")
-                }
-            }
-
-            val headers = call.request.headers.toMap()
-
-            headers.forEach { (name, values) ->
-                val maskedValues =
-                    values.map { value ->
-                        if (
-                            name.equals(
-                                "Authorization",
-                                ignoreCase = true,
-                            ) || value.filter { it.isDigit() }.length == 11
-                        )
-                            "MASKED"
-                        else value
-                    }
-                logger.info("Header '$name': ${maskedValues.joinToString()}")
-            }
-            logger.info("HTTP method: ${call.request.httpMethod}")
-            logger.info("Request URI: ${call.request.uri}")
-        }
-    }
     intercept(ApplicationCallPipeline.Monitoring, monitorHttpRequests())
 }
 
