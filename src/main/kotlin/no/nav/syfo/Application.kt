@@ -52,7 +52,6 @@ import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.api.registerJournalpostApi
 import no.nav.syfo.saf.service.SafService
-import no.nav.syfo.service.GjenapneSykmeldingService
 import no.nav.syfo.smregistrering.SmregistreringService
 import no.nav.syfo.smregistrering.api.registerFerdigstillRegistreringsoppgaveApi
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
@@ -60,7 +59,6 @@ import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.registerDeleteSykmeldingApi
-import no.nav.syfo.sykmelding.api.registerGjenapneSykmeldingApi
 import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -107,7 +105,6 @@ fun Application.configureRouting(
     updateFnrService: UpdateFnrService,
     oppgaveClient: OppgaveClient,
     deleteSykmeldingService: DeleteSykmeldingService,
-    gjenapneSykmeldingService: GjenapneSykmeldingService,
     narmestelederService: NarmestelederService,
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
     smregistreringService: SmregistreringService,
@@ -138,7 +135,6 @@ fun Application.configureRouting(
 
         authenticate("jwt") {
             registerFnrApi(updateFnrService)
-            registerGjenapneSykmeldingApi(gjenapneSykmeldingService)
             registerDeleteSykmeldingApi(deleteSykmeldingService)
             registerHentOppgaverApi(oppgaveClient)
             registrerNarmestelederRequestApi(narmestelederService)
@@ -299,12 +295,6 @@ fun Application.module() {
             ),
         )
 
-    val gjenapneSykmeldingService =
-        GjenapneSykmeldingService(
-            statusKafkaProducer,
-            syfosmregisterDatabase,
-        )
-
     val narmestelederService =
         NarmestelederService(
             pdlService = httpClients.pdlService,
@@ -333,7 +323,6 @@ fun Application.module() {
         updateFnrService = updateFnrService,
         oppgaveClient = httpClients.oppgaveClient,
         deleteSykmeldingService = deleteSykmeldingService,
-        gjenapneSykmeldingService = gjenapneSykmeldingService,
         narmestelederService = narmestelederService,
         deleteLegeerklaeringService = deleteLegeerklaeringService,
         smregistreringService = smregistreringService,
