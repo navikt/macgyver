@@ -154,41 +154,53 @@ fun Application.configureRouting(
         }
     }
     intercept(ApplicationCallPipeline.Monitoring) {
-        val authHeader = call.request.headers["Authorization"]
-        val bearerAndToken = authHeader?.split(" ")
-        val token = bearerAndToken?.get(1)
+        val excludedUris =
+            listOf("/internal/is_alive", "/internal/is_ready", "/internal/prometheus")
+        if (call.request.uri !in excludedUris) {
 
-        if (token != null) {
-            val jwt: DecodedJWT = JWT.decode(token)
-            try {
-                val jwk = jwkProviderAadV2[jwt.keyId]
-                val algorithm =
-                    when (jwt.algorithm) {
-                        "RS256" -> Algorithm.RSA256(jwk.publicKey as RSAPublicKey)
-                        "RS384" -> Algorithm.RSA384(jwk.publicKey as RSAPublicKey)
-                        "RS512" -> Algorithm.RSA512(jwk.publicKey as RSAPublicKey)
-                        else -> throw IllegalArgumentException("ukjent algorighhtm")
+            val authHeader = call.request.headers["Authorization"]
+            val bearerAndToken = authHeader?.split(" ")
+            val token = bearerAndToken?.get(1)
+
+            if (token != null) {
+                val jwt: DecodedJWT = JWT.decode(token)
+                try {
+                    val jwk = jwkProviderAadV2[jwt.keyId]
+                    val algorithm =
+                        when (jwt.algorithm) {
+                            "RS256" -> Algorithm.RSA256(jwk.publicKey as RSAPublicKey)
+                            "RS384" -> Algorithm.RSA384(jwk.publicKey as RSAPublicKey)
+                            "RS512" -> Algorithm.RSA512(jwk.publicKey as RSAPublicKey)
+                            else -> throw IllegalArgumentException("ukjent algorighhtm")
+                        }
+                    algorithm.verify(jwt)
+                    logger.info("Token is valid")
+                } catch (ex: IllegalArgumentException) {
+                    logger.info("Token has an unsupported algorithm")
+                } catch (ex: Exception) {
+                    logger.info("Token is not valid")
+                }
+            }
+
+            val headers = call.request.headers.toMap()
+
+            headers.forEach { (name, values) ->
+                val maskedValues =
+                    values.map { value ->
+                        if (
+                            name.equals(
+                                "Authorization",
+                                ignoreCase = true,
+                            ) || value.filter { it.isDigit() }.length == 11
+                        )
+                            "MASKED"
+                        else value
                     }
-                algorithm.verify(jwt)
-                logger.info("Token is valid")
-            } catch (ex: IllegalArgumentException) {
-                logger.info("Token has an unsupported algorithm")
-            } catch (ex: Exception) {
-                logger.info("Token is not valid")
+                logger.info("Header '$name': ${maskedValues.joinToString()}")
             }
+            logger.info("HTTP method: ${call.request.httpMethod}")
+            logger.info("Request URI: ${call.request.uri}")
         }
-
-        val headersWithoutAuth =
-            call.request.headers.toMap().filterKeys { key ->
-                !key.equals("Authorization", ignoreCase = true)
-            }
-
-        headersWithoutAuth.forEach { (name, values) ->
-            logger.info("Header '$name': ${values.joinToString()}")
-        }
-
-        logger.info("HTTP method: ${call.request.httpMethod}")
-        logger.info("Request URI: ${call.request.uri}")
     }
     intercept(ApplicationCallPipeline.Monitoring, monitorHttpRequests())
 }
@@ -265,7 +277,7 @@ fun Application.module() {
                 .toProducerConfig(
                     "macgyver-producer",
                     JacksonNullableKafkaSerializer::class,
-                    StringSerializer::class
+                    StringSerializer::class,
                 )
                 .apply {
                     this[ProducerConfig.ACKS_CONFIG] = "1"
@@ -279,7 +291,7 @@ fun Application.module() {
                 .toProducerConfig(
                     "macgyver-producer",
                     JacksonKafkaSerializer::class,
-                    StringSerializer::class
+                    StringSerializer::class,
                 ),
         )
     val aivenProducerProperties =
@@ -287,13 +299,13 @@ fun Application.module() {
             .toProducerConfig(
                 environmentVariables.applicationName,
                 JacksonKafkaSerializer::class,
-                StringSerializer::class
+                StringSerializer::class,
             )
 
     val statusKafkaProducer =
         SykmeldingStatusKafkaProducer(
             KafkaProducer(aivenProducerProperties),
-            environmentVariables.aivenSykmeldingStatusTopic
+            environmentVariables.aivenSykmeldingStatusTopic,
         )
 
     val sendtSykmeldingKafkaProducerFnr = SykmeldingV2KafkaProducer(kafkaAivenProducer)
@@ -305,7 +317,7 @@ fun Application.module() {
                     .toProducerConfig(
                         "macgyver-producer",
                         JacksonNullableKafkaSerializer::class,
-                        StringSerializer::class
+                        StringSerializer::class,
                     ),
             ),
         )
@@ -325,7 +337,7 @@ fun Application.module() {
             KafkaUtils.getAivenKafkaConfig("delete-sykmelding-status-producer")
                 .toProducerConfig(
                     "macgyver-tobstone-producer",
-                    JacksonNullableKafkaSerializer::class
+                    JacksonNullableKafkaSerializer::class,
                 ),
         )
 
@@ -336,7 +348,7 @@ fun Application.module() {
             tombstoneProducer,
             listOf(
                 environmentVariables.manuellTopic,
-                environmentVariables.papirSmRegistreringTopic
+                environmentVariables.papirSmRegistreringTopic,
             ),
         )
 
@@ -379,7 +391,7 @@ fun Application.module() {
         deleteLegeerklaeringService = deleteLegeerklaeringService,
         smregistreringService = smregistreringService,
         safService = httpClients.safService,
-        pdlService = httpClients.pdlService
+        pdlService = httpClients.pdlService,
     )
 
     DefaultExports.initialize()

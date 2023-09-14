@@ -14,8 +14,9 @@ import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 
 fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingService) {
     delete("/api/sykmelding/{sykmeldingId}") {
-        val sykmeldingId = call.parameters["sykmeldingId"]!!
 
+        val sykmeldingId = call.parameters["sykmeldingId"]!!
+        logger.info("delete $sykmeldingId")
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
             return@delete
