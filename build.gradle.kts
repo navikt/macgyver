@@ -16,18 +16,17 @@ val jaxbRuntimeVersion="2.4.0-b180830.0438"
 val javaxJaxwsApiVersion="2.3.1"
 val jaxbApiVersion="2.4.0-b180830.0359"
 val javaxActivationVersion="1.1.1"
-val mockkVersion="1.13.5"
+val mockkVersion="1.13.7"
 val smCommonVersion="1.0.19"
 val sykmeldingVersion="1.0.10"
 val fellesformatVersion="1.0.10"
 val kithHodemeldingVersion="1.0.10"
 val javaTimeAdapterVersion="1.1.3"
 val postgresVersion="42.6.0"
-val confluentVersion="6.2.2"
 val swaggerUiVersion="5.1.0"
 val kotlinVersion="1.9.10"
-val googlePostgresVersion="1.12.0"
-val junitVersion="5.9.3"
+val googlePostgresVersion="1.14.0"
+val junitVersion="5.10.0"
 val nimbusdsVersion="9.31"
 val commonsCodecVersion="1.16.0"
 val ktfmtVersion="0.44"
@@ -136,6 +135,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 swaggerSources {
