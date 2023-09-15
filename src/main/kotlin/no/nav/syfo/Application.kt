@@ -52,8 +52,6 @@ import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.api.registerJournalpostApi
 import no.nav.syfo.saf.service.SafService
-import no.nav.syfo.smregistrering.SmregistreringService
-import no.nav.syfo.smregistrering.api.registerFerdigstillRegistreringsoppgaveApi
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
@@ -107,7 +105,6 @@ fun Application.configureRouting(
     deleteSykmeldingService: DeleteSykmeldingService,
     narmestelederService: NarmestelederService,
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
-    smregistreringService: SmregistreringService,
     safService: SafService,
     pdlService: PdlPersonService,
 ) {
@@ -139,7 +136,6 @@ fun Application.configureRouting(
             registerHentOppgaverApi(oppgaveClient)
             registrerNarmestelederRequestApi(narmestelederService)
             registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
-            registerFerdigstillRegistreringsoppgaveApi(smregistreringService)
             registerJournalpostApi(safService)
             getPersonApi(pdlService)
         }
@@ -308,9 +304,6 @@ fun Application.module() {
             listOf(environmentVariables.legeerklaringTopic),
         )
 
-    val smregistreringService =
-        SmregistreringService(httpClients.oppgaveClient, smregistreringDatabase)
-
     environment.monitor.subscribe(ApplicationStopped) {
         applicationState.ready = false
         applicationState.alive = false
@@ -325,7 +318,6 @@ fun Application.module() {
         deleteSykmeldingService = deleteSykmeldingService,
         narmestelederService = narmestelederService,
         deleteLegeerklaeringService = deleteLegeerklaeringService,
-        smregistreringService = smregistreringService,
         safService = httpClients.safService,
         pdlService = httpClients.pdlService,
     )
