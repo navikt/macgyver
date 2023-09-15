@@ -156,40 +156,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/HttpMessage"
-  /api/smregistrering/{journalpostId}/ferdigstill:
-    post:
-      description: ""
-      parameters:
-      - name: "journalpostId"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      requestBody:
-        content:
-          '*/*':
-            schema:
-              $ref: "#/components/schemas/FerdigstillSmregOppgave"
-        required: true
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/HttpMessage"
-        "500":
-          description: "Internal Server Error"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/HttpMessage"
   /api/sykmelding/{sykmeldingId}:
     delete:
       description: ""
@@ -399,8 +365,3 @@ components:
         mappeId:
           type: "integer"
           format: "int32"
-    FerdigstillSmregOppgave:
-      type: "object"
-      properties:
-        ferdigstiltAv:
-          type: "string"

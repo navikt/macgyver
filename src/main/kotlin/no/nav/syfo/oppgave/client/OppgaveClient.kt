@@ -39,34 +39,6 @@ class OppgaveClient(
             }
         }
     }
-
-    suspend fun ferdigstillOppgave(
-        ferdigstilloppgave: FerdigstillOppgave,
-        journalpostId: String
-    ): Oppgave {
-        logger.info("Ferdigstiller oppgave for journalpostId $journalpostId")
-
-        val httpResponse =
-            httpClient.patch(url + "/" + ferdigstilloppgave.id) {
-                contentType(ContentType.Application.Json)
-                val token = accessTokenClientV2.getAccessTokenV2(scope)
-                header("Authorization", "Bearer $token")
-                header("X-Correlation-ID", journalpostId)
-                setBody(ferdigstilloppgave)
-            }
-
-        return when (httpResponse.status) {
-            HttpStatusCode.OK -> {
-                httpResponse.body<Oppgave>()
-            }
-            else -> {
-                val msg =
-                    "OppgaveClient ferdigstillOppgave kastet feil ${httpResponse.status} ved ferdigstilling av oppgave, response: ${httpResponse.body<String>()}"
-                logger.error(msg)
-                throw RuntimeException(msg)
-            }
-        }
-    }
 }
 
 data class Oppgave(
@@ -90,12 +62,3 @@ data class Oppgave(
     val mappeId: Int? = null,
 )
 
-data class FerdigstillOppgave(
-    val id: Int,
-    val versjon: Int,
-    val status: String,
-    val tilordnetRessurs: String,
-    val tildeltEnhetsnr: String,
-    val mappeId: Int?,
-    val beskrivelse: String? = null,
-)
