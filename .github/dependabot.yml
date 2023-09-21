@@ -8,9 +8,8 @@ updates:
     ignore:
       - dependency-name: "org.glassfish.jaxb:jaxb-runtime"
         update-types: ["version-update:semver-major"]
-     - dependency-name: "com.sun.xml.ws:jaxws-tools"
-        update-types: ["version-update:semver-major"]
-      
+      - dependency-name: "com.sun.xml.ws:jaxws-tools"
+        update-types: ["version-update:semver-major"]   
     groups:
       dependencies:
         patterns:
