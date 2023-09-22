@@ -7,9 +7,7 @@ updates:
     open-pull-requests-limit: 10
     ignore:
       - dependency-name: "org.glassfish.jaxb:jaxb-runtime"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "com.sun.xml.ws:jaxws-tools"
-        update-types: ["version-update::semver-minor"]   
     groups:
       dependencies:
         patterns:
