@@ -31,7 +31,7 @@ val commonsCodecVersion="1.16.0"
 val ktfmtVersion="0.44"
 val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
-
+val snappyJavaVersion = "1.1.10.5"
 
 plugins {
     id("application")
@@ -73,9 +73,11 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-apache:$ktorVersion")
-    // override transient version 1.11 from io.ktor:ktor-client-apache due to security vulnerability
-    // https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/
-    implementation("commons-codec:commons-codec:$commonsCodecVersion")
+    constraints {
+        implementation("commons-codec:commons-codec:$commonsCodecVersion") {
+            because("override transient from io.ktor:ktor-client-apache due to security vulnerability https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/")
+        }
+    }
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
 
@@ -93,6 +95,11 @@ dependencies {
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
     implementation("no.nav.helse.xml:kith-hodemelding:$kithHodemeldingVersion")
     implementation("no.nav.helse:syfosm-common-kafka:$smCommonVersion")
+    constraints {
+        implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion") {
+            because("override transient from org.apache.kafka:kafka_2.12")
+        }
+    }
     implementation("no.nav.helse:syfosm-common-diagnosis-codes:$smCommonVersion")
     implementation("com.migesok:jaxb-java-time-adapters:$javaTimeAdapterVersion")
 
