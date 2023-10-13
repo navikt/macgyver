@@ -82,6 +82,17 @@ To build locally and run the integration tests you can simply run
 or on windows
 `gradlew.bat shadowJar`
 
+Creating a docker image should be as simple as
+``` shell
+docker build -t macgyver .
+```
+
+#### :floppy_disk: Running a docker image
+
+``` shell
+docker run --rm -it -p 8080:8080 macgyver
+```
+
 ### Upgrading the gradle wrapper
 
 Find the newest version of gradle here: https://gradle.org/releases/ Then run this command:
