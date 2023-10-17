@@ -5,3 +5,5 @@ data class NlRequestDTO(
     val orgnummer: String,
     val sykmeldingId: String,
 )
+
+data class NarmesteldereRequestDTO(val sykmeldtFnr: String)

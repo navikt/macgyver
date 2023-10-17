@@ -30,13 +30,6 @@ data class EnvironmentVariables(
     val syfosmregisterDatabaseCloudSqlInstance: String =
         getEnvVar("SYFOSMREGISTER_CLOUD_SQL_INSTANCE"),
     val legeerklaringTopic: String = "teamsykmelding.legeerklaering",
-    val smregistreringDatabaseUsername: String = getEnvVar("NAIS_DATABASE_MACGYVER_USERNAME"),
-    val smregistreringDatabasePassword: String = getEnvVar("NAIS_DATABASE_MACGYVER_PASSWORD"),
-    val smregistreringDatabaseHost: String = getEnvVar("NAIS_DATABASE_MACGYVER_HOST"),
-    val smregistreringDatabasePort: String = getEnvVar("NAIS_DATABASE_MACGYVER_PORT"),
-    val smregistreringDatabaseName: String = getEnvVar("SMREGISTRERING_DB_NAME"),
-    val smregisteringDatabaseCloudSqlInstance: String =
-        getEnvVar("SMREGISTRERING_CLOUD_SQL_INSTANCE"),
     val safGraphqlPath: String = getEnvVar("SAF_GRAPHQL_PATH"),
     val safScope: String = getEnvVar("SAF_SCOPE"),
 )

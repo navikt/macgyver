@@ -5,6 +5,8 @@ import java.time.ZoneOffset
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import no.nav.syfo.identendring.client.NarmesteLeder
+import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.logger
 import no.nav.syfo.narmesteleder.api.NlRequestDTO
 import no.nav.syfo.narmesteleder.kafkamodel.NlKafkaMetadata
@@ -18,6 +20,7 @@ class NarmestelederService(
     private val pdlService: PdlPersonService,
     private val narmestelederRequestProducer: KafkaProducer<String, NlRequestKafkaMessage>,
     private val topic: String,
+    private val narmestelederClient: NarmestelederClient
 ) {
     suspend fun sendNewNlRequest(nlRequestDto: NlRequestDTO) =
         withContext(Dispatchers.IO) {
@@ -47,4 +50,8 @@ class NarmestelederService(
                 .get()
             logger.info("Sendt nl-request to ${nlRequest.nlRequest.orgnr}")
         }
+
+    suspend fun getNarmesteldereForSykmeldt(sykmeldtFnr: String): List<NarmesteLeder> {
+        return narmestelederClient.getNarmesteledere(sykmeldtFnr)
+    }
 }

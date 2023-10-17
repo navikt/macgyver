@@ -4,8 +4,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
+import io.ktor.server.routing.*
 import no.nav.syfo.HttpMessage
 import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
@@ -13,7 +12,7 @@ import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.sikkerlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 
-fun Route.registrerNarmestelederRequestApi(narmestelederService: NarmestelederService) {
+fun Route.registrerNarmestelederApi(narmestelederService: NarmestelederService) {
     post("/api/narmesteleder/request") {
         val nlRequest = call.receive<NlRequestDTO>()
 
@@ -33,5 +32,24 @@ fun Route.registrerNarmestelederRequestApi(narmestelederService: NarmestelederSe
 
         narmestelederService.sendNewNlRequest(nlRequest)
         call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
+    }
+
+    get("/api/narmesteleder") {
+        val narmestelderRequest = call.receive<NarmesteldereRequestDTO>()
+
+        auditlogg.info(
+            AuditLogger()
+                .createcCefMessage(
+                    fnr = narmestelderRequest.sykmeldtFnr,
+                    accessToken = getAccessTokenFromAuthHeader(call.request),
+                    operation = AuditLogger.Operation.READ,
+                    requestPath = "/api/narmesteleder",
+                    permit = AuditLogger.Permit.PERMIT,
+                ),
+        )
+
+        val narmesteldereForSykmeldt =
+            narmestelederService.getNarmesteldereForSykmeldt(narmestelderRequest.sykmeldtFnr)
+        call.respond(HttpStatusCode.OK, narmesteldereForSykmeldt)
     }
 }

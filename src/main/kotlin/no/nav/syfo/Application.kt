@@ -44,7 +44,7 @@ import no.nav.syfo.nais.isready.naisIsReadyRoute
 import no.nav.syfo.nais.prometheus.naisPrometheusRoute
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmestelederService
-import no.nav.syfo.narmesteleder.api.registrerNarmestelederRequestApi
+import no.nav.syfo.narmesteleder.api.registrerNarmestelederApi
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.api.registerHentOppgaverApi
@@ -134,7 +134,7 @@ fun Application.configureRouting(
             registerFnrApi(updateFnrService)
             registerDeleteSykmeldingApi(deleteSykmeldingService)
             registerHentOppgaverApi(oppgaveClient)
-            registrerNarmestelederRequestApi(narmestelederService)
+            registrerNarmestelederApi(narmestelederService)
             registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
             registerJournalpostApi(safService)
             getPersonApi(pdlService)
@@ -196,16 +196,6 @@ fun Application.module() {
             dbName = environmentVariables.syfosmregisterDatabaseName,
             dbUsername = environmentVariables.syfosmregisterDatabaseUsername,
             dbPassword = environmentVariables.syfosmregisterDatabasePassword,
-        )
-
-    val smregistreringDatabase =
-        Database(
-            cloudSqlInstance = environmentVariables.smregisteringDatabaseCloudSqlInstance,
-            dbHost = environmentVariables.smregistreringDatabaseHost,
-            dbPort = environmentVariables.smregistreringDatabasePort,
-            dbName = environmentVariables.smregistreringDatabaseName,
-            dbUsername = environmentVariables.smregistreringDatabaseUsername,
-            dbPassword = environmentVariables.smregistreringDatabasePassword,
         )
 
     val httpClients = HttpClients(environmentVariables)
@@ -296,6 +286,7 @@ fun Application.module() {
             pdlService = httpClients.pdlService,
             kafkaAivenNarmestelederRequestProducer,
             environmentVariables.narmestelederRequestTopic,
+            httpClients.narmestelederClient
         )
 
     val deleteLegeerklaeringService =

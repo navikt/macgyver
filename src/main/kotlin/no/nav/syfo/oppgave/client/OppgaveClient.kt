@@ -4,14 +4,11 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
-import io.ktor.client.request.patch
-import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.logger
 
 class OppgaveClient(
     private val url: String,
@@ -61,4 +58,3 @@ data class Oppgave(
     val status: String? = null,
     val mappeId: Int? = null,
 )
-
