@@ -24,7 +24,7 @@ val kithHodemeldingVersion="2.0.1"
 val javaTimeAdapterVersion="1.1.3"
 val postgresVersion="42.6.0"
 val swaggerUiVersion="5.9.0"
-val kotlinVersion="1.9.10"
+val kotlinVersion="1.9.20"
 val googlePostgresVersion="1.14.1"
 val junitVersion="5.10.0"
 val commonsCodecVersion="1.16.0"
@@ -35,7 +35,7 @@ val snappyJavaVersion = "1.1.10.5"
 
 plugins {
     id("application")
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "1.9.20"
     id("com.diffplug.spotless") version "6.22.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.hidetake.swagger.generator") version "2.19.2" apply true
