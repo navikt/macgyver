@@ -5,6 +5,7 @@ import java.time.ZoneOffset
 import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.db.Database
+import no.nav.syfo.dokarkiv.client.DokArkivClient
 import no.nav.syfo.logger
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
@@ -17,8 +18,9 @@ class DeleteSykmeldingService(
     val kafkaProducer: SykmeldingStatusKafkaProducer,
     val tombstoneProducer: KafkaProducer<String, Any?>,
     val topics: List<String>,
+    val dokArkivClient: DokArkivClient
 ) {
-    fun deleteSykmelding(sykmeldingID: String, accessToken: String) {
+    suspend fun deleteSykmelding(sykmeldingID: String, journalpostId: String, accessToken: String) {
         val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
             auditlogg.info(
@@ -57,6 +59,11 @@ class DeleteSykmeldingService(
             logger.warn("Could not find sykmelding with id $sykmeldingID")
             throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
+
+        dokArkivClient.feilregistreresJournalpost(
+            journalpostId = journalpostId,
+            sykmeldingId = sykmeldingID
+        )
     }
 }
 

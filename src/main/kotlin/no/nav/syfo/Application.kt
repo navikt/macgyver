@@ -279,6 +279,7 @@ fun Application.module() {
                 environmentVariables.manuellTopic,
                 environmentVariables.papirSmRegistreringTopic,
             ),
+            httpClients.dokArkivClient,
         )
 
     val narmestelederService =

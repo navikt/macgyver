@@ -1,0 +1,30 @@
+name: Deploy network-policy to prod
+on:
+  push:
+    paths:
+      - 'network-policy-smregister-prod.yaml'
+      - 'network-policy-smregistering-prod.yaml'
+      - '.github/workflows/deploy-network-policy-prod**'
+    branches:
+      - '**'
+      - '!main'
+jobs:
+  deploy:
+    name: deploy network-policy to prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy network-policy to prod-gcp
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: network-policy-smregister-prod.yaml
+          TEAM: teamsykmelding
+      - name: Deploy network-policy  to prod-gcp
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: network-policy-smregistering-prod.yaml
+          TEAM: teamsykmelding
