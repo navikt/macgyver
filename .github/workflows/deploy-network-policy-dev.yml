@@ -13,13 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy redirect ingress to dev-gcp
+      - name: Deploy network-policy to dev-gcp
         uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: network-policy-smregister-dev.yaml
-      - name: Deploy redirect ingress to dev-gcp
+          TEAM: teamsykmelding
+      - name: Deploy network-policy to dev-gcp
         uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
