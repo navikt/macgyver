@@ -6,7 +6,7 @@ on:
       - 'network-policy-smregistering-dev.yaml'
       - '.github/workflows/deploy-network-policy-dev**'
     branches:
-      - '**'
+      - main
 jobs:
   deploy:
     name: deploy network-policy to dev
