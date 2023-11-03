@@ -1,0 +1,27 @@
+name: Deploy network-policy to dev
+on:
+  push:
+    paths:
+      - 'network-policy-smregister-dev.yaml'
+      - 'network-policy-smregistering-dev.yaml'
+      - '.github/workflows/deploy-network-policy-dev**'
+    branches:
+      - '**'
+jobs:
+  deploy:
+    name: deploy network-policy to dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy redirect ingress to dev-gcp
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: network-policy-smregister-dev.yaml
+      - name: Deploy redirect ingress to dev-gcp
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: network-policy-smregistering-dev.yaml
