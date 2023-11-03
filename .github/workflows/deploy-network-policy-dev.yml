@@ -25,3 +25,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: network-policy-smregistering-dev.yaml
+          TEAM: teamsykmelding
