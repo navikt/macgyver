@@ -53,6 +53,7 @@ spec:
         - host: saf.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
+        - host: dokarkiv.prod-fss-pub.nais.io
   azure:
     application:
       allowAllUsers: true
@@ -89,3 +90,7 @@ spec:
       value: https://saf.prod-fss-pub.nais.io/graphql
     - name: SAF_SCOPE
       value: api://prod-fss.teamdokumenthandtering.saf/.default
+    - name: DOK_ARKIV_URL
+      value: https://dokarkiv.prod-fss-pub.nais.io/rest/journalpostapi/v1/journalpost
+    - name: DOK_ARKIV_SCOPE
+      value: api://prod-fss.teamdokumenthandtering.dokarkiv/.default

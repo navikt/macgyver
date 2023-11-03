@@ -13,18 +13,26 @@ import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 
 fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingService) {
-    delete("/api/sykmelding/{sykmeldingId}") {
+    delete("/api/sykmelding/{sykmeldingId}/{journalpostId}") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
-        logger.info("delete $sykmeldingId")
+        val journalpostId = call.parameters["journalpostId"]!!
+        logger.info("Deleting sykmelding $sykmeldingId")
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
             return@delete
         }
 
+        if (journalpostId.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("journalpostId må være satt"))
+            return@delete
+        }
+
+        logger.info("Deleting sykmelding $sykmeldingId and journalpostId $journalpostId")
+
         try {
             val accessToken = getAccessTokenFromAuthHeader(call.request)
 
-            deleteSykmeldingService.deleteSykmelding(sykmeldingId, accessToken)
+            deleteSykmeldingService.deleteSykmelding(sykmeldingId, journalpostId, accessToken)
             logger.info(
                 "Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId"
             )

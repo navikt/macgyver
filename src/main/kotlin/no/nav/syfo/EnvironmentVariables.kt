@@ -32,6 +32,8 @@ data class EnvironmentVariables(
     val legeerklaringTopic: String = "teamsykmelding.legeerklaering",
     val safGraphqlPath: String = getEnvVar("SAF_GRAPHQL_PATH"),
     val safScope: String = getEnvVar("SAF_SCOPE"),
+    val dokArkivUrl: String = getEnvVar("DOK_ARKIV_URL"),
+    val dokArkivScope: String = getEnvVar("DOK_ARKIV_SCOPE"),
 )
 
 fun getEnvVar(varName: String, defaultValue: String? = null) =

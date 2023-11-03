@@ -15,6 +15,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.serialization.jackson.jackson
 import no.nav.syfo.EnvironmentVariables
+import no.nav.syfo.dokarkiv.client.DokArkivClient
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.client.PdlClient
@@ -108,6 +109,14 @@ class HttpClients(environmentVariables: EnvironmentVariables) {
         )
 
     val safService = SafService(safClient, accessTokenClientV2, environmentVariables.safScope)
+
+    val dokArkivClient =
+        DokArkivClient(
+            environmentVariables.dokArkivUrl,
+            accessTokenClientV2,
+            environmentVariables.dokArkivScope,
+            httpClient
+        )
 }
 
 class ServiceUnavailableException(message: String?) : Exception(message)
