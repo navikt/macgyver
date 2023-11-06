@@ -48,7 +48,6 @@ spec:
           cluster: dev-gcp
     outbound:
       rules:
-        - application: macgyver-frontend
         - application: narmesteleder
         - application: syfosmregister
       external:
