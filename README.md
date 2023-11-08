@@ -101,6 +101,10 @@ Find the newest version of gradle here: https://gradle.org/releases/ Then run th
 ./gradlew wrapper --gradle-version $gradleVersjon
 ```
 
+### Swagger api doc
+The Swagger api doc is available here
+https://macgyver.intern.dev.nav.no/docs
+
 ### Contact
 
 This project is maintained by [navikt/teamsykmelding](CODEOWNERS)

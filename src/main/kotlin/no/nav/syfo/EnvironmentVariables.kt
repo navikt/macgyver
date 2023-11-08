@@ -34,6 +34,7 @@ data class EnvironmentVariables(
     val safScope: String = getEnvVar("SAF_SCOPE"),
     val dokArkivUrl: String = getEnvVar("DOK_ARKIV_URL"),
     val dokArkivScope: String = getEnvVar("DOK_ARKIV_SCOPE"),
+    val clusterName: String = getEnvVar("NAIS_CLUSTER_NAME"),
 )
 
 fun getEnvVar(varName: String, defaultValue: String? = null) =
