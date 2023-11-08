@@ -24,7 +24,8 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.routing.routing
 import io.prometheus.client.hotspot.DefaultExports
-import java.net.URL
+import java.net.URI
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 import kotlin.collections.listOf
 import kotlin.collections.set
@@ -128,7 +129,9 @@ fun Application.configureRouting(
         naisIsReadyRoute(applicationState)
         naisPrometheusRoute()
 
-        swaggerUI(path = "docs", swaggerFile = "openapi/documentation.yaml")
+        if (environmentVariables.clusterName == "dev-gcp") {
+            swaggerUI(path = "docs", swaggerFile = "openapi/documentation.yaml")
+        }
 
         authenticate("jwt") {
             registerFnrApi(updateFnrService)
@@ -183,9 +186,8 @@ fun Application.module() {
     val applicationState = ApplicationState()
 
     val jwkProvider =
-        JwkProviderBuilder(URL(environmentVariables.jwkKeysUrl))
-            .cached(10, 24, TimeUnit.HOURS)
-            .rateLimited(10, 1, TimeUnit.MINUTES)
+        JwkProviderBuilder(URI.create(environmentVariables.jwkKeysUrl).toURL())
+            .cached(10, Duration.ofHours(24))
             .build()
 
     val syfosmregisterDatabase =

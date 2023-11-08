@@ -23,7 +23,6 @@ val fellesformatVersion="2.0.1"
 val kithHodemeldingVersion="2.0.1"
 val javaTimeAdapterVersion="1.1.3"
 val postgresVersion="42.6.0"
-val swaggerUiVersion="5.9.0"
 val kotlinVersion="1.9.20"
 val googlePostgresVersion="1.14.1"
 val junitVersion="5.10.0"
@@ -32,13 +31,13 @@ val ktfmtVersion="0.44"
 val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
 val snappyJavaVersion = "1.1.10.5"
+val javaVersion = JavaVersion.VERSION_21
 
 plugins {
     id("application")
     kotlin("jvm") version "1.9.20"
     id("com.diffplug.spotless") version "6.22.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.hidetake.swagger.generator") version "2.19.2" apply true
 }
 
 application {
@@ -68,6 +67,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
+    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+
 
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
@@ -78,8 +79,6 @@ dependencies {
             because("override transient from io.ktor:ktor-client-apache due to security vulnerability https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/")
         }
     }
-    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
-
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
@@ -117,10 +116,12 @@ dependencies {
     implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion") {
         exclude(group = "commons-codec", module = "commons-codec")
     }
-    //due to https://github.com/advisories/GHSA-3mc7-4q67-w48m
-    implementation("org.yaml:snakeyaml:$snakeyamlVersion")
+    constraints {
+        implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
+            because("override transient version from io.confluent:kafka-avro-serializer")
+        }
+    }
 
-    swaggerUI("org.webjars:swagger-ui:$swaggerUiVersion")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
@@ -132,14 +133,15 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-swaggerSources {
-    create("macgyver").apply {
-        setInputFile(file("documentation.yaml"))
-    }
-}
-
 
 tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = javaVersion.toString()
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = javaVersion.toString()
+    }
+
     shadowJar {
         archiveBaseName.set("app")
         archiveClassifier.set("")
@@ -151,19 +153,21 @@ tasks {
                 ),
             )
         }
-        dependsOn("generateSwaggerUI")
     }
 
     test {
         useJUnitPlatform {}
-        testLogging.showStandardStreams = true
+        testLogging {
+            events("skipped", "failed")
+            showStackTraces = true
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        }
     }
 
     spotless {
         kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
         check {
             dependsOn("spotlessApply")
-            dependsOn("generateSwaggerUI")
         }
     }
 
