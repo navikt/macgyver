@@ -12,7 +12,7 @@ Application that fixes stuff like Macgyver for team sykmelding
 
 #### Requirements
 
-* JDK 17
+* JDK 21
 
 ## FlowChart
 This the high level flow of the application
