@@ -4,10 +4,10 @@ version = "1.0.0"
 val coroutinesVersion="1.7.3"
 val jacksonVersion="2.16.0"
 val ktorVersion="2.3.6"
-val logbackVersion="1.4.13"
+val logbackVersion="1.4.14"
 val logstashEncoderVersion="7.4"
 val prometheusVersion="0.16.0"
-val nimbusVersion="9.37.1"
+val nimbusVersion="9.37.2"
 val hikariVersion="5.1.0"
 val jaxbBasicAntVersion="1.11.1"
 val javaxAnnotationApiVersion="1.3.2"
@@ -36,7 +36,7 @@ val javaVersion = JavaVersion.VERSION_21
 plugins {
     id("application")
     kotlin("jvm") version "1.9.21"
-    id("com.diffplug.spotless") version "6.23.2"
+    id("com.diffplug.spotless") version "6.23.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
