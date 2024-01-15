@@ -16,7 +16,7 @@ val jaxbRuntimeVersion="2.4.0-b180830.0438"
 val javaxJaxwsApiVersion="2.3.1"
 val jaxbApiVersion="2.4.0-b180830.0359"
 val javaxActivationVersion="1.1.1"
-val mockkVersion="1.13.8"
+val mockkVersion="1.13.9"
 val smCommonVersion="2.0.8"
 val sykmeldingVersion="2.0.1"
 val fellesformatVersion="2.0.1"
@@ -36,7 +36,7 @@ val javaVersion = JavaVersion.VERSION_21
 plugins {
     id("application")
     kotlin("jvm") version "1.9.22"
-    id("com.diffplug.spotless") version "6.23.3"
+    id("com.diffplug.spotless") version "6.24.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
