@@ -13,6 +13,7 @@ import java.time.ZoneOffset
 import java.util.UUID
 import kotlin.test.assertFailsWith
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.diagnosekoder.Diagnosekoder
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.client.NarmesteLeder
 import no.nav.syfo.identendring.client.NarmestelederClient
@@ -42,7 +43,6 @@ import no.nav.syfo.narmesteleder.kafkamodel.Sykmeldt
 import no.nav.syfo.pdl.client.model.IdentInformasjon
 import no.nav.syfo.pdl.model.PdlPerson
 import no.nav.syfo.pdl.service.PdlPersonService
-import no.nav.syfo.sm.Diagnosekoder
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

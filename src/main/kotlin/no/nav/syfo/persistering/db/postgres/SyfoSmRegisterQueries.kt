@@ -4,9 +4,9 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.Connection
 import java.sql.ResultSet
 import no.nav.syfo.model.Merknad
-import no.nav.syfo.model.Sykmeldingsdokument
-import no.nav.syfo.model.Sykmeldingsopplysninger
 import no.nav.syfo.model.UtenlandskSykmelding
+import no.nav.syfo.model.syfosmregister.Sykmeldingsdokument
+import no.nav.syfo.model.syfosmregister.Sykmeldingsopplysninger
 import no.nav.syfo.objectMapper
 
 fun Connection.hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? = use { connection ->

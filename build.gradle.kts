@@ -17,7 +17,6 @@ val javaxJaxwsApiVersion="2.3.1"
 val jaxbApiVersion="2.4.0-b180830.0359"
 val javaxActivationVersion="1.1.1"
 val mockkVersion="1.13.9"
-val smCommonVersion="2.0.8"
 val sykmeldingVersion="2.0.1"
 val fellesformatVersion="2.0.1"
 val kithHodemeldingVersion="2.0.1"
@@ -32,6 +31,8 @@ val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
 val snappyJavaVersion = "1.1.10.5"
 val javaVersion = JavaVersion.VERSION_21
+val kafkaVersion = "3.7.0"
+val diagnosekoderVersion = "1.2024.0"
 
 plugins {
     id("application")
@@ -68,7 +69,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
-
+    implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
 
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
@@ -89,17 +90,15 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
-    implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
     implementation("no.nav.helse.xml:sm2013:$sykmeldingVersion")
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
     implementation("no.nav.helse.xml:kith-hodemelding:$kithHodemeldingVersion")
-    implementation("no.nav.helse:syfosm-common-kafka:$smCommonVersion")
+
     constraints {
         implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion") {
             because("override transient from org.apache.kafka:kafka_2.12")
         }
     }
-    implementation("no.nav.helse:syfosm-common-diagnosis-codes:$smCommonVersion")
     implementation("com.migesok:jaxb-java-time-adapters:$javaTimeAdapterVersion")
 
     implementation("javax.xml.ws:jaxws-api:$javaxJaxwsApiVersion")
@@ -121,6 +120,8 @@ dependencies {
             because("override transient version from io.confluent:kafka-avro-serializer")
         }
     }
+
+    implementation("no.nav.helse:diagnosekoder:$diagnosekoderVersion")
 
 
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
