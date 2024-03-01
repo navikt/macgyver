@@ -16,6 +16,7 @@ import no.nav.syfo.utils.getAccessTokenFromAuthHeader
 fun Route.registerJournalpostApi(safService: SafService) {
     get("/api/journalposter/{fnr}") {
         val fnr = call.parameters["fnr"]
+        sikkerlogg.info("prøver å hente journalposter på fnr $fnr")
 
         if (fnr.isNullOrEmpty()) {
             logger.warn("fnr kan ikke være null eller tom")
@@ -24,6 +25,7 @@ fun Route.registerJournalpostApi(safService: SafService) {
         }
 
         try {
+            sikkerlogg.info("auditlogger")
             auditlogg.info(
                 AuditLogger()
                     .createcCefMessage(

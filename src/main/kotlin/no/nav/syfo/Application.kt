@@ -81,7 +81,7 @@ val auditlogg: Logger = LoggerFactory.getLogger("auditLogger")
 val sikkerlogg: Logger = LoggerFactory.getLogger("securelog")
 
 fun main() {
-
+    logger.info("Starting server...")
     val embeddedServer =
         embeddedServer(
             Netty,
@@ -142,6 +142,7 @@ fun Application.configureRouting(
             registerJournalpostApi(safService)
             getPersonApi(pdlService)
         }
+        logger.info("Routes are configured.")
     }
 
     intercept(ApplicationCallPipeline.Monitoring, monitorHttpRequests())
@@ -299,6 +300,7 @@ fun Application.module() {
         )
 
     environment.monitor.subscribe(ApplicationStopped) {
+        logger.info("Application is stopping...")
         applicationState.ready = false
         applicationState.alive = false
     }
