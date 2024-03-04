@@ -8,10 +8,15 @@ import no.nav.syfo.sikkerlogg
 
 fun monitorHttpRequests(): suspend PipelineContext<Unit, ApplicationCall>.(Unit) -> Unit {
     return {
-        sikkerlogg.info("Received request: ${call.request.uri}")
-        val label = context.request.path()
-        val timer = HTTP_HISTOGRAM.labels(label).startTimer()
-        proceed()
-        timer.observeDuration()
+        try {
+            sikkerlogg.info("Received request: ${call.request.uri}")
+            val label = context.request.path()
+            val timer = HTTP_HISTOGRAM.labels(label).startTimer()
+            proceed()
+            timer.observeDuration()
+        } catch (e: Exception){
+            sikkerlogg.error("Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}: ${e.message}. Se exception for detaljer.", e)
+            throw e
+        }
     }
 }
