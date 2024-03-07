@@ -53,7 +53,6 @@ import no.nav.syfo.oppgave.client.OppgaveClient
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.api.registerJournalpostApi
 import no.nav.syfo.saf.service.SafService
-import no.nav.syfo.smregister.setupSmregisterApi
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
@@ -109,7 +108,6 @@ fun Application.configureRouting(
     deleteLegeerklaeringService: DeleteLegeerklaeringService,
     safService: SafService,
     pdlService: PdlPersonService,
-    database: Database
 ) {
     setupAuth(
         jwkProvider = jwkProviderAadV2,
@@ -143,7 +141,6 @@ fun Application.configureRouting(
             registerDeleteLegeerklaeringApi(deleteLegeerklaeringService)
             registerJournalpostApi(safService)
             getPersonApi(pdlService)
-            setupSmregisterApi(database = database)
         }
         logger.info("Routes are configured.")
     }
@@ -319,7 +316,6 @@ fun Application.module() {
         deleteLegeerklaeringService = deleteLegeerklaeringService,
         safService = httpClients.safService,
         pdlService = httpClients.pdlService,
-        database = syfosmregisterDatabase
     )
 
     DefaultExports.initialize()

@@ -19,4 +19,4 @@ COPY --from=jre-build /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz
 COPY build/libs/app-*.jar app.jar
 EXPOSE 8080
 USER nonroot
-CMD ["java", "-jar", "app.jar", "-Xms128m", "-Xmx2g"]
+CMD ["java", "-jar", "app.jar"]
