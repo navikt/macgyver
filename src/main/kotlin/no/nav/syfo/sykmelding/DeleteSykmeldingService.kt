@@ -65,46 +65,6 @@ class DeleteSykmeldingService(
             sykmeldingId = sykmeldingID
         )
     }
-    suspend fun deleteSykmeldingUtenJournalpostId(sykmeldingID: String, accessToken: String) {
-        val sykmelding = syfoSmRegisterDb.connection.hentSykmeldingMedId(sykmeldingID)
-        if (sykmelding != null) {
-            auditlogg.info(
-                AuditLogger()
-                    .createcCefMessage(
-                        fnr = sykmelding.sykmeldingsopplysninger.pasientFnr,
-                        accessToken = accessToken,
-                        operation = AuditLogger.Operation.WRITE,
-                        requestPath = "/api/sykmelding/$sykmeldingID",
-                        permit = AuditLogger.Permit.PERMIT,
-                    ),
-            )
-            kafkaProducer.send(
-                SykmeldingStatusKafkaEventDTO(
-                    sykmeldingID,
-                    OffsetDateTime.now(ZoneOffset.UTC),
-                    STATUS_SLETTET,
-                    null,
-                    null,
-                ),
-                "macgyver",
-                sykmelding.sykmeldingsopplysninger.pasientFnr,
-            )
-            try {
-                topics.forEach { topic ->
-                    tombstoneProducer.send(ProducerRecord(topic, sykmeldingID, null)).get()
-                }
-            } catch (e: Exception) {
-                logger.error(
-                    "Kunne ikke skrive tombstone til topic for sykmeldingid $sykmeldingID: {}",
-                    e.message
-                )
-                throw e
-            }
-        } else {
-            logger.warn("Could not find sykmelding with id $sykmeldingID")
-            throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
-        }
-    }
 }
 
 class DeleteSykmeldingException(override val message: String) : Exception(message)

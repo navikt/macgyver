@@ -22,22 +22,9 @@ fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingS
             return@delete
         }
 
-        logger.info("sletter sykmelding med sykmeldingId: $sykmeldingId")
-        if (journalpostId == "mangler") {
-            try {
-                val accessToken = getAccessTokenFromAuthHeader(call.request)
-                deleteSykmeldingService.deleteSykmeldingUtenJournalpostId(sykmeldingId, accessToken)
-                logger.info("Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId")
-                call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
-                return@delete
-            } catch (e: Exception){
-                logger.error("Kastet exception ved sletting av sykmelding med id $sykmeldingId", e)
-                call.respond(
-                    HttpStatusCode.InternalServerError,
-                    HttpMessage("Noe gikk galt ved sletting av sykmelding, prøv igjen")
-                )
-                return@delete
-            }
+        if (journalpostId.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("journalpostId må være satt"))
+            return@delete
         }
 
         logger.info("Deleting sykmelding $sykmeldingId and journalpostId $journalpostId")
