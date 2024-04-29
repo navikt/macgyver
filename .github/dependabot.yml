@@ -8,6 +8,9 @@ updates:
     ignore:
       - dependency-name: "org.glassfish.jaxb:jaxb-runtime"
       - dependency-name: "com.sun.xml.ws:jaxws-tools"
+      - dependency-name: "org.apache.kafka:kafka_2.12"
+        update-types: ["version-update:semver-major"]
+    groups:
     groups:
       dependencies:
         patterns:
