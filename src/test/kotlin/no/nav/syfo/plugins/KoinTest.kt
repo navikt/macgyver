@@ -50,7 +50,7 @@ class CheckModulesTest : KoinTest {
     @Test
     fun verifyKoinApp() {
         koinApplication {
-            getModules()
+            initProductionModules()
 
             modules(
                 module {

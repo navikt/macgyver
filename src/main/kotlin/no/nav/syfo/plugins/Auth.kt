@@ -15,6 +15,17 @@ import org.koin.ktor.ext.inject
 fun Application.configureAuth() {
     val config by inject<AuthConfiguration>()
 
+    if (environment.developmentMode) {
+        logger.warn("In development mode! Setting up passthrough for jwt")
+        install(Authentication) {
+            jwt(name = "jwt") {
+                verifier { null }
+                validate { credentials -> JWTPrincipal(credentials.payload) }
+            }
+        }
+        return
+    }
+
     install(Authentication) {
         jwt(name = "jwt") {
             verifier(config.jwkProvider, config.issuer)

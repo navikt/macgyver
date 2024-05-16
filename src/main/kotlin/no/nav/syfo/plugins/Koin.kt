@@ -42,11 +42,14 @@ fun Application.configureKoin() {
     install(Koin) {
         slf4jLogger()
 
-        getModules()
+        initProductionModules()
+        if (environment.developmentMode) {
+            initDevelopmentModules()
+        }
     }
 }
 
-fun KoinApplication.getModules() {
+fun KoinApplication.initProductionModules() {
     modules(
         environmentModule,
         applicationStateModule,
@@ -256,7 +259,7 @@ val kafkaModules = module {
         )
     }
     single<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>(
-        named("sykmeldingStatusProducer")
+        named("sykmeldingStatusProducer"),
     ) {
         KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>(
             KafkaUtils.getAivenKafkaConfig("sykmelding-status-producer")
