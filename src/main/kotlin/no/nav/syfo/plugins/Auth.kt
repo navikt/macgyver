@@ -1,5 +1,6 @@
 package no.nav.syfo.plugins
 
+import com.auth0.jwk.JwkProvider
 import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -9,28 +10,20 @@ import java.time.Duration
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.utils.EnvironmentVariables
 import no.nav.syfo.utils.logger
+import org.koin.ktor.ext.inject
 
 fun Application.configureAuth() {
-    val environmentVariables = EnvironmentVariables()
-    val jwkProvider =
-        JwkProviderBuilder(URI.create(environmentVariables.jwkKeysUrl).toURL())
-            .cached(
-                10,
-                Duration.ofHours(24),
-            )
-            .build()
-    val issuer = environmentVariables.jwtIssuer
-    val clientIdV2 = environmentVariables.clientIdV2
+    val config by inject<AuthConfiguration>()
 
     install(Authentication) {
         jwt(name = "jwt") {
-            verifier(jwkProvider, issuer)
+            verifier(config.jwkProvider, config.issuer)
             validate { credentials ->
                 when {
-                    hasMacgyverClientIdAudience(
-                        credentials,
-                        clientIdV2,
-                    ) -> JWTPrincipal(credentials.payload)
+                    credentials.payload.audience.contains(config.clinetId) ->
+                        JWTPrincipal(
+                            credentials.payload,
+                        )
                     else -> {
                         unauthorized(credentials)
                     }
@@ -40,8 +33,23 @@ fun Application.configureAuth() {
     }
 }
 
-internal fun hasMacgyverClientIdAudience(credentials: JWTCredential, clientIdV2: String): Boolean {
-    return credentials.payload.audience.contains(clientIdV2)
+class AuthConfiguration(
+    val jwkProvider: JwkProvider,
+    val issuer: String,
+    val clinetId: String,
+)
+
+fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
+    val jwkProvider =
+        JwkProviderBuilder(URI.create(env.jwkKeysUrl).toURL())
+            .cached(10, Duration.ofHours(24))
+            .build()
+
+    return AuthConfiguration(
+        jwkProvider = jwkProvider,
+        issuer = env.jwtIssuer,
+        clinetId = env.clientIdV2,
+    )
 }
 
 internal fun unauthorized(credentials: JWTCredential): Principal? {

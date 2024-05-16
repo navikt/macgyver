@@ -31,9 +31,11 @@ import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
+import org.koin.ktor.ext.inject
 
 fun Application.configureRouting() {
-    val env = EnvironmentVariables()
+    val env by inject<EnvironmentVariables>()
+
     val httpClients = HttpClients(env)
     val deps = getRoutingDependencies(env, httpClients)
 

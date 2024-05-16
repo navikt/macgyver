@@ -9,22 +9,23 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.utils.configureTestAuth
-import no.nav.syfo.utils.createTestHttpClient
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.setupTestApplication
+import no.nav.syfo.utils.testClient
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.koin.core.context.stopKoin
 
 internal class LegeerklaeringApiTest {
+
+    @AfterEach fun cleanup() = stopKoin()
+
     @Test
     internal fun `should return OK`() = testApplication {
-        setupTestApplication()
-        configureTestAuth()
-        val client = createTestHttpClient()
+        setupTestApplication(withAuth = true)
 
         val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
-
         routing {
             registerDeleteLegeerklaeringApi(
                 deleteLegeerklaeringServiceMock,
@@ -32,11 +33,11 @@ internal class LegeerklaeringApiTest {
         }
 
         val legeerklaeringId = "83919f4a-f892-4db2-9255-f3c917bd012t"
-
-        coEvery { deleteLegeerklaeringServiceMock.deleteLegeerklaering(any()) } returns Unit
+        coEvery { deleteLegeerklaeringServiceMock.deleteLegeerklaering(legeerklaeringId) } returns
+            Unit
 
         val response =
-            client.delete("/api/legeerklaering/$legeerklaeringId") {
+            testClient().delete("/api/legeerklaering/$legeerklaeringId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
@@ -50,12 +51,9 @@ internal class LegeerklaeringApiTest {
     @Test
     internal fun `should return unauthorized when missing authorization header`() =
         testApplication {
-            setupTestApplication()
-            configureTestAuth()
-            val client = createTestHttpClient()
+            setupTestApplication(withAuth = true)
 
             val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
-
             routing {
                 registerDeleteLegeerklaeringApi(
                     deleteLegeerklaeringServiceMock,
@@ -63,7 +61,7 @@ internal class LegeerklaeringApiTest {
             }
 
             val response =
-                client.delete("/api/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}
+                testClient().delete("/api/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}
             val result = response.body<HttpMessage>()
 
             assertEquals(response.status, HttpStatusCode.Unauthorized)
