@@ -5,9 +5,9 @@ import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
-import no.nav.syfo.HttpMessage
 import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
+import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader

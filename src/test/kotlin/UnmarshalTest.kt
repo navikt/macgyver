@@ -3,8 +3,8 @@ import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.LocalDateTime
 import no.nav.helse.sm2013.HelseOpplysningerArbeidsuforhet
-import no.nav.syfo.testutil.getFileAsString
 import no.nav.syfo.utils.fellesformatUnmarshaller
+import no.nav.syfo.utils.getFileAsString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test

@@ -14,7 +14,6 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.serialization.jackson.jackson
-import no.nav.syfo.EnvironmentVariables
 import no.nav.syfo.dokarkiv.client.DokArkivClient
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.oppgave.client.OppgaveClient
@@ -22,6 +21,7 @@ import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.service.SafService
+import no.nav.syfo.utils.EnvironmentVariables
 
 class HttpClients(environmentVariables: EnvironmentVariables) {
     private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {

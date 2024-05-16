@@ -454,7 +454,8 @@ fun getSendtSykmelding(
                 msgId = "msgid",
                 pasientAktoerId = "aktorId",
                 avsenderSystem = AvsenderSystem("Navn", "verjosn"),
-                perioder = periodeListe
+                perioder =
+                    periodeListe
                         ?: listOf(
                             Periode(
                                 fom = LocalDate.now().minusMonths(1),

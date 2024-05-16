@@ -5,8 +5,8 @@ import io.ktor.server.application.call
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
-import no.nav.syfo.HttpMessage
 import no.nav.syfo.auditlogger.AuditLogger
+import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader

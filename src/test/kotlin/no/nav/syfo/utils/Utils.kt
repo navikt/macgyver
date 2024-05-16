@@ -1,4 +1,4 @@
-package no.nav.syfo.testutil
+package no.nav.syfo.utils
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
