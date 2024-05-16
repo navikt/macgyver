@@ -1,10 +1,10 @@
 package no.nav.syfo.pdl.service
 
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.logger
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.error.FolkeRegistertIdentNotFoundException
 import no.nav.syfo.pdl.model.PdlPerson
+import no.nav.syfo.utils.logger
 
 class PdlPersonService(
     private val pdlClient: PdlClient,

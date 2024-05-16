@@ -19,9 +19,9 @@ import io.mockk.mockk
 import java.nio.file.Paths
 import no.nav.syfo.HttpMessage
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
-import no.nav.syfo.objectMapper
 import no.nav.syfo.setupAuth
 import no.nav.syfo.testutil.generateJWT
+import no.nav.syfo.utils.objectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

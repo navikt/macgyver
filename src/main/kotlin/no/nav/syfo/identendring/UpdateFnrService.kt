@@ -10,7 +10,6 @@ import no.nav.syfo.identendring.db.SykmeldingDbModelUtenBehandlingsutfall
 import no.nav.syfo.identendring.db.getSykmeldingerMedFnrUtenBehandlingsutfall
 import no.nav.syfo.identendring.db.updateFnr
 import no.nav.syfo.identendring.model.toArbeidsgiverSykmelding
-import no.nav.syfo.logger
 import no.nav.syfo.model.sykmeldingstatus.ArbeidsgiverStatusDTO
 import no.nav.syfo.model.sykmeldingstatus.KafkaMetadataDTO
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SENDT
@@ -28,6 +27,7 @@ import no.nav.syfo.narmesteleder.kafkamodel.Sykmeldt
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
+import no.nav.syfo.utils.logger
 
 class UpdateFnrService(
     private val pdlPersonService: PdlPersonService,

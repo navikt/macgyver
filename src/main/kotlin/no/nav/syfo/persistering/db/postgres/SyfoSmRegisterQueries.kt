@@ -7,7 +7,7 @@ import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.model.syfosmregister.Sykmeldingsdokument
 import no.nav.syfo.model.syfosmregister.Sykmeldingsopplysninger
-import no.nav.syfo.objectMapper
+import no.nav.syfo.utils.objectMapper
 
 fun Connection.hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? = use { connection ->
     connection

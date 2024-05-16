@@ -15,10 +15,10 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import java.nio.file.Paths
 import no.nav.syfo.HttpMessage
-import no.nav.syfo.objectMapper
 import no.nav.syfo.setupAuth
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.testutil.generateJWT
+import no.nav.syfo.utils.objectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

@@ -8,12 +8,12 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import java.util.UUID
 import no.nav.syfo.HttpMessage
-import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
-import no.nav.syfo.logger
 import no.nav.syfo.oppgave.client.OppgaveClient
-import no.nav.syfo.sikkerlogg
+import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logger
+import no.nav.syfo.utils.sikkerlogg
 
 fun Route.registerHentOppgaverApi(oppgaveClient: OppgaveClient) {
     post("/api/oppgave/list") {

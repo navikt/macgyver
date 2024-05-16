@@ -2,14 +2,14 @@ package no.nav.syfo.sykmelding
 
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.db.Database
 import no.nav.syfo.dokarkiv.client.DokArkivClient
-import no.nav.syfo.logger
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
 import no.nav.syfo.persistering.db.postgres.hentSykmeldingMedId
+import no.nav.syfo.utils.auditlogg
+import no.nav.syfo.utils.logger
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 

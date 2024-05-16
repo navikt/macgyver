@@ -7,13 +7,13 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import no.nav.syfo.HttpMessage
-import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.identendring.UpdateFnrService
 import no.nav.syfo.identendring.UpdateIdentException
-import no.nav.syfo.sikkerlogg
 import no.nav.syfo.sykmelding.api.model.EndreFnr
+import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.sikkerlogg
 
 fun Route.registerFnrApi(updateFnrService: UpdateFnrService) {
     post("/api/sykmelding/fnr") {

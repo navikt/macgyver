@@ -6,12 +6,12 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import no.nav.syfo.HttpMessage
-import no.nav.syfo.auditlogg
 import no.nav.syfo.auditlogger.AuditLogger
 import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
-import no.nav.syfo.logger
 import no.nav.syfo.utils.UnauthorizedException
+import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logger
 
 fun Route.registerDeleteLegeerklaeringApi(
     deleteLegeerklaeringService: DeleteLegeerklaeringService

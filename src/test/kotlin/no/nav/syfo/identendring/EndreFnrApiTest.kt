@@ -24,7 +24,6 @@ import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.updateFnr
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
-import no.nav.syfo.objectMapper
 import no.nav.syfo.pdl.client.model.IdentInformasjon
 import no.nav.syfo.pdl.model.PdlPerson
 import no.nav.syfo.pdl.service.PdlPersonService
@@ -32,6 +31,7 @@ import no.nav.syfo.setupAuth
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.model.EndreFnr
 import no.nav.syfo.testutil.generateJWT
+import no.nav.syfo.utils.objectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
