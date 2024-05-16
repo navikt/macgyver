@@ -24,5 +24,5 @@ fun Application.module() {
     configureSwagger()
     configureLifecycleHooks()
     configureNaisResources()
-    configureRouting()
+    configureFeatures()
 }

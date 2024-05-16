@@ -26,7 +26,9 @@ fun ApplicationTestBuilder.setupTestApplication(
         if (withAuth) {
             modules(mockedAuthModule)
         }
-        koin?.let { it() }
+        if (koin != null) {
+            koin()
+        }
     }
 }
 

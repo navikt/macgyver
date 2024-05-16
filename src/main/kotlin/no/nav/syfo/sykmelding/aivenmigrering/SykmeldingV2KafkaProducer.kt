@@ -1,6 +1,6 @@
 package no.nav.syfo.sykmelding.aivenmigrering
 
-import no.nav.syfo.utils.logger
+import no.nav.syfo.logging.logger
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 

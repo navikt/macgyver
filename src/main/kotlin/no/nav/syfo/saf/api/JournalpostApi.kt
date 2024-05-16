@@ -5,15 +5,18 @@ import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
-import no.nav.syfo.auditlogger.AuditLogger
+import no.nav.syfo.logging.AuditLogger
+import no.nav.syfo.logging.auditlogg
+import no.nav.syfo.logging.logger
+import no.nav.syfo.logging.sikkerlogg
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.saf.service.SafService
-import no.nav.syfo.utils.auditlogg
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
-import no.nav.syfo.utils.logger
-import no.nav.syfo.utils.sikkerlogg
+import org.koin.ktor.ext.inject
 
-fun Route.registerJournalpostApi(safService: SafService) {
+fun Route.registerJournalpostApi() {
+    val safService by inject<SafService>()
+
     get("/api/journalposter/{fnr}") {
         val fnr = call.parameters["fnr"]
         sikkerlogg.info("prøver å hente journalposter på fnr $fnr")

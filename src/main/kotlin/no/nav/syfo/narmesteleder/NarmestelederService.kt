@@ -5,14 +5,11 @@ import java.time.ZoneOffset
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import no.nav.syfo.identendring.client.NarmesteLeder
-import no.nav.syfo.identendring.client.NarmestelederClient
-import no.nav.syfo.narmesteleder.api.NlRequestDTO
+import no.nav.syfo.logging.logger
 import no.nav.syfo.narmesteleder.kafkamodel.NlKafkaMetadata
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequest
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
-import no.nav.syfo.pdl.service.PdlPersonService
-import no.nav.syfo.utils.logger
+import no.nav.syfo.pdl.PdlPersonService
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -22,20 +19,22 @@ class NarmestelederService(
     private val topic: String,
     private val narmestelederClient: NarmestelederClient
 ) {
-    suspend fun sendNewNlRequest(nlRequestDto: NlRequestDTO) =
+    suspend fun sendNewNlRequest(
+        narmestelederAltinnRequestPayload: NarmestelederAltinnRequestPayload
+    ) =
         withContext(Dispatchers.IO) {
             val person =
                 pdlService.getPdlPerson(
-                    fnr = nlRequestDto.fnr,
+                    fnr = narmestelederAltinnRequestPayload.fnr,
                 )
             val nlRequest =
                 NlRequestKafkaMessage(
                     nlRequest =
                         NlRequest(
                             requestId = UUID.randomUUID(),
-                            sykmeldingId = nlRequestDto.sykmeldingId,
-                            fnr = nlRequestDto.fnr,
-                            orgnr = nlRequestDto.orgnummer,
+                            sykmeldingId = narmestelederAltinnRequestPayload.sykmeldingId,
+                            fnr = narmestelederAltinnRequestPayload.fnr,
+                            orgnr = narmestelederAltinnRequestPayload.orgnummer,
                             name = person.navn,
                         ),
                     metadata =

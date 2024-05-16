@@ -14,17 +14,9 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.network.sockets.SocketTimeoutException
 import io.ktor.serialization.jackson.jackson
-import no.nav.syfo.dokarkiv.client.DokArkivClient
-import no.nav.syfo.identendring.client.NarmestelederClient
-import no.nav.syfo.oppgave.client.OppgaveClient
-import no.nav.syfo.pdl.client.PdlClient
-import no.nav.syfo.pdl.service.PdlPersonService
-import no.nav.syfo.saf.client.SafClient
-import no.nav.syfo.saf.service.SafService
-import no.nav.syfo.utils.EnvironmentVariables
 
-class HttpClients(environmentVariables: EnvironmentVariables) {
-    private val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
+fun createHttpClient(): HttpClient {
+    val config: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
         install(HttpTimeout) {
             connectTimeoutMillis = 10000
             requestTimeoutMillis = 10000
@@ -50,73 +42,7 @@ class HttpClients(environmentVariables: EnvironmentVariables) {
         }
     }
 
-    private val httpClient = HttpClient(Apache, config)
-
-    private val accessTokenClientV2 =
-        AccessTokenClientV2(
-            environmentVariables.aadAccessTokenV2Url,
-            environmentVariables.clientIdV2,
-            environmentVariables.clientSecretV2,
-            httpClient,
-        )
-
-    private val pdlClient =
-        PdlClient(
-            httpClient = httpClient,
-            basePath = environmentVariables.pdlGraphqlPath,
-            graphQlQuery =
-                PdlClient::class
-                    .java
-                    .getResource("/graphql/getPerson.graphql")!!
-                    .readText()
-                    .replace(Regex("[\n\t]"), ""),
-            graphQlQueryAktorids =
-                PdlClient::class
-                    .java
-                    .getResource("/graphql/getAktorids.graphql")!!
-                    .readText()
-                    .replace(Regex("[\n\t]"), ""),
-        )
-
-    val pdlService = PdlPersonService(pdlClient, accessTokenClientV2, environmentVariables.pdlScope)
-
-    val oppgaveClient =
-        OppgaveClient(
-            environmentVariables.oppgavebehandlingUrl,
-            accessTokenClientV2,
-            environmentVariables.oppgaveScope,
-            httpClient
-        )
-
-    val narmestelederClient =
-        NarmestelederClient(
-            httpClient,
-            accessTokenClientV2,
-            environmentVariables.narmestelederUrl,
-            environmentVariables.narmestelederScope
-        )
-
-    private val safClient =
-        SafClient(
-            httpClient = httpClient,
-            basePath = environmentVariables.safGraphqlPath,
-            graphQlQuery =
-                SafClient::class
-                    .java
-                    .getResource("/graphql/dokumentoversiktBruker.graphql")!!
-                    .readText()
-                    .replace(Regex("[\n\t]"), ""),
-        )
-
-    val safService = SafService(safClient, accessTokenClientV2, environmentVariables.safScope)
-
-    val dokArkivClient =
-        DokArkivClient(
-            environmentVariables.dokArkivUrl,
-            accessTokenClientV2,
-            environmentVariables.dokArkivScope,
-            httpClient
-        )
+    return HttpClient(Apache, config)
 }
 
 class ServiceUnavailableException(message: String?) : Exception(message)

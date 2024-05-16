@@ -1,10 +1,10 @@
 package no.nav.syfo.saf.service
 
 import no.nav.syfo.clients.AccessTokenClientV2
+import no.nav.syfo.logging.logger
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.error.JournalposterNotFoundException
 import no.nav.syfo.saf.model.Journalpost
-import no.nav.syfo.utils.logger
 
 class SafService(
     private val safClient: SafClient,

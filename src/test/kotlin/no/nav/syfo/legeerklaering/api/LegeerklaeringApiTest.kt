@@ -7,7 +7,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
-import no.nav.syfo.legeerklaering.service.DeleteLegeerklaeringService
+import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
+import no.nav.syfo.legeerklaering.registerDeleteLegeerklaeringApi
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.setupTestApplication
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
 internal class LegeerklaeringApiTest {
 
@@ -23,14 +25,13 @@ internal class LegeerklaeringApiTest {
 
     @Test
     internal fun `should return OK`() = testApplication {
-        setupTestApplication(withAuth = true)
-
         val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
-        routing {
-            registerDeleteLegeerklaeringApi(
-                deleteLegeerklaeringServiceMock,
-            )
+
+        setupTestApplication(withAuth = true) {
+            modules(module { single { deleteLegeerklaeringServiceMock } })
         }
+
+        routing { registerDeleteLegeerklaeringApi() }
 
         val legeerklaeringId = "83919f4a-f892-4db2-9255-f3c917bd012t"
         coEvery { deleteLegeerklaeringServiceMock.deleteLegeerklaering(legeerklaeringId) } returns
@@ -51,14 +52,12 @@ internal class LegeerklaeringApiTest {
     @Test
     internal fun `should return unauthorized when missing authorization header`() =
         testApplication {
-            setupTestApplication(withAuth = true)
-
             val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
-            routing {
-                registerDeleteLegeerklaeringApi(
-                    deleteLegeerklaeringServiceMock,
-                )
+            setupTestApplication(withAuth = true) {
+                module { single { deleteLegeerklaeringServiceMock } }
             }
+
+            routing { registerDeleteLegeerklaeringApi() }
 
             val response =
                 testClient().delete("/api/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}

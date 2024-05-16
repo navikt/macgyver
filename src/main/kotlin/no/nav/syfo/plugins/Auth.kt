@@ -8,8 +8,8 @@ import io.ktor.server.auth.jwt.*
 import java.net.URI
 import java.time.Duration
 import net.logstash.logback.argument.StructuredArguments
+import no.nav.syfo.logging.logger
 import no.nav.syfo.utils.EnvironmentVariables
-import no.nav.syfo.utils.logger
 import org.koin.ktor.ext.inject
 
 fun Application.configureAuth() {
