@@ -1,11 +1,9 @@
 package no.nav.syfo.sykmelding.api
 
-import com.auth0.jwk.JwkProviderBuilder
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.http.headers
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -13,121 +11,84 @@ import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
-import java.nio.file.Paths
-import no.nav.syfo.HttpMessage
-import no.nav.syfo.objectMapper
-import no.nav.syfo.setupAuth
+import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
-import no.nav.syfo.testutil.generateJWT
-import org.junit.jupiter.api.Assertions
+import no.nav.syfo.utils.configureTestAuth
+import no.nav.syfo.utils.createTestHttpClient
+import no.nav.syfo.utils.generateJWT
+import no.nav.syfo.utils.setupTestApplication
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class DeletSykmeldingApiTest {
 
     @Test
-    internal fun `Slette sykmelding`() {
-        with(TestApplicationEngine()) {
-            val path = "src/test/resources/jwkset.json"
-            val uri = Paths.get(path).toUri().toURL()
-            val jwkProvider = JwkProviderBuilder(uri).build()
-            start()
+    internal fun `Slette sykmelding`() = testApplication {
+        setupTestApplication()
+        configureTestAuth()
+        val client = createTestHttpClient()
 
-            val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
+        val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
 
-            application.setupAuth(
-                jwkProvider,
-                "issuer",
-                "clientId",
+        routing {
+            registerDeleteSykmeldingApi(
+                deleteSykmeldingServiceMock,
             )
+        }
 
-            application.routing {
-                registerDeleteSykmeldingApi(
-                    deleteSykmeldingServiceMock,
-                )
-            }
+        val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
+        val journalpostId = "99349925"
 
-            application.install(ContentNegotiation) {
-                jackson {
-                    registerKotlinModule()
-                    registerModule(JavaTimeModule())
-                    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        coEvery {
+            deleteSykmeldingServiceMock.deleteSykmelding(
+                any(),
+                any(),
+                any(),
+            )
+        } returns Unit
+
+        val response =
+            client.delete("/api/sykmelding/$sykmeldingId/$journalpostId") {
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
             }
+        val result = response.body<HttpMessage>()
 
-            val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
-            val journalpostId = "99349925"
-
-            coEvery {
-                deleteSykmeldingServiceMock.deleteSykmelding(
-                    any(),
-                    any(),
-                    any(),
-                )
-            } returns Unit
-
-            with(
-                handleRequest(HttpMethod.Delete, "/api/sykmelding/$sykmeldingId/$journalpostId") {
-                    addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
-                },
-            ) {
-                Assertions.assertEquals(HttpStatusCode.OK, response.status())
-                Assertions.assertEquals(
-                    objectMapper.writeValueAsString(HttpMessage("Vellykket sletting")),
-                    response.content,
-                )
-            }
-        }
+        assertEquals(response.status, HttpStatusCode.OK)
+        assertEquals(result.message, "Vellykket sletting")
     }
 
     @Test
-    internal fun `Slette sykmelding should throw not found`() {
-        with(TestApplicationEngine()) {
-            val path = "src/test/resources/jwkset.json"
-            val uri = Paths.get(path).toUri().toURL()
-            val jwkProvider = JwkProviderBuilder(uri).build()
-            start()
+    internal fun `Slette sykmelding should throw not found`() = testApplication {
+        setupTestApplication()
+        configureTestAuth()
+        val client = createTestHttpClient()
 
-            val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-
-            application.setupAuth(
-                jwkProvider,
-                "issuer",
-                "clientId",
+        val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
+        routing {
+            registerDeleteSykmeldingApi(
+                deleteSykmeldingServiceMock,
             )
+        }
 
-            application.routing {
-                registerDeleteSykmeldingApi(
-                    deleteSykmeldingServiceMock,
-                )
-            }
+        val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
 
-            application.install(ContentNegotiation) {
-                jackson {
-                    registerKotlinModule()
-                    registerModule(JavaTimeModule())
-                    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        coEvery {
+            deleteSykmeldingServiceMock.deleteSykmelding(
+                any(),
+                any(),
+                any(),
+            )
+        } returns Unit
+
+        val response =
+            client.delete("/api/sykmelding/$sykmeldingId") {
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
             }
 
-            val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
-
-            coEvery {
-                deleteSykmeldingServiceMock.deleteSykmelding(
-                    any(),
-                    any(),
-                    any(),
-                )
-            } returns Unit
-
-            with(
-                handleRequest(HttpMethod.Delete, "/api/sykmelding/$sykmeldingId") {
-                    addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
-                },
-            ) {
-                Assertions.assertEquals(HttpStatusCode.NotFound, response.status())
-            }
-        }
+        assertEquals(response.status, HttpStatusCode.NotFound)
     }
 }

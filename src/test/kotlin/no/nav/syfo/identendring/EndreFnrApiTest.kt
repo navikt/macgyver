@@ -1,110 +1,89 @@
 package no.nav.syfo.identendring
 
-import com.auth0.jwk.JwkProviderBuilder
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.jackson.jackson
-import io.ktor.server.application.install
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.routing.routing
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
+import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import java.nio.file.Paths
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.api.registerFnrApi
 import no.nav.syfo.identendring.client.NarmestelederClient
 import no.nav.syfo.identendring.db.updateFnr
+import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
-import no.nav.syfo.objectMapper
 import no.nav.syfo.pdl.client.model.IdentInformasjon
 import no.nav.syfo.pdl.model.PdlPerson
 import no.nav.syfo.pdl.service.PdlPersonService
-import no.nav.syfo.setupAuth
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.model.EndreFnr
-import no.nav.syfo.testutil.generateJWT
+import no.nav.syfo.utils.configureTestAuth
+import no.nav.syfo.utils.createTestHttpClient
+import no.nav.syfo.utils.generateJWT
+import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.utils.setupTestApplication
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class EndreFnrApiTest {
+
     @Test
-    internal fun `Test endre fnr`() {
-        with(TestApplicationEngine()) {
-            val path = "src/test/resources/jwkset.json"
-            val uri = Paths.get(path).toUri().toURL()
-            val jwkProvider = JwkProviderBuilder(uri).build()
+    internal fun `Test endre fnr`() = testApplication {
+        val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
+        val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
+        val narmesteLederResponseKafkaProducer =
+            mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
+        val narmestelederClient = mockk<NarmestelederClient>()
 
-            val pdlPersonService = mockk<PdlPersonService>(relaxed = true)
-            val sendtSykmeldingKafkaProducer = mockk<SykmeldingV2KafkaProducer>(relaxed = true)
-            val narmesteLederResponseKafkaProducer =
-                mockk<NarmesteLederResponseKafkaProducer>(relaxed = true)
-            val narmestelederClient = mockk<NarmestelederClient>()
+        mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
+        val db = mockk<Database>(relaxed = true)
 
-            mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
-            val db = mockk<Database>(relaxed = true)
+        val client = createTestHttpClient()
+        setupTestApplication()
+        configureTestAuth()
 
-            start()
-
-            application.setupAuth(
-                jwkProvider,
-                "tokenxissuer",
-                "clientId",
+        routing {
+            registerFnrApi(
+                UpdateFnrService(
+                    pdlPersonService,
+                    db,
+                    sendtSykmeldingKafkaProducer,
+                    narmesteLederResponseKafkaProducer,
+                    narmestelederClient,
+                    "topic",
+                ),
             )
-            application.routing {
-                registerFnrApi(
-                    UpdateFnrService(
-                        pdlPersonService,
-                        db,
-                        sendtSykmeldingKafkaProducer,
-                        narmesteLederResponseKafkaProducer,
-                        narmestelederClient,
-                        "topic",
-                    ),
-                )
-            }
-
-            application.install(ContentNegotiation) {
-                jackson {
-                    registerKotlinModule()
-                    registerModule(JavaTimeModule())
-                    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                }
-            }
-
-            coEvery { pdlPersonService.getPdlPerson(any()) } returns
-                PdlPerson(
-                    listOf(
-                        IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
-                        IdentInformasjon("12345678912", true, "FOLKEREGISTERIDENT"),
-                        IdentInformasjon("12345", false, "AKTORID"),
-                    ),
-                    "navn navn",
-                )
-            coEvery { narmestelederClient.getNarmesteledere(any()) } returns emptyList()
-
-            every { db.updateFnr(any(), any()) } returns 1
-
-            val endreFnr = EndreFnr(fnr = "12345678912", nyttFnr = "12345678913")
-
-            with(
-                handleRequest(HttpMethod.Post, "/api/sykmelding/fnr") {
-                    addHeader("Content-Type", "application/json")
-                    addHeader(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId") }")
-                    setBody(objectMapper.writeValueAsString(endreFnr))
-                },
-            ) {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("{\"message\":\"Vellykket oppdatering.\"}", response.content)
-            }
         }
+
+        coEvery { pdlPersonService.getPdlPerson(any()) } returns
+            PdlPerson(
+                listOf(
+                    IdentInformasjon("12345678913", false, "FOLKEREGISTERIDENT"),
+                    IdentInformasjon("12345678912", true, "FOLKEREGISTERIDENT"),
+                    IdentInformasjon("12345", false, "AKTORID"),
+                ),
+                "navn navn",
+            )
+        coEvery { narmestelederClient.getNarmesteledere(any()) } returns emptyList()
+
+        every { db.updateFnr(any(), any()) } returns 1
+
+        val endreFnr = EndreFnr(fnr = "12345678912", nyttFnr = "12345678913")
+
+        val response =
+            client.post("/api/sykmelding/fnr") {
+                headers {
+                    append("Content-Type", "application/json")
+                    append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
+                }
+                setBody(objectMapper.writeValueAsString(endreFnr))
+            }
+        val result = response.body<HttpMessage>()
+
+        assertEquals(response.status, HttpStatusCode.OK)
+        assertEquals(result, HttpMessage("Vellykket oppdatering."))
     }
 }

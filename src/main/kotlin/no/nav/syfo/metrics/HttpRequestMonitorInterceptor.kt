@@ -3,8 +3,7 @@ package no.nav.syfo.metrics
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.pipeline.PipelineContext
-import no.nav.syfo.logger
-import no.nav.syfo.sikkerlogg
+import no.nav.syfo.utils.sikkerlogg
 
 fun monitorHttpRequests(): suspend PipelineContext<Unit, ApplicationCall>.(Unit) -> Unit {
     return {
@@ -14,8 +13,11 @@ fun monitorHttpRequests(): suspend PipelineContext<Unit, ApplicationCall>.(Unit)
             val timer = HTTP_HISTOGRAM.labels(label).startTimer()
             proceed()
             timer.observeDuration()
-        } catch (e: Exception){
-            sikkerlogg.error("Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}: ${e.message}. Se exception for detaljer.", e)
+        } catch (e: Exception) {
+            sikkerlogg.error(
+                "Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}: ${e.message}. Se exception for detaljer.",
+                e
+            )
             throw e
         }
     }

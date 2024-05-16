@@ -9,7 +9,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import java.io.IOException
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.logger
+import no.nav.syfo.utils.logger
 
 class DokArkivClient(
     private val url: String,

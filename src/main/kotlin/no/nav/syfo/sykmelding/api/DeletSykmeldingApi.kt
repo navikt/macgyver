@@ -5,12 +5,12 @@ import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
-import no.nav.syfo.HttpMessage
-import no.nav.syfo.logger
+import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.sykmelding.DeleteSykmeldingException
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
 import no.nav.syfo.utils.UnauthorizedException
 import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.logger
 
 fun Route.registerDeleteSykmeldingApi(deleteSykmeldingService: DeleteSykmeldingService) {
     delete("/api/sykmelding/{sykmeldingId}/{journalpostId}") {

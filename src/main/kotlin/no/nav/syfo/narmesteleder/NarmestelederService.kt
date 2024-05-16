@@ -7,12 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.syfo.identendring.client.NarmesteLeder
 import no.nav.syfo.identendring.client.NarmestelederClient
-import no.nav.syfo.logger
 import no.nav.syfo.narmesteleder.api.NlRequestDTO
 import no.nav.syfo.narmesteleder.kafkamodel.NlKafkaMetadata
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequest
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.pdl.service.PdlPersonService
+import no.nav.syfo.utils.logger
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 

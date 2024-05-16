@@ -7,9 +7,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
-import no.nav.syfo.logger
 import no.nav.syfo.model.UtenlandskSykmelding
-import no.nav.syfo.objectMapper
+import no.nav.syfo.utils.logger
+import no.nav.syfo.utils.objectMapper
 
 fun Database.updateFnr(fnr: String, nyttFnr: String): Int {
     connection.use { connection ->

@@ -1,32 +1,32 @@
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val coroutinesVersion="1.8.1"
-val jacksonVersion="2.17.1"
-val ktorVersion="2.3.11"
-val logbackVersion="1.5.6"
-val logstashEncoderVersion="7.4"
-val prometheusVersion="0.16.0"
-val nimbusVersion="9.39.1"
-val hikariVersion="5.1.0"
-val jaxbBasicAntVersion="1.11.1"
-val javaxAnnotationApiVersion="1.3.2"
-val jaxwsToolsVersion="2.3.7"
-val jaxbRuntimeVersion="2.4.0-b180830.0438"
-val javaxJaxwsApiVersion="2.3.1"
-val jaxbApiVersion="2.4.0-b180830.0359"
-val javaxActivationVersion="1.1.1"
-val mockkVersion="1.13.10"
-val sykmeldingVersion="2.0.1"
-val fellesformatVersion="2.0.1"
-val kithHodemeldingVersion="2.0.1"
-val javaTimeAdapterVersion="1.1.3"
-val postgresVersion="42.7.3"
-val kotlinVersion="1.9.24"
-val googlePostgresVersion="1.18.1"
-val junitVersion="5.10.2"
-val commonsCodecVersion="1.17.0"
-val ktfmtVersion="0.44"
+val coroutinesVersion = "1.8.1"
+val jacksonVersion = "2.17.1"
+val ktorVersion = "2.3.11"
+val logbackVersion = "1.5.6"
+val logstashEncoderVersion = "7.4"
+val prometheusVersion = "0.16.0"
+val nimbusVersion = "9.39.1"
+val hikariVersion = "5.1.0"
+val jaxbBasicAntVersion = "1.11.1"
+val javaxAnnotationApiVersion = "1.3.2"
+val jaxwsToolsVersion = "2.3.7"
+val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val javaxJaxwsApiVersion = "2.3.1"
+val jaxbApiVersion = "2.4.0-b180830.0359"
+val javaxActivationVersion = "1.1.1"
+val mockkVersion = "1.13.10"
+val sykmeldingVersion = "2.0.1"
+val fellesformatVersion = "2.0.1"
+val kithHodemeldingVersion = "2.0.1"
+val javaTimeAdapterVersion = "1.1.3"
+val postgresVersion = "42.7.3"
+val kotlinVersion = "1.9.24"
+val googlePostgresVersion = "1.18.1"
+val junitVersion = "5.10.2"
+val commonsCodecVersion = "1.17.0"
+val ktfmtVersion = "0.49"
 val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
 val snappyJavaVersion = "1.1.10.5"
@@ -144,9 +144,9 @@ tasks {
     }
 
     shadowJar {
-mergeServiceFiles {
-     setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
- }
+        mergeServiceFiles {
+            setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
+        }
         archiveBaseName.set("app")
         archiveClassifier.set("")
         isZip64 = true
@@ -174,5 +174,4 @@ mergeServiceFiles {
             dependsOn("spotlessApply")
         }
     }
-
 }

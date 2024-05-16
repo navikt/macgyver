@@ -1,23 +1,22 @@
-package no.nav.syfo.nais.isready
+package no.nav.syfo.nais
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
 import io.ktor.server.response.respondText
-import io.ktor.server.routing.Routing
-import io.ktor.server.routing.get
-import no.nav.syfo.ApplicationState
+import io.ktor.server.routing.*
+import no.nav.syfo.plugins.ApplicationState
 
-fun Routing.naisIsReadyRoute(
+fun Route.naisIsReadyRoute(
     applicationState: ApplicationState,
     readynessCheck: () -> Boolean = { applicationState.ready },
 ) {
-    get("/internal/is_ready") {
+    get("/is_ready") {
         if (readynessCheck()) {
             call.respondText("I'm ready! :)")
         } else {
             call.respondText(
                 "Please wait! I'm not ready :(",
-                status = HttpStatusCode.InternalServerError
+                status = HttpStatusCode.InternalServerError,
             )
         }
     }

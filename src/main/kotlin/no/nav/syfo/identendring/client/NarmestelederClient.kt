@@ -9,7 +9,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
-import no.nav.syfo.logger
+import no.nav.syfo.utils.logger
 
 class NarmestelederClient(
     private val httpClient: HttpClient,
