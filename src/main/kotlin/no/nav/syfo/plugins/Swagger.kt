@@ -4,11 +4,12 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.swagger.*
 import io.ktor.server.routing.*
 import no.nav.syfo.utils.EnvironmentVariables
+import org.koin.ktor.ext.inject
 
 fun Application.configureSwagger() {
-    val environmentVariables = EnvironmentVariables()
+    val env by inject<EnvironmentVariables>()
 
-    if (environmentVariables.clusterName == "dev-gcp") {
+    if (env.clusterName == "dev-gcp") {
         routing { swaggerUI(path = "docs", swaggerFile = "openapi/documentation.yaml") }
     }
 }

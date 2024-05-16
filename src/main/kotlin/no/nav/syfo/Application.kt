@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import no.nav.syfo.plugins.*
+import no.nav.syfo.plugins.configureKoin
 import no.nav.syfo.utils.getEnvVar
 
 fun main() {
@@ -16,14 +17,12 @@ fun main() {
 }
 
 fun Application.module() {
-    val state = ApplicationState()
-
-    // TODO: Koin - configureModules()
+    configureKoin()
     configureContentNegotiation()
     configureAuth()
     configurePrometheus()
     configureSwagger()
-    configureLifecycleHooks(state)
-    configureNaisResources(state)
+    configureLifecycleHooks()
+    configureNaisResources()
     configureRouting()
 }

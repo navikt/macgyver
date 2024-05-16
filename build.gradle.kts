@@ -33,6 +33,7 @@ val snappyJavaVersion = "1.1.10.5"
 val javaVersion = JavaVersion.VERSION_21
 val kafkaVersion = "3.7.0"
 val diagnosekoderVersion = "1.2024.0"
+val koinVersion = "3.5.6"
 
 plugins {
     id("application")
@@ -94,6 +95,9 @@ dependencies {
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
     implementation("no.nav.helse.xml:kith-hodemelding:$kithHodemeldingVersion")
 
+    implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
+
     constraints {
         implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion") {
             because("override transient from org.apache.kafka:kafka_2.12")
@@ -131,7 +135,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 

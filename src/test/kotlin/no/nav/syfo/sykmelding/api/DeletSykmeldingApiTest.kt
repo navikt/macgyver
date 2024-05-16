@@ -3,52 +3,43 @@ package no.nav.syfo.sykmelding.api
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.http.headers
-import io.ktor.serialization.jackson.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.sykmelding.DeleteSykmeldingService
-import no.nav.syfo.utils.configureTestAuth
-import no.nav.syfo.utils.createTestHttpClient
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.setupTestApplication
+import no.nav.syfo.utils.testClient
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.koin.core.context.stopKoin
 
 internal class DeletSykmeldingApiTest {
 
+    @AfterEach fun cleanup() = stopKoin()
+
     @Test
     internal fun `Slette sykmelding`() = testApplication {
-        setupTestApplication()
-        configureTestAuth()
-        val client = createTestHttpClient()
+        setupTestApplication(withAuth = true)
 
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-
-        routing {
-            registerDeleteSykmeldingApi(
-                deleteSykmeldingServiceMock,
-            )
-        }
+        routing { registerDeleteSykmeldingApi(deleteSykmeldingServiceMock) }
 
         val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
         val journalpostId = "99349925"
 
         coEvery {
             deleteSykmeldingServiceMock.deleteSykmelding(
-                any(),
-                any(),
+                sykmeldingId,
+                journalpostId,
                 any(),
             )
         } returns Unit
 
         val response =
-            client.delete("/api/sykmelding/$sykmeldingId/$journalpostId") {
+            testClient().delete("/api/sykmelding/$sykmeldingId/$journalpostId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
@@ -61,9 +52,7 @@ internal class DeletSykmeldingApiTest {
 
     @Test
     internal fun `Slette sykmelding should throw not found`() = testApplication {
-        setupTestApplication()
-        configureTestAuth()
-        val client = createTestHttpClient()
+        setupTestApplication(withAuth = true)
 
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
         routing {
@@ -76,14 +65,14 @@ internal class DeletSykmeldingApiTest {
 
         coEvery {
             deleteSykmeldingServiceMock.deleteSykmelding(
-                any(),
+                sykmeldingId,
                 any(),
                 any(),
             )
         } returns Unit
 
         val response =
-            client.delete("/api/sykmelding/$sykmeldingId") {
+            testClient().delete("/api/sykmelding/$sykmeldingId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }

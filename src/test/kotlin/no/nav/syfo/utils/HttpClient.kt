@@ -8,7 +8,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.testing.*
 
-fun ApplicationTestBuilder.createTestHttpClient() = createClient {
+fun ApplicationTestBuilder.testClient() = createClient {
     install(ContentNegotiation) {
         jackson {
             registerKotlinModule()

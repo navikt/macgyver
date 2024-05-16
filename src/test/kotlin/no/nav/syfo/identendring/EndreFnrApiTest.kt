@@ -20,15 +20,18 @@ import no.nav.syfo.pdl.model.PdlPerson
 import no.nav.syfo.pdl.service.PdlPersonService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.api.model.EndreFnr
-import no.nav.syfo.utils.configureTestAuth
-import no.nav.syfo.utils.createTestHttpClient
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.objectMapper
 import no.nav.syfo.utils.setupTestApplication
+import no.nav.syfo.utils.testClient
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.koin.core.context.stopKoin
 
 internal class EndreFnrApiTest {
+
+    @AfterEach fun cleanup() = stopKoin()
 
     @Test
     internal fun `Test endre fnr`() = testApplication {
@@ -41,9 +44,7 @@ internal class EndreFnrApiTest {
         mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
         val db = mockk<Database>(relaxed = true)
 
-        val client = createTestHttpClient()
-        setupTestApplication()
-        configureTestAuth()
+        setupTestApplication(withAuth = true)
 
         routing {
             registerFnrApi(
@@ -74,7 +75,7 @@ internal class EndreFnrApiTest {
         val endreFnr = EndreFnr(fnr = "12345678912", nyttFnr = "12345678913")
 
         val response =
-            client.post("/api/sykmelding/fnr") {
+            testClient().post("/api/sykmelding/fnr") {
                 headers {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")

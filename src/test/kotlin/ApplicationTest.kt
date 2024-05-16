@@ -4,20 +4,24 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.*
 import no.nav.syfo.plugins.ApplicationState
 import no.nav.syfo.plugins.configureNaisResources
-import no.nav.syfo.utils.createTestHttpClient
+import no.nav.syfo.utils.setupTestApplication
+import no.nav.syfo.utils.testClient
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
 internal class ApplicationTest {
 
+    @AfterEach fun cleanup() = stopKoin()
+
     @Test
     internal fun `Returns ok on is_alive`() = testApplication {
-        val client = createTestHttpClient()
+        setupTestApplication()
+        application { configureNaisResources() }
 
-        val applicationState = ready()
-        application { configureNaisResources(applicationState) }
-
-        val response = client.get("/internal/is_alive")
+        val response = testClient().get("/internal/is_alive")
         val result = response.body<String>()
 
         assertEquals(response.status, HttpStatusCode.OK)
@@ -26,12 +30,10 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns ok in is_ready`() = testApplication {
-        val client = createTestHttpClient()
+        setupTestApplication()
+        application { configureNaisResources() }
 
-        val applicationState = ready()
-        application { configureNaisResources(applicationState) }
-
-        val response = client.get("/internal/is_ready")
+        val response = testClient().get("/internal/is_ready")
         val result = response.body<String>()
 
         assertEquals(response.status, HttpStatusCode.OK)
@@ -40,12 +42,10 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns internal server error when liveness check fails`() = testApplication {
-        val client = createTestHttpClient()
+        setupTestApplication { modules(unreadyApplicationState) }
+        application { configureNaisResources() }
 
-        val applicationState = unready()
-        application { configureNaisResources(applicationState) }
-
-        val response = client.get("/internal/is_alive")
+        val response = testClient().get("/internal/is_alive")
         val result = response.body<String>()
 
         assertEquals(response.status, HttpStatusCode.InternalServerError)
@@ -54,12 +54,10 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns internal server error when readyness check fails`() = testApplication {
-        val client = createTestHttpClient()
+        setupTestApplication { modules(unreadyApplicationState) }
+        application { configureNaisResources() }
 
-        val applicationState = unready()
-        application { configureNaisResources(applicationState) }
-
-        val response = client.get("/internal/is_ready")
+        val response = testClient().get("/internal/is_ready")
         val result = response.body<String>()
 
         assertEquals(response.status, HttpStatusCode.InternalServerError)
@@ -67,16 +65,11 @@ internal class ApplicationTest {
     }
 }
 
-private fun ready(): ApplicationState {
-    val state = ApplicationState()
-    state.ready = true
-    state.alive = true
-    return state
-}
-
-private fun unready(): ApplicationState {
-    val state = ApplicationState()
-    state.ready = false
-    state.alive = false
-    return state
+private val unreadyApplicationState = module {
+    single {
+        val state = ApplicationState()
+        state.ready = false
+        state.alive = false
+        state
+    }
 }

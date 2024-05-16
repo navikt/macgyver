@@ -2,8 +2,6 @@ package no.nav.syfo.oppgave.api
 
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.http.headers
-import io.ktor.server.routing.routing
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,30 +9,26 @@ import io.mockk.mockkStatic
 import java.time.LocalDate
 import no.nav.syfo.oppgave.client.Oppgave
 import no.nav.syfo.oppgave.client.OppgaveClient
-import no.nav.syfo.utils.configureTestAuth
-import no.nav.syfo.utils.createTestHttpClient
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.objectMapper
 import no.nav.syfo.utils.setupTestApplication
+import no.nav.syfo.utils.testClient
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.koin.core.context.stopKoin
 
 internal class OppgaveApiTest {
+    @AfterEach fun cleanup() = stopKoin()
+
     @Test
     internal fun `Test endre fnr`() = testApplication {
-        setupTestApplication()
-        configureTestAuth()
-        val client = createTestHttpClient()
-
-        val oppgaveClient = mockk<OppgaveClient>()
+        setupTestApplication(withAuth = true)
 
         mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
 
-        routing {
-            registerHentOppgaverApi(
-                oppgaveClient,
-            )
-        }
+        val oppgaveClient = mockk<OppgaveClient>()
+        routing { registerHentOppgaverApi(oppgaveClient) }
 
         coEvery { oppgaveClient.hentOppgave(any(), any()) } returns
             Oppgave(
@@ -61,7 +55,7 @@ internal class OppgaveApiTest {
         val oppgaverid = listOf(121321312)
 
         val response =
-            client.post("/api/oppgave/list") {
+            testClient().post("/api/oppgave/list") {
                 headers {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
