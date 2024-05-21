@@ -5,10 +5,10 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import java.time.LocalDate
-import no.nav.syfo.oppgave.client.Oppgave
-import no.nav.syfo.oppgave.client.OppgaveClient
+import no.nav.syfo.oppgave.Oppgave
+import no.nav.syfo.oppgave.OppgaveClient
+import no.nav.syfo.oppgave.registerHentOppgaverApi
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.objectMapper
 import no.nav.syfo.utils.setupTestApplication
@@ -17,18 +17,17 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
 internal class OppgaveApiTest {
     @AfterEach fun cleanup() = stopKoin()
 
     @Test
     internal fun `Test endre fnr`() = testApplication {
-        setupTestApplication(withAuth = true)
-
-        mockkStatic("no.nav.syfo.identendring.db.SyfoSmRegisterKt")
-
         val oppgaveClient = mockk<OppgaveClient>()
-        routing { registerHentOppgaverApi(oppgaveClient) }
+        setupTestApplication(withAuth = true) { modules(module { single { oppgaveClient } }) }
+
+        routing { registerHentOppgaverApi() }
 
         coEvery { oppgaveClient.hentOppgave(any(), any()) } returns
             Oppgave(

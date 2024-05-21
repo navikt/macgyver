@@ -7,7 +7,8 @@ import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.sykmelding.DeleteSykmeldingService
+import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
+import no.nav.syfo.sykmelding.delete_sykmelding.registerDeleteSykmeldingApi
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.setupTestApplication
 import no.nav.syfo.utils.testClient
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 
 internal class DeletSykmeldingApiTest {
 
@@ -22,10 +24,12 @@ internal class DeletSykmeldingApiTest {
 
     @Test
     internal fun `Slette sykmelding`() = testApplication {
-        setupTestApplication(withAuth = true)
-
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-        routing { registerDeleteSykmeldingApi(deleteSykmeldingServiceMock) }
+        setupTestApplication(withAuth = true) {
+            modules(module { single { deleteSykmeldingServiceMock } })
+        }
+
+        routing { registerDeleteSykmeldingApi() }
 
         val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
         val journalpostId = "99349925"
@@ -52,14 +56,10 @@ internal class DeletSykmeldingApiTest {
 
     @Test
     internal fun `Slette sykmelding should throw not found`() = testApplication {
-        setupTestApplication(withAuth = true)
-
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-        routing {
-            registerDeleteSykmeldingApi(
-                deleteSykmeldingServiceMock,
-            )
-        }
+        setupTestApplication(withAuth = true) { module { single { deleteSykmeldingServiceMock } } }
+
+        routing { registerDeleteSykmeldingApi() }
 
         val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
 

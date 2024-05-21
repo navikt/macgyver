@@ -3,7 +3,7 @@ package no.nav.syfo.metrics
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.pipeline.PipelineContext
-import no.nav.syfo.utils.sikkerlogg
+import no.nav.syfo.logging.sikkerlogg
 
 fun monitorHttpRequests(): suspend PipelineContext<Unit, ApplicationCall>.(Unit) -> Unit {
     return {
