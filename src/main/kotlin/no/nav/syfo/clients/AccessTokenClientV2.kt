@@ -15,17 +15,21 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import no.nav.syfo.logging.logger
 
-class AccessTokenClientV2(
+interface AccessTokenClientV2 {
+    suspend fun getAccessTokenV2(resource: String): String
+}
+
+class ProductionAccessTokenClientV2(
     private val aadAccessTokenUrl: String,
     private val clientId: String,
     private val clientSecret: String,
     private val httpClient: HttpClient,
-) {
+) : AccessTokenClientV2 {
     private val mutex = Mutex()
 
     @Volatile private var tokenMap = HashMap<String, AadAccessTokenMedExpiry>()
 
-    suspend fun getAccessTokenV2(resource: String): String {
+    override suspend fun getAccessTokenV2(resource: String): String {
         val omToMinutter = Instant.now().plusSeconds(120L)
         return mutex.withLock {
             (tokenMap[resource]?.takeUnless { it.expiresOn.isBefore(omToMinutter) }
@@ -61,6 +65,12 @@ class AccessTokenClientV2(
                     })
                 .access_token
         }
+    }
+}
+
+class DevelopmentAccessTokenClientV2 : AccessTokenClientV2 {
+    override suspend fun getAccessTokenV2(resource: String): String {
+        return "token"
     }
 }
 

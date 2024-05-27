@@ -14,7 +14,7 @@ import org.koin.ktor.ext.inject
 fun Route.registerDeleteLegeerklaeringApi() {
     val deleteLegeerklaeringService by inject<DeleteLegeerklaeringService>()
 
-    delete("/api/legeerklaering/{legeerklaeringId}") {
+    delete("/legeerklaering/{legeerklaeringId}") {
         val legeerklaeringId = call.parameters["legeerklaeringId"]!!
 
         try {

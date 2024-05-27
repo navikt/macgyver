@@ -23,7 +23,7 @@ data class NarmestelederForSykmeldtPayload(val sykmeldtFnr: String)
 fun Route.registrerNarmestelederApi() {
     val narmestelederService by inject<NarmestelederService>()
 
-    post("/api/narmesteleder/request") {
+    post("/narmesteleder/request") {
         val principal = call.safePrincipal()
         val nlRequest = call.receive<NarmestelederAltinnRequestPayload>()
 

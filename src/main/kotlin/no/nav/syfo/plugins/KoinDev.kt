@@ -1,5 +1,8 @@
 package no.nav.syfo.plugins
 
+import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
+import no.nav.syfo.pdl.PdlPersonService
+import no.nav.syfo.pdl.client.DevelopmentPdlClient
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
 import org.koin.dsl.module
@@ -7,7 +10,18 @@ import org.koin.dsl.module
 fun KoinApplication.initDevelopmentModules() {
     modules(
         developmentEnv,
+        developmentPdl,
     )
+}
+
+val developmentPdl = module {
+    single {
+        PdlPersonService(
+            pdlClient = DevelopmentPdlClient(),
+            accessTokenClientV2 = DevelopmentAccessTokenClientV2(),
+            pdlScope = "dummy-value",
+        )
+    }
 }
 
 val developmentEnv = module {

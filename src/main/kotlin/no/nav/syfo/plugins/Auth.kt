@@ -13,18 +13,15 @@ import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.ktor.ext.inject
 
 fun Application.configureAuth() {
-    val config by inject<AuthConfiguration>()
-
     if (environment.developmentMode) {
-        logger.warn("In development mode! Setting up passthrough for jwt")
-        install(Authentication) {
-            jwt(name = "jwt") {
-                verifier { null }
-                validate { credentials -> JWTPrincipal(credentials.payload) }
-            }
-        }
-        return
+        configureDevelopmentAuth()
+    } else {
+        configureProductionAuth()
     }
+}
+
+fun Application.configureProductionAuth() {
+    val config by inject<AuthConfiguration>()
 
     install(Authentication) {
         jwt(name = "jwt") {
@@ -45,6 +42,17 @@ fun Application.configureAuth() {
                         unauthorized(credentials)
                     }
                 }
+            }
+        }
+    }
+}
+
+fun Application.configureDevelopmentAuth() {
+    install(Authentication) {
+        provider("local") {
+            authenticate { context ->
+                println("WE HERE NOW")
+                context.principal(UserPrincipal("12345678910"))
             }
         }
     }

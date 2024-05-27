@@ -2,6 +2,7 @@ package no.nav.syfo.plugins
 
 import io.ktor.server.application.*
 import no.nav.syfo.clients.AccessTokenClientV2
+import no.nav.syfo.clients.ProductionAccessTokenClientV2
 import no.nav.syfo.clients.createHttpClient
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
@@ -18,6 +19,7 @@ import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.OppgaveClient
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.PdlClient
+import no.nav.syfo.pdl.client.ProductionPdlClient
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
@@ -74,10 +76,10 @@ val authModule = module { single { getProductionAuthConfig(get()) } }
 
 val httpClientModule = module {
     single { createHttpClient() }
-    single {
+    single<AccessTokenClientV2> {
         val env = get<EnvironmentVariables>()
 
-        AccessTokenClientV2(
+        ProductionAccessTokenClientV2(
             env.aadAccessTokenV2Url,
             env.clientIdV2,
             env.clientSecretV2,
@@ -87,8 +89,8 @@ val httpClientModule = module {
 }
 
 val pdlModule = module {
-    single {
-        PdlClient(
+    single<PdlClient> {
+        ProductionPdlClient(
             httpClient = get(),
             basePath = get<EnvironmentVariables>().pdlGraphqlPath,
             graphQlQuery =

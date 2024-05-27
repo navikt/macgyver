@@ -55,7 +55,7 @@ internal class OppgaveApiTest {
         val oppgaverid = listOf(121321312)
 
         val response =
-            testClient().post("/api/oppgave/list") {
+            testClient().post("/oppgave/list") {
                 headers {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")

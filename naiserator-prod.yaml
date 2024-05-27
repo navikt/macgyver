@@ -13,19 +13,19 @@ spec:
     cpuThresholdPercentage: 90
   port: 8080
   liveness:
-    path: /internal/is_alive
+    path: /api/internal/is_alive
     initialDelay: 10
     timeout: 5
     periodSeconds: 5
     failureThreshold: 30
   readiness:
-    path: /internal/is_ready
+    path: /api/internal/is_ready
     initialDelay: 30
     periodSeconds: 5
     timeout: 5
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /api/internal/prometheus
   observability:
     autoInstrumentation:
       enabled: true
@@ -47,6 +47,7 @@ spec:
           kind: Project
         role: roles/cloudsql.client
   accessPolicy:
+    # TODO: Remove
     inbound:
       rules:
         - application: macgyver-frontend
@@ -61,11 +62,17 @@ spec:
         - host: pdl-api.prod-fss-pub.nais.io
         - host: oppgave.prod-fss-pub.nais.io
         - host: dokarkiv.prod-fss-pub.nais.io
+  ingresses:
+    - "https://macgyver.ansatt.nav.no"
   azure:
     application:
-      allowAllUsers: true
       enabled: true
+      allowAllUsers: true
       tenant: nav.no
+      groups:
+        - id: "3a541678-8965-45c4-844b-486a8b9b94a3"
+      sidecar:
+        enabled: true
   secureLogs:
     enabled: true
   envFrom:

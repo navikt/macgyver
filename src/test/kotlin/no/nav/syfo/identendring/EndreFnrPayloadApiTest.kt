@@ -73,7 +73,7 @@ internal class EndreFnrPayloadApiTest {
         val endreFnr = EndreFnrPayload(fnr = "12345678912", nyttFnr = "12345678913")
 
         val response =
-            testClient().post("/api/sykmelding/fnr") {
+            testClient().post("/sykmelding/fnr") {
                 headers {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")

@@ -7,10 +7,10 @@ import io.ktor.server.routing.*
 import no.nav.syfo.pdl.PdlPersonService
 import org.koin.ktor.ext.inject
 
-fun Route.personApi() {
+fun Route.registerPersonApi() {
     val pdlPersonService by inject<PdlPersonService>()
 
-    get("/api/person") {
+    get("/person") {
         val fnr = call.request.headers["fnr"]
         if (fnr == null) {
             call.respond(HttpStatusCode.BadRequest)

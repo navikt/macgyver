@@ -17,7 +17,7 @@ import org.koin.ktor.ext.inject
 fun Route.registerHentOppgaverApi() {
     val oppgaveClient by inject<OppgaveClient>()
 
-    post("/api/oppgave/list") {
+    post("/oppgave/list") {
         val callId = UUID.randomUUID().toString()
 
         val ids = call.receive<List<Int>>()

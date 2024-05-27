@@ -34,7 +34,7 @@ internal class LegeerklaeringApiTest {
             Unit
 
         val response =
-            testClient().delete("/api/legeerklaering/$legeerklaeringId") {
+            testClient().delete("/legeerklaering/$legeerklaeringId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
@@ -55,7 +55,7 @@ internal class LegeerklaeringApiTest {
             }
 
             val response =
-                testClient().delete("/api/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}
+                testClient().delete("/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}
 
             assertEquals(HttpStatusCode.Unauthorized, response.status)
         }
