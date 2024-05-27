@@ -20,10 +20,16 @@ fun Application.configureAuth() {
             verifier(config.jwkProvider, config.issuer)
             validate { credentials ->
                 when {
-                    credentials.payload.audience.contains(config.clinetId) ->
-                        JWTPrincipal(
-                            credentials.payload,
+                    credentials.payload.audience.contains(config.clientId) -> {
+                        val email = credentials.payload.getClaim("preferred_username").asString()
+                        requireNotNull(email) {
+                            "Logged in user without preferred_username should not be possible. Are you wonderwalling?"
+                        }
+
+                        UserPrincipal(
+                            email = email,
                         )
+                    }
                     else -> {
                         unauthorized(credentials)
                     }
@@ -33,10 +39,12 @@ fun Application.configureAuth() {
     }
 }
 
+data class UserPrincipal(val email: String) : Principal
+
 class AuthConfiguration(
     val jwkProvider: JwkProvider,
     val issuer: String,
-    val clinetId: String,
+    val clientId: String,
 )
 
 fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
@@ -48,11 +56,11 @@ fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
     return AuthConfiguration(
         jwkProvider = jwkProvider,
         issuer = env.jwtIssuer,
-        clinetId = env.clientIdV2,
+        clientId = env.clientIdV2,
     )
 }
 
-internal fun unauthorized(credentials: JWTCredential): Principal? {
+internal fun unauthorized(credentials: JWTCredential): UserPrincipal? {
     logger.warn(
         "Auth: Unexpected audience for jwt {}, {}",
         StructuredArguments.keyValue("issuer", credentials.payload.issuer),

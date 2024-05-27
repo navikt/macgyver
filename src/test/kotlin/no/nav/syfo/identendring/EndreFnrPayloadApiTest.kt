@@ -52,9 +52,10 @@ internal class EndreFnrPayloadApiTest {
             }
         }
 
-        setupTestApplication(withAuth = true) { modules(updateFnrServiceModule) }
-
-        routing { registerFnrApi() }
+        setupTestApplication {
+            dependencies { modules(updateFnrServiceModule) }
+            authedRoutes { registerFnrApi() }
+        }
 
         coEvery { pdlPersonService.getPdlPerson(any()) } returns
             PdlPerson(

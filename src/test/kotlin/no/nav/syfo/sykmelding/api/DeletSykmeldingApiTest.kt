@@ -25,11 +25,10 @@ internal class DeletSykmeldingApiTest {
     @Test
     internal fun `Slette sykmelding`() = testApplication {
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-        setupTestApplication(withAuth = true) {
-            modules(module { single { deleteSykmeldingServiceMock } })
+        setupTestApplication {
+            dependencies { modules(module { single { deleteSykmeldingServiceMock } }) }
+            authedRoutes { registerDeleteSykmeldingApi() }
         }
-
-        routing { registerDeleteSykmeldingApi() }
 
         val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
         val journalpostId = "99349925"
@@ -57,9 +56,10 @@ internal class DeletSykmeldingApiTest {
     @Test
     internal fun `Slette sykmelding should throw not found`() = testApplication {
         val deleteSykmeldingServiceMock = mockk<DeleteSykmeldingService>()
-        setupTestApplication(withAuth = true) { module { single { deleteSykmeldingServiceMock } } }
-
-        routing { registerDeleteSykmeldingApi() }
+        setupTestApplication {
+            dependencies { module { single { deleteSykmeldingServiceMock } } }
+            authedRoutes { registerDeleteSykmeldingApi() }
+        }
 
         val sykmeldingId = "83919f4a-f892-4db2-9255-f3c917bd012t"
 

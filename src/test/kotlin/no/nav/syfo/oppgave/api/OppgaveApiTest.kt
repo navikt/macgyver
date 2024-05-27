@@ -25,9 +25,10 @@ internal class OppgaveApiTest {
     @Test
     internal fun `Test endre fnr`() = testApplication {
         val oppgaveClient = mockk<OppgaveClient>()
-        setupTestApplication(withAuth = true) { modules(module { single { oppgaveClient } }) }
-
-        routing { registerHentOppgaverApi() }
+        setupTestApplication {
+            dependencies { modules(module { single { oppgaveClient } }) }
+            authedRoutes { registerHentOppgaverApi() }
+        }
 
         coEvery { oppgaveClient.hentOppgave(any(), any()) } returns
             Oppgave(

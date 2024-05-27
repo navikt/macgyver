@@ -7,6 +7,7 @@ import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
+import no.nav.syfo.plugins.UserPrincipal
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -17,14 +18,13 @@ class DeleteSykmeldingService(
     val topics: List<String>,
     val dokArkivClient: DokArkivClient
 ) {
-    suspend fun deleteSykmelding(sykmeldingID: String, journalpostId: String, accessToken: String) {
+    suspend fun deleteSykmelding(sykmeldingID: String, journalpostId: String, user: UserPrincipal) {
         val sykmelding = deleteSykmeldingDatabase.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
             auditlogg.info(
-                AuditLogger()
+                AuditLogger(user.email)
                     .createcCefMessage(
                         fnr = sykmelding.sykmeldingsopplysninger.pasientFnr,
-                        accessToken = accessToken,
                         operation = AuditLogger.Operation.WRITE,
                         requestPath = "/api/sykmelding/$sykmeldingID",
                         permit = AuditLogger.Permit.PERMIT,

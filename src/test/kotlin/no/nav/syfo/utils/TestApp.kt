@@ -1,49 +1,90 @@
 package no.nav.syfo.utils
 
-import com.auth0.jwk.JwkProviderBuilder
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.server.testing.*
-import java.nio.file.Paths
-import no.nav.syfo.plugins.AuthConfiguration
+import io.mockk.every
+import io.mockk.mockk
+import no.nav.syfo.plugins.UserPrincipal
 import no.nav.syfo.plugins.applicationStateModule
-import no.nav.syfo.plugins.configureAuth
 import no.nav.syfo.plugins.configureContentNegotiation
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
-fun ApplicationTestBuilder.configureTestAuth() {
-    application { configureAuth() }
+class Blocks {
+    var openRouteConfiguration: (Route.() -> Unit)? = null
+    var authedRouteConfiguration: (Route.() -> Unit)? = null
+    var invalidRouteConfiguration: (Route.() -> Unit)? = null
+
+    fun dependencies(koin: KoinAppDeclaration?) {
+        startKoin {
+            modules(mockedEnvModule, applicationStateModule)
+            if (koin != null) {
+                koin()
+            }
+        }
+    }
+
+    fun openRoutes(configure: Route.() -> Unit) {
+        openRouteConfiguration = configure
+    }
+
+    fun authedRoutes(configure: Route.() -> Unit) {
+        authedRouteConfiguration = configure
+    }
+
+    fun invalidRoutes(configure: Route.() -> Unit) {
+        invalidRouteConfiguration = configure
+    }
 }
 
 fun ApplicationTestBuilder.setupTestApplication(
-    withAuth: Boolean = false,
-    koin: KoinAppDeclaration? = null,
+    setup: (Blocks.() -> Unit)? = null,
 ) {
-    application { configureContentNegotiation() }
-
-    startKoin {
-        modules(applicationStateModule)
-        if (withAuth) {
-            modules(mockedAuthModule)
+    val blocks =
+        if (setup != null) {
+            Blocks().apply(setup)
+        } else {
+            startKoin { modules(mockedEnvModule, applicationStateModule) }
+            null
         }
-        if (koin != null) {
-            koin()
+
+    application {
+        configureContentNegotiation()
+
+        install(Authentication) {
+            provider("valid") {
+                authenticate { context ->
+                    context.principal(UserPrincipal(email = "test@example.com"))
+                }
+            }
+            provider("invalid") {
+                authenticate { context ->
+                    context.challenge(
+                        "InvalidAuth",
+                        AuthenticationFailedCause.InvalidCredentials,
+                    ) { _, call ->
+                        call.respond(HttpStatusCode.Unauthorized)
+                    }
+                }
+            }
+        }
+
+        routing {
+            blocks?.openRouteConfiguration?.let { it(this) }
+
+            authenticate("valid") { blocks?.authedRouteConfiguration?.let { it(this) } }
+            authenticate("invalid") { blocks?.invalidRouteConfiguration?.let { it(this) } }
         }
     }
 }
 
-val mockedAuthModule = module {
-    val path = "src/test/resources/jwkset.json"
-    val uri = Paths.get(path).toUri().toURL()
-    val jwkProvider = JwkProviderBuilder(uri).build()
-
+val mockedEnvModule = module {
     single {
-        val env = get<EnvironmentVariables>()
-
-        AuthConfiguration(
-            jwkProvider = jwkProvider,
-            issuer = "issuer",
-            clinetId = env.clientIdV2,
-        )
+        mockk<EnvironmentVariables>(relaxed = true) { every { clientIdV2 } returns "client_id" }
     }
 }

@@ -7,8 +7,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.utils.UnauthorizedException
-import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerDeleteSykmeldingApi() {
@@ -31,16 +30,15 @@ fun Route.registerDeleteSykmeldingApi() {
         logger.info("Deleting sykmelding $sykmeldingId and journalpostId $journalpostId")
 
         try {
-            val accessToken = getAccessTokenFromAuthHeader(call.request)
-
-            deleteSykmeldingService.deleteSykmelding(sykmeldingId, journalpostId, accessToken)
+            deleteSykmeldingService.deleteSykmelding(
+                sykmeldingId,
+                journalpostId,
+                call.safePrincipal()
+            )
             logger.info(
                 "Sender http OK status tilbake for sletting av sykmelding med id $sykmeldingId"
             )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
-        } catch (unauthorizedException: UnauthorizedException) {
-            logger.warn("Fant ikkje authorization header: ", unauthorizedException)
-            call.respond(HttpStatusCode.Unauthorized, HttpMessage("Unauthorized"))
         } catch (deleteSykmeldingException: DeleteSykmeldingException) {
             logger.warn("Fant ikkje sykmelding: ", deleteSykmeldingException)
             call.respond(

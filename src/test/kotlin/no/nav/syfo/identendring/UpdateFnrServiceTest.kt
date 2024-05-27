@@ -72,7 +72,7 @@ internal class UpdateFnrServiceTest {
 
     @BeforeEach
     fun before() = testApplication {
-        setupTestApplication(withAuth = true) { modules(module { single { updateFnrService } }) }
+        setupTestApplication { dependencies { modules(module { single { updateFnrService } }) } }
         clearMocks(sendtSykmeldingKafkaProducer, narmesteLederResponseKafkaProducer)
     }
 
