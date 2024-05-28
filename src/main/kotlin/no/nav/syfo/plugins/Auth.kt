@@ -64,8 +64,9 @@ fun Application.configureDevelopmentAuth() {
     install(Authentication) {
         provider("local") {
             authenticate { context ->
-                println("WE HERE NOW")
-                context.principal(UserPrincipal("12345678910"))
+                context.principal(UserPrincipal(
+                    email = "test.testerssen@nav.no")
+                )
             }
         }
     }

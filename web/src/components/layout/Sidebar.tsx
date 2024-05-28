@@ -9,7 +9,7 @@ function Sidebar(): ReactElement {
     <Box
       background="surface-alt-3-subtle"
       padding="4"
-      className="w-full max-w-sm"
+      className="w-full max-w-sm h-[calc(100vh-48px)]"
     >
       <SidebarMenuItem title="Person" Icon={PersonIcon}>
         <li>
