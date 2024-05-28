@@ -3,11 +3,11 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import "./App.css";
+import { ReactElement } from "react";
 
 const queryClient = new QueryClient();
 
-function App() {
+function App(): ReactElement {
   return (
     <QueryClientProvider client={queryClient}>
       <h1>Vite + React + Ktor</h1>
@@ -16,7 +16,7 @@ function App() {
   );
 }
 
-function ExampleFetch() {
+function ExampleFetch(): ReactElement {
   const query = useQuery<{ navn: string }>({
     queryKey: ["person"],
     queryFn: async () => {
