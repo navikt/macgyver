@@ -1,18 +1,17 @@
 package no.nav.syfo.oppgave
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import java.util.UUID
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import java.util.*
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
 import no.nav.syfo.logging.sikkerlogg
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerHentOppgaverApi() {
@@ -33,11 +32,11 @@ fun Route.registerHentOppgaverApi() {
         }
 
         try {
+            val principal = call.safePrincipal()
             auditlogg.info(
-                AuditLogger()
+                AuditLogger(principal.email)
                     .createcCefMessage(
                         fnr = null,
-                        accessToken = getAccessTokenFromAuthHeader(call.request),
                         operation = AuditLogger.Operation.WRITE,
                         requestPath = "/api/oppgave/list",
                         permit = AuditLogger.Permit.PERMIT,

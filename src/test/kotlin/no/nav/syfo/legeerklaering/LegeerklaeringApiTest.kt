@@ -1,14 +1,11 @@
-package no.nav.syfo.legeerklaering.api
+package no.nav.syfo.legeerklaering
 
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
-import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
-import no.nav.syfo.legeerklaering.registerDeleteLegeerklaeringApi
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.setupTestApplication
@@ -27,11 +24,10 @@ internal class LegeerklaeringApiTest {
     internal fun `should return OK`() = testApplication {
         val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
 
-        setupTestApplication(withAuth = true) {
-            modules(module { single { deleteLegeerklaeringServiceMock } })
+        setupTestApplication {
+            dependencies { modules(module { single { deleteLegeerklaeringServiceMock } }) }
+            authedRoutes { registerDeleteLegeerklaeringApi() }
         }
-
-        routing { registerDeleteLegeerklaeringApi() }
 
         val legeerklaeringId = "83919f4a-f892-4db2-9255-f3c917bd012t"
         coEvery { deleteLegeerklaeringServiceMock.deleteLegeerklaering(legeerklaeringId) } returns
@@ -43,9 +39,9 @@ internal class LegeerklaeringApiTest {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
             }
-        val result = response.body<HttpMessage>()
-
         assertEquals(response.status, HttpStatusCode.OK)
+
+        val result = response.body<HttpMessage>()
         assertEquals(result.message, "Vellykket sletting")
     }
 
@@ -53,17 +49,14 @@ internal class LegeerklaeringApiTest {
     internal fun `should return unauthorized when missing authorization header`() =
         testApplication {
             val deleteLegeerklaeringServiceMock = mockk<DeleteLegeerklaeringService>()
-            setupTestApplication(withAuth = true) {
-                module { single { deleteLegeerklaeringServiceMock } }
+            setupTestApplication {
+                dependencies { module { single { deleteLegeerklaeringServiceMock } } }
+                invalidRoutes { registerDeleteLegeerklaeringApi() }
             }
-
-            routing { registerDeleteLegeerklaeringApi() }
 
             val response =
                 testClient().delete("/api/legeerklaering/83919f4a-f892-4db2-9255-f3c917bd012t") {}
-            val result = response.body<HttpMessage>()
 
-            assertEquals(response.status, HttpStatusCode.Unauthorized)
-            assertEquals(result.message, "Unauthorized")
+            assertEquals(HttpStatusCode.Unauthorized, response.status)
         }
 }

@@ -1,18 +1,17 @@
 package no.nav.syfo.identendring
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.identendring.update_fnr.UpdateIdentException
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.sikkerlogg
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerFnrApi() {
@@ -39,11 +38,11 @@ fun Route.registerFnrApi() {
             }
             else -> {
                 try {
+                    val principal = call.safePrincipal()
                     auditlogg.info(
-                        AuditLogger()
+                        AuditLogger(principal.email)
                             .createcCefMessage(
                                 fnr = endreFnr.fnr,
-                                accessToken = getAccessTokenFromAuthHeader(call.request),
                                 operation = AuditLogger.Operation.WRITE,
                                 requestPath = "/api/sykmelding/fnr",
                                 permit = AuditLogger.Permit.PERMIT,
@@ -93,12 +92,11 @@ fun Route.registerFnrApi() {
             }
             else -> {
                 try {
-
+                    val principal = call.safePrincipal()
                     auditlogg.info(
-                        AuditLogger()
+                        AuditLogger(principal.email)
                             .createcCefMessage(
                                 fnr = endreFnr.fnr,
-                                accessToken = getAccessTokenFromAuthHeader(call.request),
                                 operation = AuditLogger.Operation.WRITE,
                                 requestPath = "/api/leder/fnr",
                                 permit = AuditLogger.Permit.PERMIT,

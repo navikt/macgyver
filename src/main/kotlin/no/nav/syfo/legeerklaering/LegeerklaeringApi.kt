@@ -1,16 +1,14 @@
 package no.nav.syfo.legeerklaering
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.HttpMessage
-import no.nav.syfo.utils.UnauthorizedException
-import no.nav.syfo.utils.getAccessTokenFromAuthHeader
+import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerDeleteLegeerklaeringApi() {
@@ -20,11 +18,11 @@ fun Route.registerDeleteLegeerklaeringApi() {
         val legeerklaeringId = call.parameters["legeerklaeringId"]!!
 
         try {
+            val principal = call.safePrincipal()
             auditlogg.info(
-                AuditLogger()
+                AuditLogger(principal.email)
                     .createcCefMessage(
                         fnr = null,
-                        accessToken = getAccessTokenFromAuthHeader(call.request),
                         operation = AuditLogger.Operation.WRITE,
                         requestPath = "/api/legeerklaering/$legeerklaeringId",
                         permit = AuditLogger.Permit.PERMIT,
@@ -36,9 +34,6 @@ fun Route.registerDeleteLegeerklaeringApi() {
                 "Sender http OK status tilbake for sletting av legeerklaering med id $legeerklaeringId",
             )
             call.respond(HttpStatusCode.OK, HttpMessage("Vellykket sletting"))
-        } catch (unauthorizedException: UnauthorizedException) {
-            logger.warn("Fant ikkje authorization header: ", unauthorizedException)
-            call.respond(HttpStatusCode.Unauthorized, HttpMessage("Unauthorized"))
         } catch (e: Exception) {
             logger.error(
                 "Kastet exception ved sletting av legeerklaering med id $legeerklaeringId",
