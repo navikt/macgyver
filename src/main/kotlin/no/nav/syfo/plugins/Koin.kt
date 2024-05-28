@@ -6,6 +6,7 @@ import no.nav.syfo.clients.ProductionAccessTokenClientV2
 import no.nav.syfo.clients.createHttpClient
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
+import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseProduction
 import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
@@ -24,6 +25,7 @@ import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
+import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingDatabase
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
@@ -122,7 +124,9 @@ val sykmeldingModule = module {
             dbPassword = env.syfosmregisterDatabasePassword,
         )
     }
-    single { UpdateFnrDatabase(get(qualifier = named("syfoSmregisterDatabase"))) }
+    single<UpdateFnrDatabase> {
+        UpdateFnrDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
+    }
     single { DeleteSykmeldingDatabase(get(qualifier = named("syfoSmregisterDatabase"))) }
     single {
         val env = get<EnvironmentVariables>()
@@ -282,7 +286,9 @@ val kafkaModules = module {
                 ),
         )
     }
-    single { SykmeldingV2KafkaProducer(get(qualifier = named("kafkaAivenProducer"))) }
+    single<SykmeldingV2KafkaProducer> {
+        SykmeldingV2KafkaProducerProduction(get(qualifier = named("kafkaAivenProducer")))
+    }
     single {
         NarmesteLederResponseKafkaProducer(
             get<EnvironmentVariables>().nlResponseTopic,

@@ -32,7 +32,6 @@ class ProductionPdlClient(
     private val graphQlQueryAktorids: String,
 ) : PdlClient {
 
-
     override suspend fun getPerson(fnr: String, token: String): GraphQLResponse<PdlResponse> {
         val getPersonRequest =
             GetPersonRequest(query = graphQlQuery, variables = GetPersonVariables(ident = fnr))

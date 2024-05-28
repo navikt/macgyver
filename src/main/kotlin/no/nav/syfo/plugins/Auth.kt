@@ -47,6 +47,7 @@ fun Application.configureProductionAuth() {
         }
     }
 }
+
 fun isValidToken(payload: Payload, env: EnvironmentVariables): Boolean {
     if (payload.issuer != env.jwtIssuer) {
         logger.warn("Something is wrong here with issuer")
@@ -57,16 +58,13 @@ fun isValidToken(payload: Payload, env: EnvironmentVariables): Boolean {
         return false
     }
     return true
-
 }
 
 fun Application.configureDevelopmentAuth() {
     install(Authentication) {
         provider("local") {
             authenticate { context ->
-                context.principal(UserPrincipal(
-                    email = "test.testerssen@nav.no")
-                )
+                context.principal(UserPrincipal(email = "test.testerssen@nav.no"))
             }
         }
     }
@@ -85,10 +83,7 @@ fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
             .cached(10, Duration.ofHours(24))
             .build()
 
-    return AuthConfiguration(
-        jwkProvider = jwkProvider,
-        issuer = env.jwtIssuer
-    )
+    return AuthConfiguration(jwkProvider = jwkProvider, issuer = env.jwtIssuer)
 }
 
 internal fun unauthorized(credentials: JWTCredential): UserPrincipal? {
