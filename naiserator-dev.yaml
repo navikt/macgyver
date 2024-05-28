@@ -65,6 +65,10 @@ spec:
       tenant: trygdeetaten.no
     sidecar:
       enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /assets/*
+        - /favicon.ico
   secureLogs:
     enabled: true
   envFrom:

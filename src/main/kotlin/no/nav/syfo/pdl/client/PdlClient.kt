@@ -32,8 +32,6 @@ class ProductionPdlClient(
     private val graphQlQueryAktorids: String,
 ) : PdlClient {
 
-    private val temaHeader = "TEMA"
-    private val tema = "SYM"
 
     override suspend fun getPerson(fnr: String, token: String): GraphQLResponse<PdlResponse> {
         val getPersonRequest =
@@ -55,7 +53,8 @@ class ProductionPdlClient(
             .post(basePath) {
                 setBody(graphQlBody)
                 header(HttpHeaders.Authorization, "Bearer $token")
-                header(temaHeader, tema)
+                header("Behandlingsnummer", "B229")
+                header("TEMA", "SYM")
                 header(HttpHeaders.ContentType, "application/json")
             }
             .body()
