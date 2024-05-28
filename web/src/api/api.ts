@@ -4,20 +4,23 @@ export async function fetchApi<SchemaType extends ZodTypeAny>(
   path: string,
   {
     method,
+    body,
     schema,
     headers,
   }: {
-    method?: "GET";
+    method?: "GET" | "POST";
     headers?: Record<string, string>;
+    body?: unknown;
     schema: SchemaType;
   },
 ): Promise<z.infer<SchemaType>> {
-  const response = await fetch(path, {
+  const response = await fetch(`/api${path}`, {
     method: method ?? "GET",
     headers: {
       "Content-Type": "application/json",
       ...headers,
     },
+    body: body ? JSON.stringify(body) : undefined,
   });
 
   if (!response.ok) {

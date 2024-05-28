@@ -9,6 +9,7 @@ import ErrorPage from "./error-page.tsx";
 import Root from "./routes/root.tsx";
 import Landing from "./routes/person/landing.tsx";
 import PersonOppslag from "./routes/person/oppslag.tsx";
+import OppgaveOppslag from "./routes/oppgaver/oppslag.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
         element: <Landing />,
       },
       { path: "/person/oppslag", element: <PersonOppslag /> },
+      { path: "/oppgave/oppslag", element: <OppgaveOppslag /> },
     ],
   },
 ]);

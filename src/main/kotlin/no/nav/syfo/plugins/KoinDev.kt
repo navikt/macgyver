@@ -3,6 +3,8 @@ package no.nav.syfo.plugins
 import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseDevelopment
+import no.nav.syfo.oppgave.OppgaveClient
+import no.nav.syfo.oppgave.OppgaveClientDevelopment
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.DevelopmentPdlClient
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
@@ -15,6 +17,7 @@ fun KoinApplication.initDevelopmentModules() {
     modules(
         developmentEnv,
         developmentPdl,
+        developmentOppgaveModule,
         developmentKafkaModules,
     )
 }
@@ -22,6 +25,12 @@ fun KoinApplication.initDevelopmentModules() {
 val developmentKafkaModules = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<SykmeldingV2KafkaProducer> { SykmeldingV2KafkaProducerDevelopment() }
+}
+
+val developmentOppgaveModule = module {
+    single<OppgaveClient> {
+        OppgaveClientDevelopment()
+    }
 }
 
 val developmentPdl = module {

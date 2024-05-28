@@ -18,6 +18,7 @@ import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.OppgaveClient
+import no.nav.syfo.oppgave.OppgaveClientProduction
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.client.ProductionPdlClient
@@ -164,8 +165,8 @@ val legeerklaeringModule = module {
 }
 
 val oppgaveModule = module {
-    single {
-        OppgaveClient(
+    single<OppgaveClient> {
+        OppgaveClientProduction(
             get<EnvironmentVariables>().oppgavebehandlingUrl,
             get(),
             get<EnvironmentVariables>().oppgaveScope,

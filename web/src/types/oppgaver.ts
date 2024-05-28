@@ -4,7 +4,7 @@ const OppgaverField = z.array(z.number())
 
 export type OppgaverField = z.infer<typeof OppgaverField>
 
-const Oppgave = z.object({
+export const OppgaveSchema = z.object({
     oppgavetype: z.string(),
     mappeId: z.number().nullable(),
     prioritet: z.string(),
@@ -25,4 +25,4 @@ const Oppgave = z.object({
     status: z.string().nullable(),
 })
 
-export type Oppgave = z.infer<typeof Oppgave>
+export type Oppgave = z.infer<typeof OppgaveSchema>

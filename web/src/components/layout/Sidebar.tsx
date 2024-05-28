@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Box } from "@navikt/ds-react";
 import SidebarMenuItem from "./SidebarMenuItem.tsx";
-import { PersonIcon } from "@navikt/aksel-icons";
+import { FilesIcon, PersonIcon } from "@navikt/aksel-icons";
 import { Link } from "react-router-dom";
 
 function Sidebar(): ReactElement {
@@ -11,6 +11,11 @@ function Sidebar(): ReactElement {
       padding="4"
       className="w-full max-w-sm h-[calc(100vh-48px)]"
     >
+      <SidebarMenuItem title="Oppgave" Icon={FilesIcon}>
+        <li>
+          <Link to="/oppgave/oppslag">Hent oppgaver</Link>
+        </li>
+      </SidebarMenuItem>
       <SidebarMenuItem title="Person" Icon={PersonIcon}>
         <li>
           <Link to="/person/oppslag">

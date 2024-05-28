@@ -1,4 +1,4 @@
-package no.nav.syfo.oppgave.api
+package no.nav.syfo.oppgave
 
 import io.ktor.client.request.*
 import io.ktor.http.*

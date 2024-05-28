@@ -12,7 +12,7 @@ import { raiseError } from "../../utils/ts.ts";
 function PersonOppslag(): ReactElement {
   const [fnrToSearch, setFnrToSearch] = useState<string | null>(null);
   const { data, error, isFetching } = useQuery({
-    queryKey: ["person"],
+    queryKey: ["person", fnrToSearch],
     queryFn: async () =>
       fetchApi("/api/person", {
         schema: PersonSchema,
