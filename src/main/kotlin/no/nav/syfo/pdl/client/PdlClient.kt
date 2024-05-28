@@ -82,7 +82,7 @@ class DevelopmentPdlClient : PdlClient {
                         PersonResponse(
                             listOf(
                                 Navn(
-                                    fornavn = "KARI",
+                                    fornavn = "KARL",
                                     mellomnavn = "MELLONAVN",
                                     etternavn = "NORDMANN",
                                 ),

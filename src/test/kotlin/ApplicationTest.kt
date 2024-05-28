@@ -14,16 +14,11 @@ import org.koin.core.context.stopKoin
 
 internal class ApplicationTest {
 
-    @AfterEach
-    fun cleanup() = stopKoin()
+    @AfterEach fun cleanup() = stopKoin()
 
     @Test
     internal fun `Returns ok on is_alive`() = testApplication {
-        setupTestApplication {
-            openRoutes {
-                naisIsAliveRoute(ApplicationState())
-            }
-        }
+        setupTestApplication { openRoutes { naisIsAliveRoute(ApplicationState()) } }
 
         val response = testClient().get("/is_alive")
         val result = response.body<String>()
@@ -34,11 +29,7 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns ok in is_ready`() = testApplication {
-        setupTestApplication {
-            openRoutes {
-                naisIsReadyRoute(ApplicationState())
-            }
-        }
+        setupTestApplication { openRoutes { naisIsReadyRoute(ApplicationState()) } }
 
         val response = testClient().get("/is_ready")
         val result = response.body<String>()
@@ -49,11 +40,7 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns internal server error when liveness check fails`() = testApplication {
-        setupTestApplication {
-            openRoutes {
-                naisIsAliveRoute(unreadyApplicationState())
-            }
-        }
+        setupTestApplication { openRoutes { naisIsAliveRoute(unreadyApplicationState()) } }
 
         val response = testClient().get("/is_alive")
         val result = response.body<String>()
@@ -64,11 +51,7 @@ internal class ApplicationTest {
 
     @Test
     internal fun `Returns internal server error when readyness check fails`() = testApplication {
-        setupTestApplication {
-            openRoutes {
-                naisIsReadyRoute(unreadyApplicationState())
-            }
-        }
+        setupTestApplication { openRoutes { naisIsReadyRoute(unreadyApplicationState()) } }
 
         val response = testClient().get("/is_ready")
         val result = response.body<String>()

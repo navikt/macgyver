@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "copy": "cp -R dist/* ../src/main/resources/web-app",
+    "copy": "cp -R dist/* ../src/main/resources/web-app && cp -R public ../src/main/resources/web-app",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

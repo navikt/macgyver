@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { Box } from "@navikt/ds-react";
 import SidebarMenuItem from "./SidebarMenuItem.tsx";
 import { PersonIcon } from "@navikt/aksel-icons";

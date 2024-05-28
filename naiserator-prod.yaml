@@ -47,12 +47,6 @@ spec:
           kind: Project
         role: roles/cloudsql.client
   accessPolicy:
-    # TODO: Remove
-    inbound:
-      rules:
-        - application: macgyver-frontend
-          namespace: teamsykmelding
-          cluster: prod-gcp
     outbound:
       rules:
         - application: narmesteleder
@@ -71,8 +65,8 @@ spec:
       tenant: nav.no
       groups:
         - id: "3a541678-8965-45c4-844b-486a8b9b94a3"
-      sidecar:
-        enabled: true
+    sidecar:
+      enabled: true
   secureLogs:
     enabled: true
   envFrom:
