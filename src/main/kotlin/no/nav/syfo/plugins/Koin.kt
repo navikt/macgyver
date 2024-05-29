@@ -11,7 +11,6 @@ import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
-import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
@@ -30,11 +29,16 @@ import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingDatabase
+import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingDatabaseProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
+import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClientProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer.*
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerProduction
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
 import no.nav.syfo.utils.EnvironmentVariables
-import no.nav.syfo.utils.JacksonKafkaSerializer
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -85,10 +89,10 @@ val httpClientModule = module {
         val env = get<EnvironmentVariables>()
 
         ProductionAccessTokenClientV2(
-            env.aadAccessTokenV2Url,
-            env.clientIdV2,
-            env.clientSecretV2,
-            get(),
+            aadAccessTokenUrl = env.aadAccessTokenV2Url,
+            clientId = env.clientIdV2,
+            clientSecret = env.clientSecretV2,
+            httpClient = get(),
         )
     }
 }
@@ -130,14 +134,16 @@ val sykmeldingModule = module {
     single<UpdateFnrDatabase> {
         UpdateFnrDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
     }
-    single { DeleteSykmeldingDatabase(get(qualifier = named("syfoSmregisterDatabase"))) }
+    single<DeleteSykmeldingDatabase> {
+        DeleteSykmeldingDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
+    }
     single {
         val env = get<EnvironmentVariables>()
 
         DeleteSykmeldingService(
             deleteSykmeldingDatabase = get(),
-            kafkaProducer = get<SykmeldingStatusKafkaProducer>(),
-            tombstoneProducer = get(qualifier = named("tombstoneProducer")),
+            sykmeldingStatusKafkaProducer = get<SykmeldingStatusKafkaProducer>(),
+            tombstoneProducer = get<TombstoneKafkaProducer>(),
             topics =
                 listOf(
                     env.manuellTopic,
@@ -161,8 +167,8 @@ val sykmeldingModule = module {
 val legeerklaeringModule = module {
     single {
         DeleteLegeerklaeringService(
-            get(qualifier = named("tombstoneProducer")),
-            listOf(get<EnvironmentVariables>().legeerklaringTopic),
+            tombstoneProducer = get(),
+            topics = listOf(get<EnvironmentVariables>().legeerklaringTopic),
         )
     }
 }
@@ -170,10 +176,10 @@ val legeerklaeringModule = module {
 val oppgaveModule = module {
     single<OppgaveClient> {
         ProductionOppgaveClient(
-            get<EnvironmentVariables>().oppgavebehandlingUrl,
-            get(),
-            get<EnvironmentVariables>().oppgaveScope,
-            get(),
+            url = get<EnvironmentVariables>().oppgavebehandlingUrl,
+            accessTokenClientV2 = get(),
+            scope = get<EnvironmentVariables>().oppgaveScope,
+            httpClient = get(),
         )
     }
 }
@@ -212,22 +218,22 @@ val safModule = module {
     }
     single {
         SafService(
-            get(),
-            get(),
-            get<EnvironmentVariables>().safScope,
+            safClient = get(),
+            accessTokenClientV2 = get(),
+            safScope = get<EnvironmentVariables>().safScope,
         )
     }
 }
 
 val dokarkivModule = module {
-    single {
+    single<DokArkivClient> {
         val env = get<EnvironmentVariables>()
 
-        DokArkivClient(
-            env.dokArkivUrl,
-            get(),
-            env.dokArkivScope,
-            get(),
+        DokArkivClientProduction(
+            url = env.dokArkivUrl,
+            accessTokenClientV2 = get(),
+            scope = env.dokArkivScope,
+            httpClient = get(),
         )
     }
 }
@@ -248,39 +254,8 @@ val kafkaModules = module {
                 },
         )
     }
-    single<KafkaProducer<String, Any?>>(named("tombstoneProducer")) {
-        KafkaProducer<String, Any?>(
-            KafkaUtils.getAivenKafkaConfig("delete-sykmelding-status-producer")
-                .toProducerConfig(
-                    "macgyver-tobstone-producer",
-                    JacksonNullableKafkaSerializer::class,
-                ),
-        )
-    }
+    single<TombstoneKafkaProducer> { TombstoneKafkaProducerProduction() }
 
-    // TODO fjerne denne etterhvert når vi har mocket opp nlresponse riktig
-    //    single<KafkaProducer<String, NlResponseKafkaMessage>>(named("nlResponseProducer")) {
-    //        KafkaProducer<String, NlResponseKafkaMessage>(
-    //            KafkaUtils.getAivenKafkaConfig("narmesteleder-response-producer")
-    //                .toProducerConfig(
-    //                    "macgyver-producer",
-    //                    JacksonNullableKafkaSerializer::class,
-    //                    StringSerializer::class,
-    //                ),
-    //        )
-    //    }
-    single<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>(
-        named("sykmeldingStatusProducer"),
-    ) {
-        KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>(
-            KafkaUtils.getAivenKafkaConfig("sykmelding-status-producer")
-                .toProducerConfig(
-                    get<EnvironmentVariables>().applicationName,
-                    JacksonKafkaSerializer::class,
-                    StringSerializer::class,
-                ),
-        )
-    }
     single<NarmesteLederRequestKafkaProducer> {
         NarmesteLederRequestKafkaProducerProduction(
             get<EnvironmentVariables>().narmestelederRequestTopic
@@ -294,9 +269,9 @@ val kafkaModules = module {
     single<SykmeldingV2KafkaProducer> {
         SykmeldingV2KafkaProducerProduction(get(qualifier = named("kafkaAivenProducer")))
     }
-    single {
-        SykmeldingStatusKafkaProducer(
-            get(qualifier = named("sykmeldingStatusProducer")),
+    single<SykmeldingStatusKafkaProducer> {
+        SykmeldingStatusKafkaProducerProduction(
+            get<EnvironmentVariables>().applicationName,
             get<EnvironmentVariables>().aivenSykmeldingStatusTopic,
         )
     }

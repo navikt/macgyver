@@ -8,8 +8,13 @@ import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
-import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
+import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
+import no.nav.syfo.sykmelding.delete_sykmelding.DokarkivClientDevelopment
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDevelopment
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.utils.EnvironmentVariables
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.junit.jupiter.api.Test
@@ -63,18 +68,10 @@ class CheckModulesTest : KoinTest {
                     single { mockk<UpdateFnrDatabase>() }
                     single { mockk<AuthConfiguration>() }
                     single<Database>(named("syfoSmregisterDatabase")) { mockk<Database>() }
-                    single<KafkaProducer<String, Any?>>(named("tombstoneProducer")) {
-                        mockk<KafkaProducer<String, Any?>>()
-                    }
                     single<KafkaProducer<String, SykmeldingV2KafkaMessage?>>(
                         named("kafkaAivenProducer"),
                     ) {
                         mockk<KafkaProducer<String, SykmeldingV2KafkaMessage?>>()
-                    }
-                    single<KafkaProducer<String, NlResponseKafkaMessage>>(
-                        named("nlResponseProducer"),
-                    ) {
-                        mockk<KafkaProducer<String, NlResponseKafkaMessage>>()
                     }
                     single<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>(
                         named("sykmeldingStatusProducer"),
@@ -87,6 +84,11 @@ class CheckModulesTest : KoinTest {
                     single<NarmesteLederResponseKafkaProducer>() {
                         mockk<NarmesteLederResponseKafkaProducerDevelopment>()
                     }
+                    single<SykmeldingStatusKafkaProducer>() {
+                        mockk<SykmeldingStatusKafkaProducerDevelopment>()
+                    }
+                    single<TombstoneKafkaProducer>() { mockk<TombstoneKafkaProducerDevelopment>() }
+                    single<DokArkivClient>() { mockk<DokarkivClientDevelopment>() }
                 },
             )
 
