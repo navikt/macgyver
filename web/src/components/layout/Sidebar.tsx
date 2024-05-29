@@ -33,19 +33,15 @@ function Sidebar({ className }: Props): ReactElement {
           <Link to="/oppgave/oppslag">Hent oppgaver</Link>
         </li>
       </SidebarMenuItem>
-      <SidebarMenuItem todo title="Narmesteleder" Icon={ReceptionIcon}>
-        <>
-          <li>
-            <Link to="/ny-naermeste-leder">
-              Sender ny NL-request til altinn
-            </Link>
-          </li>
-          <li>
-            <Link to="/hent-naermeste-ledere">
-              Hent narmesteldere for ein sykmeldt person
-            </Link>
-          </li>
-        </>
+      <SidebarMenuItem title="Narmesteleder" Icon={ReceptionIcon}>
+        <li>
+          <Link to="/narmesteleder/ny">Sender ny NL-request til altinn</Link>
+        </li>
+        <li>
+          <Link to="/narmesteleder/oppslag">
+            Hent nærmesteledere for en sykmeldt
+          </Link>
+        </li>
       </SidebarMenuItem>
       <SidebarMenuItem todo title="Legeerklæring" Icon={StethoscopeIcon}>
         <li>

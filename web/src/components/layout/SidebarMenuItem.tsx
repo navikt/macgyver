@@ -7,7 +7,6 @@ import { cn } from "../../utils/tw";
 type Props = {
   title: string;
   Icon: typeof PersonGroupIcon;
-  children: ReactElement;
   // temp
   todo?: true;
 };

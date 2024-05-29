@@ -1,6 +1,11 @@
 import { z, ZodTypeAny } from "zod";
 
-type KnownPaths = "/person" | "/oppgave/list" | (string & {});
+type KnownPaths =
+  | "/person"
+  | "/oppgave/list"
+  | "/narmesteleder"
+  | "/sykmelding/fnr"
+  | (string & {});
 
 export async function fetchApi<SchemaType extends ZodTypeAny>(
   path: KnownPaths,
