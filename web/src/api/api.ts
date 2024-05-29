@@ -1,7 +1,9 @@
 import { z, ZodTypeAny } from "zod";
 
+type KnownPaths = "/person" | "/oppgave/list" | (string & {});
+
 export async function fetchApi<SchemaType extends ZodTypeAny>(
-  path: string,
+  path: KnownPaths,
   {
     method,
     body,

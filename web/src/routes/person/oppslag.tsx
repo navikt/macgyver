@@ -14,7 +14,7 @@ function PersonOppslag(): ReactElement {
   const { data, error, isFetching } = useQuery({
     queryKey: ["person", fnrToSearch],
     queryFn: async () =>
-      fetchApi("/api/person", {
+      fetchApi("/person", {
         schema: PersonSchema,
         headers: { fnr: fnrToSearch ?? raiseError("Missing FNR") },
       }),
