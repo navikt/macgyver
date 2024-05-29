@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Button, TextField } from "@navikt/ds-react";
 
 import ConfirmModal from "../../../components/confirm-modal/ConfirmModal.tsx";
@@ -9,7 +9,7 @@ interface SlettLegeerklaeringFormProps {
 
 const SlettLegeerklaeringForm = ({
   onSubmit,
-}: SlettLegeerklaeringFormProps): JSX.Element => {
+}: SlettLegeerklaeringFormProps): ReactElement => {
   const [legeerklaeringId, setlegeerklaeringId] = useState<string>("");
   const [conformationModalOpen, setConformationModalOpen] = useState(false);
 

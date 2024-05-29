@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import image from "./not-found-image.webp";
+import image from "./images/not-found-image.webp";
 import { BodyShort, Heading } from "@navikt/ds-react";
 
 function NotFound(): ReactElement {
