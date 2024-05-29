@@ -2,12 +2,12 @@ import { ReactElement } from "react";
 
 import { Alert } from "@navikt/ds-react";
 
-import { Jouranlpost } from "../../../types/jouranlpost";
+import { Journalpost } from "../../../types/journalpost.ts";
 
 import JournalpostListItem from "./JournalpostListItem";
 
 interface JournalpostListerProps {
-  journalpostLister: Jouranlpost[];
+  journalpostLister: Journalpost[];
 }
 
 const JournalpostList = ({

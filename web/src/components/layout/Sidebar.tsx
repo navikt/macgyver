@@ -48,9 +48,9 @@ function Sidebar({ className }: Props): ReactElement {
           <Link to="/legeerklaering/slett">Slett en gitt legeerklæring</Link>
         </li>
       </SidebarMenuItem>
-      <SidebarMenuItem todo title="Journalpost" Icon={FilePdfIcon}>
+      <SidebarMenuItem title="Journalpost" Icon={FilePdfIcon}>
         <li>
-          <Link to="/hent-journalposter">Hent liste med journalposter</Link>
+          <Link to="/journalpost/oppslag">Hent liste med journalposter</Link>
         </li>
       </SidebarMenuItem>
       <SidebarMenuItem title="Person" Icon={PersonIcon}>

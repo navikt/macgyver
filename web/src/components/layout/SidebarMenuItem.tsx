@@ -2,27 +2,19 @@ import { PropsWithChildren, ReactElement } from "react";
 
 import { Heading } from "@navikt/ds-react";
 import { PersonGroupIcon } from "@navikt/aksel-icons";
-import { cn } from "../../utils/tw";
 
 type Props = {
   title: string;
   Icon: typeof PersonGroupIcon;
-  // temp
-  todo?: true;
 };
 
 function SidebarMenuItem({
   title,
   Icon,
   children,
-  todo,
 }: PropsWithChildren<Props>): ReactElement {
   return (
-    <div
-      className={cn("pb-10", {
-        "opacity-50 pointer-events-none": todo,
-      })}
-    >
+    <div className="pb-10">
       <Heading className="flex items-center pb-3" size="medium">
         <Icon className="mr-2" />
         {title}
