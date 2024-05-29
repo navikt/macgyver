@@ -12,8 +12,8 @@ type Props = {
 function SidebarMenuItem({ title, Icon, children }: PropsWithChildren<Props>): ReactElement {
     return (
         <div className="pb-10">
-            <Heading className="flex items-center pb-3" size="large">
-                <Icon className="relative br-10" />
+            <Heading className="flex items-center pb-3" size="medium">
+                <Icon className="mr-2" />
                 {title}
             </Heading>
             <ul className="list-disc pl-12">{children}</ul>

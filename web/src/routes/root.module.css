@@ -1,13 +1,13 @@
 .content {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 320px 1fr;
 
-  height: calc(100vh - 48px);
-  max-height: calc(100vh - 48px);
+  height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
 }
 
 .sidebar {
-  @apply p-4 overflow-auto bg-surface-action-subtle h-full;
+  @apply p-4 overflow-auto h-full border-r border-r-border-subtle;
 }
 
 .pageBlock {
