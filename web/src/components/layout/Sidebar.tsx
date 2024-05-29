@@ -1,12 +1,14 @@
 import { ReactElement } from "react";
 import SidebarMenuItem from "./SidebarMenuItem.tsx";
-import {     BandageIcon,
-    FilesIcon,
-    FilePdfIcon,
-    ReceptionIcon,
-    PersonGroupIcon,
-    StethoscopeIcon,
-    PersonIcon, } from "@navikt/aksel-icons";
+import {
+  BandageIcon,
+  FilesIcon,
+  FilePdfIcon,
+  ReceptionIcon,
+  PersonGroupIcon,
+  StethoscopeIcon,
+  PersonIcon,
+} from "@navikt/aksel-icons";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -16,9 +18,9 @@ type Props = {
 function Sidebar({ className }: Props): ReactElement {
   return (
     <div className={className}>
-      <SidebarMenuItem todo title="IdentEndring" Icon={PersonGroupIcon}>
+      <SidebarMenuItem title="IdentEndring" Icon={PersonGroupIcon}>
         <li>
-          <Link to="/ident-endring">Endre fnr for en gitt sykmelding</Link>
+          <Link to="/ident/endre">Endre fnr for en gitt sykmelding</Link>
         </li>
       </SidebarMenuItem>
       <SidebarMenuItem todo title="Sykmelding" Icon={BandageIcon}>
