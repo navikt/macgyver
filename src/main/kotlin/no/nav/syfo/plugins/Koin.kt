@@ -19,8 +19,6 @@ import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmestelederClient
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.narmesteleder.ProductionNarmestelederClient
-import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
-import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.OppgaveClient
 import no.nav.syfo.oppgave.ProductionOppgaveClient
 import no.nav.syfo.pdl.PdlPersonService
@@ -137,24 +135,25 @@ val sykmeldingModule = module {
         val env = get<EnvironmentVariables>()
 
         DeleteSykmeldingService(
-            get(),
-            get<SykmeldingStatusKafkaProducer>(),
-            get(qualifier = named("tombstoneProducer")),
-            listOf(
-                env.manuellTopic,
-                env.papirSmRegistreringTopic,
-            ),
-            get(),
+            deleteSykmeldingDatabase = get(),
+            kafkaProducer = get<SykmeldingStatusKafkaProducer>(),
+            tombstoneProducer = get(qualifier = named("tombstoneProducer")),
+            topics =
+                listOf(
+                    env.manuellTopic,
+                    env.papirSmRegistreringTopic,
+                ),
+            dokArkivClient = get(),
         )
     }
     single {
         UpdateFnrService(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get<EnvironmentVariables>().sendSykmeldingV2Topic,
+            pdlPersonService = get(),
+            updateFnrDatabase = get(),
+            sendtSykmeldingKafkaProducer = get(),
+            narmesteLederResponseKafkaProducer = get(),
+            narmestelederClient = get(),
+            sendtSykmeldingTopic = get<EnvironmentVariables>().sendSykmeldingV2Topic,
         )
     }
 }
@@ -183,10 +182,10 @@ val narmestelederModule = module {
     single<NarmestelederClient> {
         val env = get<EnvironmentVariables>()
         ProductionNarmestelederClient(
-            get(),
-            get(),
-            env.narmestelederUrl,
-            env.narmestelederScope,
+            httpClient = get(),
+            accessTokenClientV2 = get(),
+            baseUrl = env.narmestelederUrl,
+            resource = env.narmestelederScope,
         )
     }
     single {
@@ -260,16 +259,16 @@ val kafkaModules = module {
     }
 
     // TODO fjerne denne etterhvert når vi har mocket opp nlresponse riktig
-    single<KafkaProducer<String, NlResponseKafkaMessage>>(named("nlResponseProducer")) {
-        KafkaProducer<String, NlResponseKafkaMessage>(
-            KafkaUtils.getAivenKafkaConfig("narmesteleder-response-producer")
-                .toProducerConfig(
-                    "macgyver-producer",
-                    JacksonNullableKafkaSerializer::class,
-                    StringSerializer::class,
-                ),
-        )
-    }
+    //    single<KafkaProducer<String, NlResponseKafkaMessage>>(named("nlResponseProducer")) {
+    //        KafkaProducer<String, NlResponseKafkaMessage>(
+    //            KafkaUtils.getAivenKafkaConfig("narmesteleder-response-producer")
+    //                .toProducerConfig(
+    //                    "macgyver-producer",
+    //                    JacksonNullableKafkaSerializer::class,
+    //                    StringSerializer::class,
+    //                ),
+    //        )
+    //    }
     single<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>(
         named("sykmeldingStatusProducer"),
     ) {
@@ -283,7 +282,9 @@ val kafkaModules = module {
         )
     }
     single<NarmesteLederRequestKafkaProducer> {
-        NarmesteLederRequestKafkaProducerProduction(get<EnvironmentVariables>().narmestelederRequestTopic)
+        NarmesteLederRequestKafkaProducerProduction(
+            get<EnvironmentVariables>().narmestelederRequestTopic
+        )
     }
     single<NarmesteLederResponseKafkaProducer> {
         NarmesteLederResponseKafkaProducerProduction(

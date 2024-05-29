@@ -16,7 +16,6 @@ import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerDevelopment
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {

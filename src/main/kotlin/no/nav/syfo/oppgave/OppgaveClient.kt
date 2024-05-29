@@ -88,6 +88,27 @@ class DevelopmentOppgaveClient : OppgaveClient {
                 status = "OPPRETTET",
                 mappeId = null,
             ),
+            Oppgave(
+                id = 123,
+                versjon = 1,
+                tildeltEnhetsnr = "0231",
+                opprettetAvEnhetsnr = "3333",
+                aktoerId = "2843217343728",
+                journalpostId = "620048839",
+                behandlesAvApplikasjon = "FS22",
+                saksreferanse = null,
+                tilordnetRessurs = null,
+                beskrivelse =
+                    "Manuell behandling av sykmelding grunnet følgende regler: Pasienten finnes ikke i Infotrygd",
+                tema = "SYM",
+                oppgavetype = "BEH_EL_SYM",
+                behandlingstype = null,
+                aktivDato = LocalDate.parse("2023-09-12"),
+                fristFerdigstillelse = LocalDate.parse("2023-09-18"),
+                prioritet = "NORM",
+                status = "OPPRETTET",
+                mappeId = null,
+            ),
         )
 
     override suspend fun hentOppgave(oppgaveId: Int, msgId: String): Oppgave {

@@ -4,7 +4,10 @@ import io.mockk.mockk
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
-import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.utils.EnvironmentVariables
@@ -78,10 +81,11 @@ class CheckModulesTest : KoinTest {
                     ) {
                         mockk<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>()
                     }
-                    single<KafkaProducer<String, NlRequestKafkaMessage>>(
-                        named("nlRequestProducer"),
-                    ) {
-                        mockk<KafkaProducer<String, NlRequestKafkaMessage>>()
+                    single<NarmesteLederRequestKafkaProducer>() {
+                        mockk<NarmesteLederRequestKafkaProducerDevelopment>() {}
+                    }
+                    single<NarmesteLederResponseKafkaProducer>() {
+                        mockk<NarmesteLederResponseKafkaProducerDevelopment>()
                     }
                 },
             )
