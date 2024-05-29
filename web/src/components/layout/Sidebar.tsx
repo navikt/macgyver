@@ -23,9 +23,9 @@ function Sidebar({ className }: Props): ReactElement {
           <Link to="/ident/endre">Endre fnr for en gitt sykmelding</Link>
         </li>
       </SidebarMenuItem>
-      <SidebarMenuItem todo title="Sykmelding" Icon={BandageIcon}>
+      <SidebarMenuItem title="Sykmelding" Icon={BandageIcon}>
         <li>
-          <Link to="/slett-sykmelding">Slett en gitt sykmelding</Link>
+          <Link to="/sykmelding/slett">Slett en gitt sykmelding</Link>
         </li>
       </SidebarMenuItem>
       <SidebarMenuItem title="Oppgave" Icon={FilesIcon}>

@@ -10,7 +10,7 @@ export async function fetchApi<SchemaType extends ZodTypeAny>(
     schema,
     headers,
   }: {
-    method?: "GET" | "POST";
+    method?: "GET" | "POST" | "DELETE";
     headers?: Record<string, string>;
     body?: unknown;
     schema: SchemaType;

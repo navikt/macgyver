@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactElement } from "react";
 import { BodyLong, Button, Modal } from "@navikt/ds-react";
 
 interface ConfirmationModalProps {
@@ -13,7 +13,7 @@ const ConfirmModal = ({
   message,
   onCancel,
   onOK,
-}: ConfirmationModalProps): JSX.Element => {
+}: ConfirmationModalProps): ReactElement => {
   return (
     <Modal open={open} aria-label="Modal demo" onClose={onCancel}>
       <Modal.Body>

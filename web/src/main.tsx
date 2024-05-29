@@ -11,6 +11,7 @@ import Landing from "./routes/person/landing.tsx";
 import PersonOppslag from "./routes/person/oppslag.tsx";
 import OppgaveOppslag from "./routes/oppgaver/oppslag.tsx";
 import EndreIdent from "./routes/ident/endre.tsx";
+import SlettSykmelding from "./routes/sykmelding/slett.tsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "/person/oppslag", element: <PersonOppslag /> },
       { path: "/oppgave/oppslag", element: <OppgaveOppslag /> },
       { path: "/ident/endre", element: <EndreIdent /> },
+      { path: "/sykmelding/slett", element: <SlettSykmelding /> },
     ],
   },
 ]);
