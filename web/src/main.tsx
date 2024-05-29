@@ -14,6 +14,7 @@ import EndreIdent from "./routes/ident/endre.tsx";
 import SlettSykmelding from "./routes/sykmelding/slett.tsx";
 import NyNarmesteleder from "./routes/narmesteleder/ny.tsx";
 import OppslagNarmesteleder from "./routes/narmesteleder/oppslag.tsx";
+import SlettLegeerklaering from "./routes/legeerklaering/slett.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: "/sykmelding/slett", element: <SlettSykmelding /> },
       { path: "/narmesteleder/ny", element: <NyNarmesteleder /> },
       { path: "/narmesteleder/oppslag", element: <OppslagNarmesteleder /> },
+      { path: "/legeerklaering/slett", element: <SlettLegeerklaering /> },
     ],
   },
 ]);
