@@ -12,13 +12,17 @@ import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmestelederClient
 import no.nav.syfo.narmesteleder.NarmestelederService
+import no.nav.syfo.narmesteleder.ProductionNarmestelederClient
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.oppgave.OppgaveClient
-import no.nav.syfo.oppgave.OppgaveClientProduction
+import no.nav.syfo.oppgave.ProductionOppgaveClient
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.client.ProductionPdlClient
@@ -166,7 +170,7 @@ val legeerklaeringModule = module {
 
 val oppgaveModule = module {
     single<OppgaveClient> {
-        OppgaveClientProduction(
+        ProductionOppgaveClient(
             get<EnvironmentVariables>().oppgavebehandlingUrl,
             get(),
             get<EnvironmentVariables>().oppgaveScope,
@@ -176,9 +180,9 @@ val oppgaveModule = module {
 }
 
 val narmestelederModule = module {
-    single {
+    single<NarmestelederClient> {
         val env = get<EnvironmentVariables>()
-        NarmestelederClient(
+        ProductionNarmestelederClient(
             get(),
             get(),
             env.narmestelederUrl,
@@ -188,9 +192,8 @@ val narmestelederModule = module {
     single {
         NarmestelederService(
             pdlService = get(),
-            get(qualifier = named("nlRequestProducer")),
-            get<EnvironmentVariables>().narmestelederRequestTopic,
-            get(),
+            narmestelederRequestProducer = get(),
+            narmestelederClient = get(),
         )
     }
 }
@@ -255,6 +258,8 @@ val kafkaModules = module {
                 ),
         )
     }
+
+    // TODO fjerne denne etterhvert når vi har mocket opp nlresponse riktig
     single<KafkaProducer<String, NlResponseKafkaMessage>>(named("nlResponseProducer")) {
         KafkaProducer<String, NlResponseKafkaMessage>(
             KafkaUtils.getAivenKafkaConfig("narmesteleder-response-producer")
@@ -277,24 +282,16 @@ val kafkaModules = module {
                 ),
         )
     }
-    single<KafkaProducer<String, NlRequestKafkaMessage>>(named("nlRequestProducer")) {
-        KafkaProducer<String, NlRequestKafkaMessage>(
-            KafkaUtils.getAivenKafkaConfig("narmesteleder-request-producer")
-                .toProducerConfig(
-                    "macgyver-producer",
-                    JacksonKafkaSerializer::class,
-                    StringSerializer::class,
-                ),
+    single<NarmesteLederRequestKafkaProducer> {
+        NarmesteLederRequestKafkaProducerProduction(get<EnvironmentVariables>().narmestelederRequestTopic)
+    }
+    single<NarmesteLederResponseKafkaProducer> {
+        NarmesteLederResponseKafkaProducerProduction(
+            get<EnvironmentVariables>().nlResponseTopic,
         )
     }
     single<SykmeldingV2KafkaProducer> {
         SykmeldingV2KafkaProducerProduction(get(qualifier = named("kafkaAivenProducer")))
-    }
-    single {
-        NarmesteLederResponseKafkaProducer(
-            get<EnvironmentVariables>().nlResponseTopic,
-            get(qualifier = named("nlResponseProducer")),
-        )
     }
     single {
         SykmeldingStatusKafkaProducer(

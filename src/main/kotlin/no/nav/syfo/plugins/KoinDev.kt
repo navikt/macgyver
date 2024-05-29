@@ -3,14 +3,20 @@ package no.nav.syfo.plugins
 import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseDevelopment
+import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
+import no.nav.syfo.narmesteleder.NarmestelederClient
+import no.nav.syfo.narmesteleder.NarmestelederService
+import no.nav.syfo.oppgave.DevelopmentOppgaveClient
 import no.nav.syfo.oppgave.OppgaveClient
-import no.nav.syfo.oppgave.OppgaveClientDevelopment
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.DevelopmentPdlClient
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerDevelopment
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {
@@ -19,17 +25,26 @@ fun KoinApplication.initDevelopmentModules() {
         developmentPdl,
         developmentOppgaveModule,
         developmentKafkaModules,
+        developmentNarmestelederModule,
     )
 }
 
 val developmentKafkaModules = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<SykmeldingV2KafkaProducer> { SykmeldingV2KafkaProducerDevelopment() }
+    single<NarmesteLederRequestKafkaProducer> { NarmesteLederRequestKafkaProducerDevelopment() }
 }
 
-val developmentOppgaveModule = module {
-    single<OppgaveClient> {
-        OppgaveClientDevelopment()
+val developmentOppgaveModule = module { single<OppgaveClient> { DevelopmentOppgaveClient() } }
+
+val developmentNarmestelederModule = module {
+    single<NarmestelederClient> { DevelopmentNarmestelederClient() }
+    single {
+        NarmestelederService(
+            pdlService = get(),
+            narmestelederRequestProducer = get(),
+            narmestelederClient = get(),
+        )
     }
 }
 

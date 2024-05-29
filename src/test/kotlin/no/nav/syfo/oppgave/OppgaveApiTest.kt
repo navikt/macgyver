@@ -6,9 +6,6 @@ import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import java.time.LocalDate
-import no.nav.syfo.oppgave.Oppgave
-import no.nav.syfo.oppgave.OppgaveClient
-import no.nav.syfo.oppgave.registerHentOppgaverApi
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.objectMapper
 import no.nav.syfo.utils.setupTestApplication

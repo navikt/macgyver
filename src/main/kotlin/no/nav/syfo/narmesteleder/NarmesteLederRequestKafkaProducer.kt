@@ -3,6 +3,7 @@ package no.nav.syfo.narmesteleder
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.logging.logger
+import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -10,30 +11,30 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import kotlin.math.log
 
-interface NarmesteLederResponseKafkaProducer {
-    fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String)
+interface NarmesteLederRequestKafkaProducer {
+    fun publishToKafka(nlRequestKafkaMessage: NlRequestKafkaMessage, orgnummer: String)
 }
 
-class NarmesteLederResponseKafkaProducerProduction(
+class NarmesteLederRequestKafkaProducerProduction(
     private val topic: String,
-) : NarmesteLederResponseKafkaProducer {
+) : NarmesteLederRequestKafkaProducer {
 
-    private val kafkaProducerNlResponse: KafkaProducer<String, NlResponseKafkaMessage> =
-        KafkaProducer<String, NlResponseKafkaMessage>(
+    private val kafkaProducerNlRequest: KafkaProducer<String, NlRequestKafkaMessage> =
+        KafkaProducer<String, NlRequestKafkaMessage>(
                 KafkaUtils.getAivenKafkaConfig("narmesteleder-request-producer").toProducerConfig(
                         "macgyver-producer",
                         JacksonNullableKafkaSerializer::class,
                         StringSerializer::class,
                 ),
         )
-    override fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String) {
+    override fun publishToKafka(nlRequestKafkaMessage: NlRequestKafkaMessage, orgnummer: String) {
         try {
-            kafkaProducerNlResponse
+            kafkaProducerNlRequest
                 .send(
                     ProducerRecord(
                         topic,
                         orgnummer,
-                        nlResponseKafkaMessage,
+                        nlRequestKafkaMessage,
                     ),
                 )
                 .get()
@@ -44,9 +45,9 @@ class NarmesteLederResponseKafkaProducerProduction(
     }
 }
 
-class NarmesteLederResponseKafkaProducerDevelopment(
-) : NarmesteLederResponseKafkaProducer {
-    override fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String) {
-        logger.info("Publishing narmesteleder for orgnummer $orgnummer to kafka topic $nlResponseKafkaMessage")
+class NarmesteLederRequestKafkaProducerDevelopment(
+) : NarmesteLederRequestKafkaProducer {
+    override fun publishToKafka(nlRequestKafkaMessage: NlRequestKafkaMessage, orgnummer: String) {
+        logger.info("Sending narmestelederrequest to orgnummer $orgnummer")
     }
 }
