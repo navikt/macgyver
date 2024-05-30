@@ -63,8 +63,9 @@ spec:
       enabled: true
       allowAllUsers: true
       tenant: nav.no
-      groups:
-        - id: "3a541678-8965-45c4-844b-486a8b9b94a3"
+      claims:
+        groups:
+          - id: "3a541678-8965-45c4-844b-486a8b9b94a3"
     sidecar:
       enabled: true
       autoLogin: true
