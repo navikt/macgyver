@@ -8,13 +8,11 @@ import no.nav.syfo.logging.logger
 import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
 import no.nav.syfo.plugins.UserPrincipal
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerRecord
 
 class DeleteSykmeldingService(
     val deleteSykmeldingDatabase: DeleteSykmeldingDatabase,
-    val kafkaProducer: SykmeldingStatusKafkaProducer,
-    val tombstoneProducer: KafkaProducer<String, Any?>,
+    val sykmeldingStatusKafkaProducer: SykmeldingStatusKafkaProducer,
+    val tombstoneProducer: TombstoneKafkaProducer,
     val topics: List<String>,
     val dokArkivClient: DokArkivClient
 ) {
@@ -30,7 +28,7 @@ class DeleteSykmeldingService(
                         permit = AuditLogger.Permit.PERMIT,
                     ),
             )
-            kafkaProducer.send(
+            sykmeldingStatusKafkaProducer.send(
                 SykmeldingStatusKafkaEventDTO(
                     sykmeldingID,
                     OffsetDateTime.now(ZoneOffset.UTC),
@@ -41,23 +39,14 @@ class DeleteSykmeldingService(
                 "macgyver",
                 sykmelding.sykmeldingsopplysninger.pasientFnr,
             )
-            try {
-                topics.forEach { topic ->
-                    tombstoneProducer.send(ProducerRecord(topic, sykmeldingID, null)).get()
-                }
-            } catch (e: Exception) {
-                logger.error(
-                    "Kunne ikke skrive tombstone til topic for sykmeldingid $sykmeldingID: {}",
-                    e.message,
-                )
-                throw e
-            }
+
+            tombstoneProducer.send(topics, sykmeldingID)
         } else {
             logger.warn("Could not find sykmelding with id $sykmeldingID")
             throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
 
-        dokArkivClient.feilregistreresJournalpost(
+        dokArkivClient.registrerFeilMedJournalpost(
             journalpostId = journalpostId,
             sykmeldingId = sykmeldingID,
         )

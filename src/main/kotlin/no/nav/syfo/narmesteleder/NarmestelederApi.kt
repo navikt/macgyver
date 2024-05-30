@@ -18,12 +18,10 @@ data class NarmestelederAltinnRequestPayload(
     val sykmeldingId: String,
 )
 
-data class NarmestelederForSykmeldtPayload(val sykmeldtFnr: String)
-
 fun Route.registrerNarmestelederApi() {
     val narmestelederService by inject<NarmestelederService>()
 
-    post("/api/narmesteleder/request") {
+    post("/narmesteleder/request") {
         val principal = call.safePrincipal()
         val nlRequest = call.receive<NarmestelederAltinnRequestPayload>()
 
@@ -44,22 +42,27 @@ fun Route.registrerNarmestelederApi() {
         call.respond(HttpStatusCode.OK, HttpMessage("Vellykket oppdatering."))
     }
 
-    get("/api/narmesteleder") {
+    get("/narmesteleder") {
         val principal = call.safePrincipal()
-        val narmestelderRequest = call.receive<NarmestelederForSykmeldtPayload>()
+        val fnr = call.request.headers["fnr"]
+
+        if (fnr == null) {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Mangler fnr i header"))
+            return@get
+        }
 
         auditlogg.info(
             AuditLogger(principal.email)
                 .createcCefMessage(
-                    fnr = narmestelderRequest.sykmeldtFnr,
+                    fnr = fnr,
                     operation = AuditLogger.Operation.READ,
                     requestPath = "/api/narmesteleder",
                     permit = AuditLogger.Permit.PERMIT,
                 ),
         )
 
-        val narmesteldereForSykmeldt =
-            narmestelederService.getNarmesteldereForSykmeldt(narmestelderRequest.sykmeldtFnr)
+        val narmesteldereForSykmeldt = narmestelederService.getNarmesteldereForSykmeldt(fnr)
+
         call.respond(HttpStatusCode.OK, narmesteldereForSykmeldt)
     }
 }

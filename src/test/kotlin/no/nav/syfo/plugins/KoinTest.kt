@@ -4,9 +4,17 @@ import io.mockk.mockk
 import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
-import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
-import no.nav.syfo.narmesteleder.kafkamodel.NlResponseKafkaMessage
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
+import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
+import no.nav.syfo.sykmelding.delete_sykmelding.DokarkivClientDevelopment
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDevelopment
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
+import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.utils.EnvironmentVariables
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.junit.jupiter.api.Test
@@ -50,7 +58,7 @@ class CheckModulesTest : KoinTest {
     @Test
     fun verifyKoinApp() {
         koinApplication {
-            getModules()
+            initProductionModules()
 
             modules(
                 module {
@@ -60,29 +68,27 @@ class CheckModulesTest : KoinTest {
                     single { mockk<UpdateFnrDatabase>() }
                     single { mockk<AuthConfiguration>() }
                     single<Database>(named("syfoSmregisterDatabase")) { mockk<Database>() }
-                    single<KafkaProducer<String, Any?>>(named("tombstoneProducer")) {
-                        mockk<KafkaProducer<String, Any?>>()
-                    }
                     single<KafkaProducer<String, SykmeldingV2KafkaMessage?>>(
                         named("kafkaAivenProducer"),
                     ) {
                         mockk<KafkaProducer<String, SykmeldingV2KafkaMessage?>>()
-                    }
-                    single<KafkaProducer<String, NlResponseKafkaMessage>>(
-                        named("nlResponseProducer"),
-                    ) {
-                        mockk<KafkaProducer<String, NlResponseKafkaMessage>>()
                     }
                     single<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>(
                         named("sykmeldingStatusProducer"),
                     ) {
                         mockk<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>()
                     }
-                    single<KafkaProducer<String, NlRequestKafkaMessage>>(
-                        named("nlRequestProducer"),
-                    ) {
-                        mockk<KafkaProducer<String, NlRequestKafkaMessage>>()
+                    single<NarmesteLederRequestKafkaProducer>() {
+                        mockk<NarmesteLederRequestKafkaProducerDevelopment>() {}
                     }
+                    single<NarmesteLederResponseKafkaProducer>() {
+                        mockk<NarmesteLederResponseKafkaProducerDevelopment>()
+                    }
+                    single<SykmeldingStatusKafkaProducer>() {
+                        mockk<SykmeldingStatusKafkaProducerDevelopment>()
+                    }
+                    single<TombstoneKafkaProducer>() { mockk<TombstoneKafkaProducerDevelopment>() }
+                    single<DokArkivClient>() { mockk<DokarkivClientDevelopment>() }
                 },
             )
 

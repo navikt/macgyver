@@ -13,7 +13,7 @@ import org.koin.ktor.ext.inject
 fun Route.registerDeleteSykmeldingApi() {
     val deleteSykmeldingService by inject<DeleteSykmeldingService>()
 
-    delete("/api/sykmelding/{sykmeldingId}/{journalpostId}") {
+    delete("/sykmelding/{sykmeldingId}/{journalpostId}") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
         val journalpostId = call.parameters["journalpostId"]!!
         logger.info("Deleting sykmelding $sykmeldingId")

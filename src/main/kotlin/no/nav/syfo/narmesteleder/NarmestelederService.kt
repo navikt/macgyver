@@ -10,13 +10,10 @@ import no.nav.syfo.narmesteleder.kafkamodel.NlKafkaMetadata
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequest
 import no.nav.syfo.narmesteleder.kafkamodel.NlRequestKafkaMessage
 import no.nav.syfo.pdl.PdlPersonService
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerRecord
 
 class NarmestelederService(
     private val pdlService: PdlPersonService,
-    private val narmestelederRequestProducer: KafkaProducer<String, NlRequestKafkaMessage>,
-    private val topic: String,
+    private val narmestelederRequestProducer: NarmesteLederRequestKafkaProducer,
     private val narmestelederClient: NarmestelederClient
 ) {
     suspend fun sendNewNlRequest(
@@ -43,10 +40,7 @@ class NarmestelederService(
                             source = "macgyver",
                         ),
                 )
-
-            narmestelederRequestProducer
-                .send(ProducerRecord(topic, nlRequest.nlRequest.orgnr, nlRequest))
-                .get()
+            narmestelederRequestProducer.publishToKafka(nlRequest, nlRequest.nlRequest.orgnr)
             logger.info("Sendt nl-request to ${nlRequest.nlRequest.orgnr}")
         }
 

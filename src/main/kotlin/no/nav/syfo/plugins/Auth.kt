@@ -2,6 +2,7 @@ package no.nav.syfo.plugins
 
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwk.JwkProviderBuilder
+import com.auth0.jwt.interfaces.Payload
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -13,19 +14,27 @@ import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.ktor.ext.inject
 
 fun Application.configureAuth() {
+    if (environment.developmentMode) {
+        configureDevelopmentAuth()
+    } else {
+        configureProductionAuth()
+    }
+}
+
+fun Application.configureProductionAuth() {
     val config by inject<AuthConfiguration>()
+    val env by inject<EnvironmentVariables>()
 
     install(Authentication) {
         jwt(name = "jwt") {
             verifier(config.jwkProvider, config.issuer)
             validate { credentials ->
                 when {
-                    credentials.payload.audience.contains(config.clientId) -> {
+                    isValidToken(credentials.payload, env) -> {
                         val email = credentials.payload.getClaim("preferred_username").asString()
                         requireNotNull(email) {
                             "Logged in user without preferred_username should not be possible. Are you wonderwalling?"
                         }
-
                         UserPrincipal(
                             email = email,
                         )
@@ -39,12 +48,33 @@ fun Application.configureAuth() {
     }
 }
 
+fun isValidToken(payload: Payload, env: EnvironmentVariables): Boolean {
+    if (payload.issuer != env.jwtIssuer) {
+        logger.warn("Something is wrong here with issuer")
+        return false
+    }
+    if (!payload.audience.contains(env.clientIdV2)) {
+        logger.warn("Something is wrong here with audience")
+        return false
+    }
+    return true
+}
+
+fun Application.configureDevelopmentAuth() {
+    install(Authentication) {
+        provider("local") {
+            authenticate { context ->
+                context.principal(UserPrincipal(email = "test.testerssen@nav.no"))
+            }
+        }
+    }
+}
+
 data class UserPrincipal(val email: String) : Principal
 
 class AuthConfiguration(
     val jwkProvider: JwkProvider,
     val issuer: String,
-    val clientId: String,
 )
 
 fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
@@ -53,11 +83,7 @@ fun getProductionAuthConfig(env: EnvironmentVariables): AuthConfiguration {
             .cached(10, Duration.ofHours(24))
             .build()
 
-    return AuthConfiguration(
-        jwkProvider = jwkProvider,
-        issuer = env.jwtIssuer,
-        clientId = env.clientIdV2,
-    )
+    return AuthConfiguration(jwkProvider = jwkProvider, issuer = env.jwtIssuer)
 }
 
 internal fun unauthorized(credentials: JWTCredential): UserPrincipal? {

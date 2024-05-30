@@ -16,8 +16,8 @@ import org.koin.ktor.ext.inject
 fun Route.registerJournalpostApi() {
     val safService by inject<SafService>()
 
-    get("/api/journalposter/{fnr}") {
-        val fnr = call.parameters["fnr"]
+    get("/journalposter") {
+        val fnr = call.request.headers["fnr"]
         sikkerlogg.info("prøver å hente journalposter på fnr $fnr")
 
         if (fnr.isNullOrEmpty()) {

@@ -1,4 +1,4 @@
-package no.nav.syfo.oppgave.api
+package no.nav.syfo.oppgave
 
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -6,9 +6,6 @@ import io.ktor.server.testing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import java.time.LocalDate
-import no.nav.syfo.oppgave.Oppgave
-import no.nav.syfo.oppgave.OppgaveClient
-import no.nav.syfo.oppgave.registerHentOppgaverApi
 import no.nav.syfo.utils.generateJWT
 import no.nav.syfo.utils.objectMapper
 import no.nav.syfo.utils.setupTestApplication
@@ -55,7 +52,7 @@ internal class OppgaveApiTest {
         val oppgaverid = listOf(121321312)
 
         val response =
-            testClient().post("/api/oppgave/list") {
+            testClient().post("/oppgave/list") {
                 headers {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")

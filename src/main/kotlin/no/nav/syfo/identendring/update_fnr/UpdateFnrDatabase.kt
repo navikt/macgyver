@@ -10,14 +10,35 @@ import no.nav.syfo.logging.logger
 import no.nav.syfo.model.UtenlandskSykmelding
 import no.nav.syfo.utils.objectMapper
 
-class UpdateFnrDatabase(val database: Database) {
-
+interface UpdateFnrDatabase {
     fun getSykmeldingerMedFnrUtenBehandlingsutfall(
+        fnr: String
+    ): List<SykmeldingDbModelUtenBehandlingsutfall>
+
+    fun updateFnr(fnr: String, nyttFnr: String): Int
+}
+
+class UpdateFnrDatabaseDevelopment() : UpdateFnrDatabase {
+    override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
+        fnr: String
+    ): List<SykmeldingDbModelUtenBehandlingsutfall> {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateFnr(fnr: String, nyttFnr: String): Int {
+        logger.info("updating fnr {}, {}", fnr, nyttFnr)
+        return 1
+    }
+}
+
+class UpdateFnrDatabaseProduction(val database: Database) : UpdateFnrDatabase {
+
+    override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
         fnr: String
     ): List<SykmeldingDbModelUtenBehandlingsutfall> =
         getSykmeldingMedSisteStatusForFnrUtenBehandlingsutfall(fnr)
 
-    fun updateFnr(fnr: String, nyttFnr: String): Int {
+    override fun updateFnr(fnr: String, nyttFnr: String): Int {
         database.connection.use { connection ->
             var updated: Int
             connection

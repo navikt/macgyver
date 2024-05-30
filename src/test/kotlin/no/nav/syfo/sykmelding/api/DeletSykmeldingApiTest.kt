@@ -42,7 +42,7 @@ internal class DeletSykmeldingApiTest {
         } returns Unit
 
         val response =
-            testClient().delete("/api/sykmelding/$sykmeldingId/$journalpostId") {
+            testClient().delete("/sykmelding/$sykmeldingId/$journalpostId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
@@ -72,7 +72,7 @@ internal class DeletSykmeldingApiTest {
         } returns Unit
 
         val response =
-            testClient().delete("/api/sykmelding/$sykmeldingId") {
+            testClient().delete("/sykmelding/$sykmeldingId") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }

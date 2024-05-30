@@ -11,14 +11,20 @@ import java.time.LocalDate
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.logging.logger
 
-class NarmestelederClient(
+interface NarmestelederClient {
+    suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder>
+
+    suspend fun getNarmestelederKoblingerForLeder(lederFnr: String): List<NarmesteLeder>
+}
+
+class ProductionNarmestelederClient(
     private val httpClient: HttpClient,
     private val accessTokenClientV2: AccessTokenClientV2,
     private val baseUrl: String,
     private val resource: String,
-) {
+) : NarmestelederClient {
 
-    suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder> {
+    override suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder> {
         try {
             val token = accessTokenClientV2.getAccessTokenV2(resource)
             return httpClient
@@ -36,7 +42,7 @@ class NarmestelederClient(
         }
     }
 
-    suspend fun getNarmestelederKoblingerForLeder(lederFnr: String): List<NarmesteLeder> {
+    override suspend fun getNarmestelederKoblingerForLeder(lederFnr: String): List<NarmesteLeder> {
         try {
             val token = accessTokenClientV2.getAccessTokenV2(resource)
             return httpClient
@@ -52,6 +58,38 @@ class NarmestelederClient(
             logger.error("Noe gikk galt ved henting av nærmesteleder-koblinger for leder")
             throw e
         }
+    }
+}
+
+class DevelopmentNarmestelederClient : NarmestelederClient {
+    override suspend fun getNarmesteledere(fnr: String): List<NarmesteLeder> {
+        return listOf(
+            NarmesteLeder(
+                fnr = fnr,
+                narmesteLederFnr = "22222222222",
+                orgnummer = "orgnummer",
+                narmesteLederTelefonnummer = "tlf",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                aktivTom = LocalDate.now(),
+                arbeidsgiverForskutterer = null,
+            ),
+        )
+    }
+
+    override suspend fun getNarmestelederKoblingerForLeder(lederFnr: String): List<NarmesteLeder> {
+        return listOf(
+            NarmesteLeder(
+                fnr = "11111111111",
+                narmesteLederFnr = "22222222222",
+                orgnummer = "orgnummer",
+                narmesteLederTelefonnummer = "tlf",
+                narmesteLederEpost = "epost@nav.no",
+                aktivFom = LocalDate.now(),
+                aktivTom = LocalDate.now(),
+                arbeidsgiverForskutterer = null,
+            ),
+        )
     }
 }
 

@@ -11,7 +11,7 @@ fun Application.configureNaisResources() {
     val state by inject<ApplicationState>()
 
     routing {
-        route("/internal") {
+        route("/api/internal") {
             naisIsAliveRoute(state)
             naisIsReadyRoute(state)
             naisPrometheusRoute()

@@ -17,7 +17,7 @@ import org.koin.ktor.ext.inject
 fun Route.registerFnrApi() {
     val updateFnrService by inject<UpdateFnrService>()
 
-    post("/api/sykmelding/fnr") {
+    post("/sykmelding/fnr") {
         val endreFnr = call.receive<EndreFnrPayload>()
         when {
             endreFnr.fnr.length != 11 || endreFnr.fnr.any { !it.isDigit() } -> {

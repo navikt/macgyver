@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.ResultSet
 import java.time.LocalDateTime
 import no.nav.syfo.db.Database
+import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.Sykmelding
 import no.nav.syfo.model.UtenlandskSykmelding
@@ -38,8 +39,12 @@ data class SykmeldingDbModel(
     val sykmeldingsdokument: Sykmeldingsdokument?,
 )
 
-class DeleteSykmeldingDatabase(val database: Database) {
-    fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? =
+interface DeleteSykmeldingDatabase {
+    fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel?
+}
+
+class DeleteSykmeldingDatabaseProduction(val database: Database) : DeleteSykmeldingDatabase {
+    override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? =
         database.connection.use { connection ->
             connection
                 .prepareStatement(
@@ -54,6 +59,13 @@ class DeleteSykmeldingDatabase(val database: Database) {
                     it.executeQuery().toSykmelding()
                 }
         }
+}
+
+class DeleteSykmeldingDatabaseDevelopment() : DeleteSykmeldingDatabase {
+    override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? {
+        logger.info("Henter sykmelding med id $sykmeldingId")
+        return null
+    }
 }
 
 private fun ResultSet.toSykmelding(): SykmeldingDbModel? {

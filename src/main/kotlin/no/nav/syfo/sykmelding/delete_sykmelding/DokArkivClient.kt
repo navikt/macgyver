@@ -11,14 +11,21 @@ import java.io.IOException
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.logging.logger
 
-class DokArkivClient(
+interface DokArkivClient {
+    suspend fun registrerFeilMedJournalpost(
+        journalpostId: String,
+        sykmeldingId: String,
+    )
+}
+
+class DokArkivClientProduction(
     private val url: String,
     private val accessTokenClientV2: AccessTokenClientV2,
     private val scope: String,
     private val httpClient: HttpClient,
-) {
+) : DokArkivClient {
 
-    suspend fun feilregistreresJournalpost(
+    override suspend fun registrerFeilMedJournalpost(
         journalpostId: String,
         sykmeldingId: String,
     ) {
@@ -33,7 +40,7 @@ class DokArkivClient(
         when (httpResponse.status) {
             HttpStatusCode.OK -> {
                 logger.info(
-                    "feilregistrer av journalpost ok for journalpostid {}, msgId {}, http status {}",
+                    "Registrering av journalpost med feil - ok for journalpostid {}, msgId {}, http status {}",
                     journalpostId,
                     sykmeldingId,
                     httpResponse.status.value,
@@ -41,11 +48,11 @@ class DokArkivClient(
             }
             HttpStatusCode.InternalServerError -> {
                 logger.error(
-                    "Dokakriv svarte med feilmelding ved feilregistrer av journalpost for sykmeldingId {}",
+                    "Dokakriv svarte med feilmelding ved forsøk på å registrering av journalpost med feil for sykmeldingId {}",
                     sykmeldingId,
                 )
                 throw IOException(
-                    "Saf svarte med feilmelding ved feilregistrer av journalpost for $journalpostId sykmeldingId $sykmeldingId",
+                    "Saf svarte med feilmelding ved forsøk på å registrering av journalpost med feil for journalpostId: $journalpostId sykmeldingId: $sykmeldingId",
                 )
             }
             HttpStatusCode.NotFound -> {
@@ -55,7 +62,7 @@ class DokArkivClient(
                     sykmeldingId,
                 )
                 throw RuntimeException(
-                    "Feilregistrer: Journalposten finnes ikke for journalpostid $journalpostId sykmeldingId $sykmeldingId",
+                    "Feil ved registrering av journalpost: Journalposten finnes ikke for journalpostid $journalpostId sykmeldingId $sykmeldingId",
                 )
             }
             HttpStatusCode.BadRequest -> {
@@ -66,41 +73,52 @@ class DokArkivClient(
                     sykmeldingId,
                 )
                 throw RuntimeException(
-                    "Fikk BadRequest ved feilregistrer av journalpostid $journalpostId sykmeldingId $sykmeldingId",
+                    "Fikk BadRequest ved registrering av journalpost med feil med journalpostId: $journalpostId sykmeldingId: $sykmeldingId",
                 )
             }
             HttpStatusCode.Unauthorized -> {
                 logger.error(
-                    "Fikk http status {} for journalpostid {}, sykmeldingId {}",
+                    "Fikk HTTP status {} for journalpostid {}, sykmeldingId {}",
                     HttpStatusCode.Unauthorized.value,
                     journalpostId,
                     sykmeldingId,
                 )
                 throw RuntimeException(
-                    "Fikk Unauthorized ved feilregistrer av journalpostid $journalpostId sykmeldingId $sykmeldingId",
+                    "Fikk Unauthorized ved registrering av feil journalpost med journalpostid $journalpostId sykmeldingId $sykmeldingId",
                 )
             }
             HttpStatusCode.Forbidden -> {
                 logger.error(
-                    "Fikk http status {} for journalpostid {}, sykmeldingId {}",
+                    "Fikk HTTP status {} for journalpostid {}, sykmeldingId {}",
                     HttpStatusCode.Forbidden.value,
                     journalpostId,
                     sykmeldingId,
                 )
                 throw RuntimeException(
-                    "Fikk Forbidden ved feilregistrer av journalpostid $journalpostId sykmeldingId $sykmeldingId",
+                    "Fikk Forbidden ved registrering av feil journalpost med journalpostid $journalpostId sykmeldingId $sykmeldingId",
                 )
             }
             else -> {
                 logger.error(
-                    "Feil ved feilregistrer av journalpostid {}, sykmeldingId {}. Statuskode: ${httpResponse.status}",
+                    "Feil ved registrering av feil journalpost med journalpostid {}, sykmeldingId {}. Statuskode: ${httpResponse.status}",
                     journalpostId,
                     sykmeldingId,
                 )
                 throw RuntimeException(
-                    "En ukjent feil oppsto ved feilregistrer av journalpostid $journalpostId. Statuskode: ${httpResponse.status}",
+                    "En ukjent feil oppsto ved registrering av feil journalpost med journalpostid: $journalpostId. Statuskode: ${httpResponse.status}",
                 )
             }
         }
+    }
+}
+
+class DokarkivClientDevelopment() : DokArkivClient {
+    override suspend fun registrerFeilMedJournalpost(
+        journalpostId: String,
+        sykmeldingId: String,
+    ) {
+        logger.info(
+            "ved registrering av feil journalpost med journalpostId: $journalpostId for sykmeldingId: $sykmeldingId"
+        )
     }
 }

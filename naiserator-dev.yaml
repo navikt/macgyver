@@ -13,19 +13,19 @@ spec:
     cpuThresholdPercentage: 90
   port: 8080
   liveness:
-    path: /internal/is_alive
+    path: /api/internal/is_alive
     initialDelay: 10
     timeout: 5
     periodSeconds: 5
     failureThreshold: 30
   readiness:
-    path: /internal/is_ready
+    path: /api/internal/is_ready
     initialDelay: 30
     periodSeconds: 5
     timeout: 5
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /api/internal/prometheus
   observability:
     autoInstrumentation:
       enabled: true
@@ -49,11 +49,6 @@ spec:
           kind: Project
         role: roles/cloudsql.client
   accessPolicy:
-    inbound:
-      rules:
-        - application: macgyver-frontend
-          namespace: teamsykmelding
-          cluster: dev-gcp
     outbound:
       rules:
         - application: narmesteleder
@@ -68,6 +63,12 @@ spec:
       allowAllUsers: true
       enabled: true
       tenant: trygdeetaten.no
+    sidecar:
+      enabled: true
+      autoLogin: true
+      autoLoginIgnorePaths:
+        - /assets/*
+        - /favicon.ico
   secureLogs:
     enabled: true
   envFrom:
