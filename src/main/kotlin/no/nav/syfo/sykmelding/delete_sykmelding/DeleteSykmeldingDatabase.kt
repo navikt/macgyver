@@ -64,7 +64,34 @@ class DeleteSykmeldingDatabaseProduction(val database: Database) : DeleteSykmeld
 class DeleteSykmeldingDatabaseDevelopment() : DeleteSykmeldingDatabase {
     override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? {
         logger.info("Henter sykmelding med id $sykmeldingId")
-        return null
+
+        return SykmeldingDbModel(
+            sykmeldingsopplysninger =
+                Sykmeldingsopplysninger(
+                    id = "12345",
+                    pasientFnr = "12345678901",
+                    pasientAktoerId = "987654321",
+                    legeFnr = "1122334455",
+                    legeAktoerId = "5566778899",
+                    mottakId = "abc123",
+                    legekontorOrgNr = "123456789",
+                    legekontorHerId = null,
+                    legekontorReshId = null,
+                    epjSystemNavn = "TestSystem",
+                    epjSystemVersjon = "1.0",
+                    mottattTidspunkt = LocalDateTime.now(),
+                    tssid = "tssid123",
+                    merknader =
+                        listOf(Merknad(type = "TestType", beskrivelse = "Test description")),
+                    partnerreferanse = "partner123",
+                    utenlandskSykmelding =
+                        UtenlandskSykmelding(
+                            land = "Norway",
+                            folkeRegistertAdresseErBrakkeEllerTilsvarende = false,
+                        ),
+                ),
+            sykmeldingsdokument = null,
+        )
     }
 }
 
