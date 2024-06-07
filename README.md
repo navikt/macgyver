@@ -2,6 +2,7 @@
 
 # macgyver
 Application that fixes stuff like Macgyver for team sykmelding
+frontend application is located here [README.md](web/README.md)
 
 ## Technologies used
 
