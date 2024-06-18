@@ -1,46 +1,107 @@
 [![Deploy to dev and prod](https://github.com/navikt/macgyver/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/navikt/macgyver/actions/workflows/deploy.yml)
 
 # macgyver
+
 Application that fixes stuff like Macgyver for team sykmelding
 frontend application is located here [README.md](web/README.md)
 
 ## Technologies used
+
+Backend:
 
 * Kotlin
 * Ktor
 * Gradle
 * Junit
 
+Frontend:
+
+* React
+* Vite
+
 #### Requirements
 
 * JDK 21
+* Node 20
 
 ## FlowChart
+
 This the high level flow of the application
 
 ```mermaid
-  graph LR;
-      macgyver --- macgyver-frontend;
-      macgyver --- azure-ad;
-      macgyver --- id1[(syfosmregister)];
-      macgyver --- PDL;
-      macgyver --- oppgave;
-      macgyver --- narmesteleder;
-      macgyver --- saf;
+  graph LR
+;
+    web["web (vite)"] --> wonderwall --> macgyver["macgyver (ktor)"]
+    macgyver --- azure-ad;
+    macgyver --- id1[(syfosmregister)];
+    macgyver --- PDL;
+    macgyver --- oppgave;
+    macgyver --- narmesteleder;
+    macgyver --- saf;
 ```
 
 ## Getting started
 
+### Pre-requisites
+
+Install these using mise/asdf or any other package manager (**not** brew)
+
+- JDK 21
+- Node 20
+
+Enable corepack:
+
+``` shell
+corepack enable
+```
+
+### Running the application
+
+#### Run the backend
+
+For local development the application runs in two parts, the ktor app and the vite development server. The Ktor-app is
+best to run in IntelliJ so you can do partial builds and get hot swapping.
+
+Go to Application.kt and run the main function, edit the run-configuration in IntelliJ and add the following "VM
+Option":
+
+```plain
+-Dio.ktor.development=true
+```
+
+You can now use this to run the application in development mode. Using the "build" feature in IntelliJ on a single file
+will (usually) hot-swap it without requiring a full server reboot when developing.
+
+#### Run the frontend
+
+While the backend is running, cd into the web folder and run the following commands:
+
+``` shell
+yarn
+```
+
+``` shell
+yarn dev
+```
+
+You will now have a development server on http://localhost:5173 that uses the Ktor-backend. You're not ready to develop
+new MacGyver features!
+
+Note: Vite automatically hot-reloads.
+
 #### Build and run tests
 
 To build locally and run the integration tests you can simply run
+
 ``` bash
 ./gradlew shadowJar
 ```
+
 or on windows
 `gradlew.bat shadowJar`
 
 Creating a docker image should be as simple as
+
 ``` shell
 docker build -t macgyver .
 ```
@@ -60,6 +121,7 @@ Find the newest version of gradle here: https://gradle.org/releases/ Then run th
 ```
 
 ### Swagger api doc
+
 The Swagger api doc is available here
 https://macgyver.intern.dev.nav.no/docs
 
