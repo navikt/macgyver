@@ -10,7 +10,7 @@ import no.nav.syfo.model.HttpMessage
 import org.koin.ktor.ext.inject
 
 fun Route.registerSykmeldingsOpplysningerApi() {
-    val sykmeldingsOpplysningerClient by inject<DevelopmentSykmeldingsOpplysningerClient>()
+    val sykmeldingsOpplysningerClient by inject<SykmeldingsOpplysningerClient>()
 
     get("/sykmeldingsopplysninger") {
         logger.info("Henter sykmeldingsopplysninger")
@@ -23,6 +23,7 @@ fun Route.registerSykmeldingsOpplysningerApi() {
             return@get
         }
 
+        logger.info("Skal hente ut sykmeldingsopplysninger fra sykmeldingsopplysningerClient")
         val sykmeldingsOpplysninger = sykmeldingsOpplysningerClient.getSykmeldingsopplysninger(fnr)
         call.respond(sykmeldingsOpplysninger)
     }

@@ -34,10 +34,11 @@ import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClientProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
-import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer.*
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
+import no.nav.syfo.sykmeldingsopplysninger.ProductionSykmeldingsOpplysningerClient
+import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -74,6 +75,7 @@ fun KoinApplication.initProductionModules() {
         dokarkivModule,
         sykmeldingModule,
         safModule,
+        sykmeldingsopplysningerModule,
     )
 }
 
@@ -275,4 +277,8 @@ val kafkaModules = module {
             get<EnvironmentVariables>().aivenSykmeldingStatusTopic,
         )
     }
+}
+
+val sykmeldingsopplysningerModule = module {
+    single<SykmeldingsOpplysningerClient> { ProductionSykmeldingsOpplysningerClient() }
 }

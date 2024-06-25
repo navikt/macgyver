@@ -1,6 +1,6 @@
 import {ReactElement} from "react";
 
-import {BodyShort} from "@navikt/ds-react";
+import {BodyShort, Timeline} from "@navikt/ds-react";
 
 interface SykmeldingProps {
     fnr: string,
@@ -11,20 +11,24 @@ interface SykmeldingProps {
     merknader: MerknadProps[],
     behandlingsutfall: BehandlingsutfallProps,
     tssid: string,
-    perioder: PeriodeProps[]
+    perioder: PeriodeProps[],
+    synligStatus: string,
 }
 
-const SykmeldingItem = ({fnr, sykmeldingId, mottattTidspunkt, mottakId, statusEvent, merknader, behandlingsutfall, tssid,  perioder}: SykmeldingProps): ReactElement => {
+const SykmeldingItem = ({fnr, sykmeldingId, mottattTidspunkt, mottakId, statusEvent, merknader, behandlingsutfall, tssid,  perioder, synligStatus}: SykmeldingProps): ReactElement => {
     return (
+
+        // wrap en timelineperiode rundt
+        // lage en onclick av noe slag, dersom onlcik vis sykmeldingsopplysnigner
         <li className="flex border-b border-gray-600 py-1 max-[1030px]:flex-col">
             <BodyShort className="min-w-[15rem] font-bold">
                 {fnr}
             </BodyShort>
-            <BodyShort>{sykmeldingId}</BodyShort>
-            <BodyShort>{mottattTidspunkt}</BodyShort>
-            <BodyShort>{mottakId}</BodyShort>
-            <BodyShort>{statusEvent}</BodyShort>
-            <BodyShort>{tssid}</BodyShort>
+            <BodyShort>SykmeldingId = {sykmeldingId}</BodyShort>
+            <BodyShort>MottattTidspunkt = {mottattTidspunkt}</BodyShort>
+            <BodyShort>MottakId = {mottakId}</BodyShort>
+            <BodyShort>StatusEvent = {statusEvent}</BodyShort>
+            <BodyShort>TssId = {tssid}</BodyShort>
 
             {merknader.map((merknad) => {
                 return <MerknadItem
@@ -51,7 +55,9 @@ const SykmeldingItem = ({fnr, sykmeldingId, mottattTidspunkt, mottakId, statusEv
                     tom={periode.tom}>
                 </PeriodeItem>;
             })},
+            <BodyShort>{synligStatus}</BodyShort>
         </li>
+
     );
 };
 

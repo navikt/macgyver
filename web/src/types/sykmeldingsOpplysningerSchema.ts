@@ -34,6 +34,7 @@ const SykmeldingSchema = z.object({
     mottattTidspunkt: z.string(),
     behandlingsUtfall: BehandlingsutfallSchema,
     perioder: z.array(PeriodeSchema),
+    synligStatus: z.string(),
 
 })
 
