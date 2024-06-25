@@ -1,6 +1,6 @@
 import {ReactElement} from "react";
 
-import {BodyShort, Timeline} from "@navikt/ds-react";
+import {BodyShort} from "@navikt/ds-react";
 
 interface SykmeldingProps {
     fnr: string,

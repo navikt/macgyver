@@ -4,6 +4,7 @@ import {Timeline} from "@navikt/ds-react";
 import {
     PersonIcon, VirusIcon,
 } from "@navikt/aksel-icons";
+import {TimelineRow} from "@navikt/ds-react/Timeline";
 
 interface SykmeldingsOpplysningerProps {
     person: SykmeldingsOpplysninger;
@@ -11,18 +12,17 @@ interface SykmeldingsOpplysningerProps {
 
 const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): ReactElement => {
 
-    // Sort the periods by their start date
-    // @ts-ignore
-    const sortedSykmeldinger = [...person.sykmeldinger].sort((a, b) => a.perioder[0].fom - b.perioder[0].fom);
+    const sortedSykmeldinger = [...person.sykmeldinger].sort((a, b) => Date.parse(a.perioder[0].fom) - Date.parse(b.perioder[0].fom));
 
-// Initialize an array to hold the timeline rows
-    const timelineRows = [];
+    interface TimelineRow {
+        start: string;
+        end: string;
+        sykmeldinger: Sykmelding[];
+    }
+
+    const timelineRows: TimelineRow[] = [];
 
     type StatusType = "success" | "warning" | "danger" | "info" | "neutral" | undefined;
-
-    // Initialize the main row
-    let mainRow = null;
-
 
     interface Sykmelding {
         sykmeldingId: string;
@@ -37,6 +37,7 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
         arbeidsgiver: Arbeidsgiver;
         hovedDiagnose: HovedDiagnose;
     }
+
 
     interface Merknad {
         type: string;
@@ -71,25 +72,22 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
         tekst: string | null;
     }
 
-// Now you can use the Sykmelding interface as the type for your state
+    let mainRow = {
+        start: sortedSykmeldinger[0].perioder[0].fom,
+        end: sortedSykmeldinger[0].perioder[sortedSykmeldinger[0].perioder.length - 1].tom,
+        sykmeldinger: [sortedSykmeldinger[0]]
+    };
+
     const [activePeriod, setActivePeriod] = useState<Sykmelding | null>(null);
-    // Add this line to create the activePeriod state variable
-    // const [activePeriod, setActivePeriod] = useState("");
-// Iterate over the sorted periods
+
 
     for (let i = 0; i < sortedSykmeldinger.length; i++) {
-        // If it's the first period, add it to the main row
+
         const sistePeriodeSlutt = sortedSykmeldinger[i].perioder[sortedSykmeldinger[i].perioder.length - 1].tom
         if (i === 0) {
-            mainRow = {
-                start: sortedSykmeldinger[i].perioder[0].fom,
-                end: sistePeriodeSlutt,
-                sykmeldinger: [sortedSykmeldinger[i]]
-            };
             timelineRows.push(mainRow);
         } else {
             // If it overlaps with the main row, create a new timeline row for this period
-            // @ts-ignore
             if (new Date(sortedSykmeldinger[i].perioder[0].fom).getTime() <= new Date(mainRow.end).getTime()) {
                 timelineRows.push({
                     start: sortedSykmeldinger[i].perioder[0].fom,
@@ -98,17 +96,12 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
                 });
             } else {
                 // If it doesn't overlap with the main row, add it to the main row
-                // @ts-ignore
                 mainRow.sykmeldinger.push(sortedSykmeldinger[i]);
-                // @ts-ignore
                 mainRow.end = sistePeriodeSlutt;
             }
         }
     }
 
-// Now you can map over timelineRows to create the Timeline.Row components
-    // @ts-ignore
-    // @ts-ignore
     return (
         <div className="min-w-[800px]">
             <Timeline>
@@ -130,40 +123,15 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
                                                 <p><b>tom</b> = {periode.tom}</p>
                                             </div>
                                         )}</li>
-                                        {/*<li><b>sykmeldingId</b> = {sykmelding.sykmeldingId}</li>*/}
-                                        {/*<li><b>mottakId</b> = {sykmelding.mottakId}</li>*/}
-                                        {/*<li><b>TssId</b> = {sykmelding.tssId}</li>*/}
-                                        {/*<li><b>Merknader er*/}
-                                        {/*    følgende:</b> {sykmelding.merknader.map((merknad, merknadindex) => (*/}
-                                        {/*    <div key={merknadindex} style={{paddingLeft: '20px'}}>*/}
-                                        {/*        <p><b>type</b> = {merknad.type} </p>*/}
-                                        {/*        <p><b>beskrivelse</b> = {merknad.beskrivelse}</p>*/}
-                                        {/*    </div>*/}
-                                        {/*))}*/}
-                                        {/*</li>*/}
                                         <li><b>Behandlingsutfall status er</b> {sykmelding.behandlingsUtfall.status}
                                         </li>
-                                        {/*<li><b>Behandlingsutfall regler:</b>*/}
-                                        {/*    {sykmelding.behandlingsUtfall.ruleHits.map((ruleHit, index) => (*/}
-                                        {/*        <div key={index} style={{paddingLeft: '20px'}}>*/}
-                                        {/*            <p><b>Rule Name:</b> {ruleHit.ruleName}</p>*/}
-                                        {/*            <p><b>Rule Status:</b> {ruleHit.ruleStatus}</p>*/}
-                                        {/*            <p><b>Message For User:</b> {ruleHit.messageForUser}</p>*/}
-                                        {/*            <p><b>Message For Sender:</b> {ruleHit.messageForSender}</p>*/}
-                                        {/*        </div>*/}
-                                        {/*    ))}*/}
-                                        {/*</li>*/}
-                                        {/*<li><b>Arbeidsgiver orgNavn:</b> {sykmelding.arbeidsgiver.orgNavn}</li>*/}
-                                        {/*<li><b>Arbeidsgiver orgnummer:</b> {sykmelding.arbeidsgiver.orgnummer}</li>*/}
-                                        {/*<li><b>Hoveddiagnose</b> {sykmelding.hovedDiagnose.kode}</li>*/}
                                     </ul>
                                 </div>}
                                 onSelectPeriod={() => setActivePeriod(sykmelding)}
-                                isActive={activePeriod === sykmelding.sykmeldingId}
+                                isActive={activePeriod === sykmelding}
                                 aria-controls={"timeline-panel"}
                                 id={sykmelding.sykmeldingId}
                             >
-                                {/*{p.children ?? null}*/}
                             </Timeline.Period>
                         ))}
                     </Timeline.Row>
@@ -175,11 +143,9 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
                     <Timeline.Zoom.Button label="1.5 år" interval="year" count={1.5}/>
                 </Timeline.Zoom>
             </Timeline>
-            {/* Clickable periods */}
             {activePeriod && (
                 <div className="mt-8" aria-controls={activePeriod.sykmeldingId} id={"timeline-panel"}>
                     <h2>Details for sykmelding with id: {activePeriod.sykmeldingId}</h2>
-                    {/* Add the details you want to display here... TODO */}
                     <br/>
 
                     <ul className={"list-style-type: none;"}>
