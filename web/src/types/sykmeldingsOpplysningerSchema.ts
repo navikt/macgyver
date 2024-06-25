@@ -24,6 +24,16 @@ const MerknadSchema = z.object({
     beskrivelse: z.string(),
 })
 
+const ArbeidsgiverSchema = z.object({
+    orgnummer: z.string(),
+    orgNavn: z.string(),
+})
+const HovedDiagnoseSchema = z.object({
+    kode: z.string(),
+    system: z.string(),
+    tekst: z.string().nullable(),
+})
+
 
 const SykmeldingSchema = z.object({
     sykmeldingId: z.string(),
@@ -35,6 +45,8 @@ const SykmeldingSchema = z.object({
     behandlingsUtfall: BehandlingsutfallSchema,
     perioder: z.array(PeriodeSchema),
     synligStatus: z.string(),
+    arbeidsgiver: ArbeidsgiverSchema,
+    hovedDiagnose: HovedDiagnoseSchema,
 
 })
 

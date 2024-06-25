@@ -67,7 +67,9 @@ class DevelopmentSykmeldingsOpplysningerClient() : SykmeldingsOpplysningerClient
                             tom = LocalDate.of(2021, 1, 30),
                         ),
                     ),
-                    synligStatus = getSynligStatus(Status.OK)
+                    synligStatus = getSynligStatus(Status.OK),
+                    arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                    hovedDiagnose = HovedDiagnose("kode", "system", null),
                 ),
                 Sykmelding(
                     sykmeldingId = UUID.randomUUID().toString(),
@@ -101,7 +103,9 @@ class DevelopmentSykmeldingsOpplysningerClient() : SykmeldingsOpplysningerClient
                             tom = LocalDate.of(2021, 2, 20),
                         ),
                     ),
-                    synligStatus = getSynligStatus(Status.MANUAL_PROCESSING)
+                    synligStatus = getSynligStatus(Status.MANUAL_PROCESSING),
+                    arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                    hovedDiagnose = HovedDiagnose("kode", "system", null),
                 ),
                 Sykmelding(
                     sykmeldingId = UUID.randomUUID().toString(),
@@ -136,6 +140,8 @@ class DevelopmentSykmeldingsOpplysningerClient() : SykmeldingsOpplysningerClient
                         ),
                     ),
                     synligStatus = getSynligStatus(Status.OK),
+                    arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                    hovedDiagnose = HovedDiagnose("kode", "system", null),
                 ),
                 Sykmelding(
                     sykmeldingId = UUID.randomUUID().toString(),
@@ -170,6 +176,8 @@ class DevelopmentSykmeldingsOpplysningerClient() : SykmeldingsOpplysningerClient
                         ),
                     ),
                     synligStatus = getSynligStatus(Status.INVALID),
+                    arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                    hovedDiagnose = HovedDiagnose("kode", "system", null),
                 ),
                 Sykmelding(
                     sykmeldingId = UUID.randomUUID().toString(),
@@ -204,6 +212,8 @@ class DevelopmentSykmeldingsOpplysningerClient() : SykmeldingsOpplysningerClient
                         ),
                     ),
                     synligStatus = getSynligStatus(Status.OK),
+                    arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                    hovedDiagnose = HovedDiagnose("kode", "system", null),
                 ),
             ),
         )

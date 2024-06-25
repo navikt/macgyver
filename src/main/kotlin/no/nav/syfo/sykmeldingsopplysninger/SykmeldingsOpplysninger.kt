@@ -37,4 +37,19 @@ data class Sykmelding(
     val mottattTidspunkt: LocalDateTime?,
     val behandlingsUtfall: BehandlingsUtfall,
     val perioder: List<Periode>,
+    val synligStatus: String,
+    val arbeidsgiver: Arbeidsgiver,
+    val hovedDiagnose: HovedDiagnose,
 )
+
+data class Arbeidsgiver(
+    val orgnummer: String,
+    val orgNavn: String,
+)
+
+data class HovedDiagnose(
+    val kode: String,
+    val system: String,
+    val tekst: String?,
+)
+
