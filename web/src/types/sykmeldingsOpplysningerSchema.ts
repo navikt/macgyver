@@ -6,14 +6,17 @@ const PeriodeSchema = z.object({
 })
 const RuleStatusSchema = z.union([z.literal('MANUAL_PROCESSING'), z.literal('OK'), z.literal('INVALID')])
 
+const RuleHitsSchema = z.object({
+    ruleName: z.string(),
+    messageForSender: z.string(),
+    messageForUser: z.string(),
+    ruleStatus: RuleStatusSchema,
+})
+
+
 const BehandlingsutfallSchema = z.object({
     status: z.string(),
-    ruleHits: z.array(z.object({
-        ruleName: z.string(),
-        ruleStatus: RuleStatusSchema,
-        messageForUser: z.string(),
-        messageForSender: z.string(),
-    }))
+    ruleHits: z.array(RuleHitsSchema)
 })
 
 const MerknadSchema = z.object({
@@ -24,21 +27,20 @@ const MerknadSchema = z.object({
 
 const SykmeldingSchema = z.object({
     sykmeldingId: z.string(),
-    fnr: z.string(),
+    merknader: z.array(MerknadSchema),
+    tssId: z.string(),
+    statusEvent: z.string(),
     mottakId: z.string(),
     mottattTidspunkt: z.string(),
-    statusEvent: z.string(),
-    merknader: z.array(MerknadSchema),
-    behandlingsutfall: BehandlingsutfallSchema,
-    tssId: z.string(),
+    behandlingsUtfall: BehandlingsutfallSchema,
     perioder: z.array(PeriodeSchema),
 
 })
 
 
 export const SykmeldingsOpplysningerSchema = z.object({
-    sykmeldinger: z.array(SykmeldingSchema),
     fnr: z.string(),
+    sykmeldinger: z.array(SykmeldingSchema),
 })
 
 export type SykmeldingsOpplysninger = z.infer<typeof SykmeldingsOpplysningerSchema>

@@ -21,7 +21,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                         mottakId={sykmelding.mottakId}
                         statusEvent={sykmelding.statusEvent}
                         merknader={sykmelding.merknader}
-                        behandlingsutfall={sykmelding.behandlingsutfall}
+                        behandlingsutfall={sykmelding.behandlingsUtfall}
                         tssid={sykmelding.tssId}
                         perioder={sykmelding.perioder}
                     />
