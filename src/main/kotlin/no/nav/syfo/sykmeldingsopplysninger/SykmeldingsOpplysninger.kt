@@ -19,16 +19,16 @@ data class BehandlingsUtfall(val status: String, val ruleHits: List<RuleInfo>)
 
 data class Sykmelding(
     val sykmeldingId: String,
-    val merknader: List<Merknad>,
-    val tssId: String,
-    val statusEvent: String,
+    val merknader: List<Merknad>?,
+    val tssId: String?,
+    val statusEvent: String?,
     val mottakId: String,
-    val mottattTidspunkt: LocalDateTime?,
-    val behandlingsUtfall: BehandlingsUtfall,
-    val perioder: List<Periode>,
-    val synligStatus: String,
-    val arbeidsgiver: Arbeidsgiver,
-    val hovedDiagnose: HovedDiagnose,
+    val mottattTidspunkt: LocalDateTime,
+    val behandlingsUtfall: BehandlingsUtfall?,
+    val perioder: List<Periode>?,
+    val synligStatus: String?,
+    val arbeidsgiver: Arbeidsgiver?,
+    val hovedDiagnose: HovedDiagnose?,
 )
 
 data class Arbeidsgiver(

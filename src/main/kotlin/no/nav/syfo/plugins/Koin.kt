@@ -37,6 +37,8 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.sykmeldingsopplysninger.ProductionSykmeldingsOpplysningerClient
 import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
@@ -138,6 +140,9 @@ val sykmeldingModule = module {
     }
     single<DeleteSykmeldingDatabase> {
         DeleteSykmeldingDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
+    }
+    single<GetSykmeldingerDatabase> {
+        GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
     }
     single {
         val env = get<EnvironmentVariables>()
@@ -280,5 +285,5 @@ val kafkaModules = module {
 }
 
 val sykmeldingsopplysningerModule = module {
-    single<SykmeldingsOpplysningerClient> { ProductionSykmeldingsOpplysningerClient() }
+    single<SykmeldingsOpplysningerClient> { ProductionSykmeldingsOpplysningerClient(null) }
 }
