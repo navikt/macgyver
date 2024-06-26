@@ -1,12 +1,13 @@
 import {z} from 'zod'
 
-const PeriodeSchema = z.object({
+export const PeriodeSchema = z.object({
     fom: z.string(),
     tom: z.string(),
 })
-const RuleStatusSchema = z.union([z.literal('MANUAL_PROCESSING'), z.literal('OK'), z.literal('INVALID')])
 
-const RuleHitsSchema = z.object({
+export const RuleStatusSchema = z.union([z.literal('MANUAL_PROCESSING'), z.literal('OK'), z.literal('INVALID')])
+
+export const RuleHitsSchema = z.object({
     ruleName: z.string(),
     messageForSender: z.string(),
     messageForUser: z.string(),
@@ -14,28 +15,29 @@ const RuleHitsSchema = z.object({
 })
 
 
-const BehandlingsutfallSchema = z.object({
+export const BehandlingsutfallSchema = z.object({
     status: z.string(),
     ruleHits: z.array(RuleHitsSchema)
 })
 
-const MerknadSchema = z.object({
+export const MerknadSchema = z.object({
     type: z.string(),
     beskrivelse: z.string(),
 })
 
-const ArbeidsgiverSchema = z.object({
+export const ArbeidsgiverSchema = z.object({
     orgnummer: z.string(),
     orgNavn: z.string(),
 })
-const HovedDiagnoseSchema = z.object({
+
+export const HovedDiagnoseSchema = z.object({
     kode: z.string(),
     system: z.string(),
     tekst: z.string().nullable(),
 })
 
 
-const SykmeldingSchema = z.object({
+export const SykmeldingSchema = z.object({
     sykmeldingId: z.string(),
     merknader: z.array(MerknadSchema),
     tssId: z.string(),
@@ -57,3 +59,9 @@ export const SykmeldingsOpplysningerSchema = z.object({
 })
 
 export type SykmeldingsOpplysninger = z.infer<typeof SykmeldingsOpplysningerSchema>
+
+export type Merknad = z.infer<typeof MerknadSchema>
+export type RuleInfo = z.infer<typeof RuleHitsSchema>
+export type Periode = z.infer<typeof PeriodeSchema>
+export type Arbeidsgiver = z.infer<typeof ArbeidsgiverSchema>
+export type HovedDiagnose = z.infer<typeof HovedDiagnoseSchema>

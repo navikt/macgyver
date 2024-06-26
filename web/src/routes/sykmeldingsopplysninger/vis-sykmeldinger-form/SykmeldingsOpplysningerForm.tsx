@@ -1,10 +1,15 @@
 import {ReactElement, useState} from "react";
-import {SykmeldingsOpplysninger} from "../../../types/sykmeldingsOpplysningerSchema.ts";
+import {
+    Arbeidsgiver,
+    HovedDiagnose, Merknad,
+    Periode, RuleInfo,
+    SykmeldingsOpplysninger,
+
+} from "../../../types/sykmeldingsOpplysningerSchema.ts";
 import {Timeline} from "@navikt/ds-react";
 import {
     PersonIcon, VirusIcon,
 } from "@navikt/aksel-icons";
-import {TimelineRow} from "@navikt/ds-react/Timeline";
 
 interface SykmeldingsOpplysningerProps {
     person: SykmeldingsOpplysninger;
@@ -38,39 +43,12 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
         hovedDiagnose: HovedDiagnose;
     }
 
-
-    interface Merknad {
-        type: string;
-        beskrivelse: string;
-    }
-
     interface BehandlingsUtfall {
         status: string;
         ruleHits: RuleInfo[];
     }
 
-    interface RuleInfo {
-        ruleName: string;
-        ruleStatus: string;
-        messageForUser: string;
-        messageForSender: string;
-    }
 
-    interface Periode {
-        fom: string;
-        tom: string;
-    }
-
-    interface Arbeidsgiver {
-        orgnummer: string;
-        orgNavn: string;
-    }
-
-    interface HovedDiagnose {
-        kode: string;
-        system: string;
-        tekst: string | null;
-    }
 
     let mainRow = {
         start: sortedSykmeldinger[0].perioder[0].fom,
