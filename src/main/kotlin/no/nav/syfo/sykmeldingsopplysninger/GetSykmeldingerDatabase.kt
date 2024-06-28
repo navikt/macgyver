@@ -1,13 +1,13 @@
 package no.nav.syfo.sykmeldingsopplysninger
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import java.sql.ResultSet
+import java.time.LocalDate
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.utils.objectMapper
-import java.sql.ResultSet
-import java.time.LocalDate
 
 interface GetSykmeldingerDatabase {
 
@@ -16,9 +16,7 @@ interface GetSykmeldingerDatabase {
 
 class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldingerDatabase {
 
-    override fun getAlleSykmeldinger(
-        fnr: String
-    ): List<Sykmelding> =
+    override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> =
         this.database.connection
             .prepareStatement(
                 """
@@ -31,9 +29,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 it.executeQuery().toList { toSykmelding() }
             }
 
-    fun getArbeidsgiver(
-        sykmeldingId: String
-    ): Arbeidsgiver =
+    fun getArbeidsgiver(sykmeldingId: String): Arbeidsgiver =
         this.database.connection
             .prepareStatement(
                 """
@@ -46,9 +42,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 it.executeQuery().toArbeidsgiver()
             }
 
-    private fun getBehandlingsUtfall(
-        sykmeldingId: String
-    ): BehandlingsUtfall? =
+    private fun getBehandlingsUtfall(sykmeldingId: String): BehandlingsUtfall? =
         this.database.connection
             .prepareStatement(
                 """
@@ -61,9 +55,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 it.executeQuery().toBehandlingsutfall()
             }
 
-    private fun getPerioder(
-        sykmeldingId: String
-    ): List<Periode>? =
+    private fun getPerioder(sykmeldingId: String): List<Periode>? =
         this.database.connection
             .prepareStatement(
                 """
@@ -76,9 +68,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 it.executeQuery().toPerioder()
             }
 
-    private fun getSykmeldingStatus(
-        sykmeldingId: String
-    ): String =
+    private fun getSykmeldingStatus(sykmeldingId: String): String =
         this.database.connection
             .prepareStatement(
                 """
@@ -101,12 +91,14 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 arbeidsgiver = getArbeidsgiver("id"),
                 synligStatus = null,
                 behandlingsUtfall = getBehandlingsUtfall("id"),
-                hovedDiagnose = getString("hovedDiagnose")?.let {
-                    objectMapper.readValue<HovedDiagnose>(
-                        it,
-                    )
-                },
-                merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                hovedDiagnose =
+                    getString("hovedDiagnose")?.let {
+                        objectMapper.readValue<HovedDiagnose>(
+                            it,
+                        )
+                    },
+                merknader =
+                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
                 statusEvent = getSykmeldingStatus("id"),
                 perioder = getPerioder("id"),
             )
@@ -124,12 +116,14 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
 
     private fun ResultSet.toBehandlingsutfall(): BehandlingsUtfall? {
         val behandlingsutfall =
-            getString("ruleHits")?.let { objectMapper.readValue<List<RuleInfo>>(it) }?.let {
-                BehandlingsUtfall(
-                    status = getString("status"),
-                    ruleHits = it,
-                )
-            }
+            getString("ruleHits")
+                ?.let { objectMapper.readValue<List<RuleInfo>>(it) }
+                ?.let {
+                    BehandlingsUtfall(
+                        status = getString("status"),
+                        ruleHits = it,
+                    )
+                }
         return behandlingsutfall
     }
 
@@ -146,4 +140,3 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
         }
     }
 }
-

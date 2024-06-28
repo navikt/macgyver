@@ -20,18 +20,14 @@ import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingDatabaseDevelopm
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
 import no.nav.syfo.sykmelding.delete_sykmelding.DokarkivClientDevelopment
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabase
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDevelopment
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.DevelopmentSykmeldingsOpplysningerClient
-import no.nav.syfo.sykmeldingsopplysninger.ProductionSykmeldingsOpplysningerClient
 import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {

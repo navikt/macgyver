@@ -5,10 +5,7 @@ import java.time.LocalDateTime
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 
-data class Sykmeldingsopplysninger(
-    val fnr: String,
-    val sykmeldinger: List<Sykmelding>
-)
+data class Sykmeldingsopplysninger(val fnr: String, val sykmeldinger: List<Sykmelding>)
 
 data class Periode(
     val fom: LocalDate,

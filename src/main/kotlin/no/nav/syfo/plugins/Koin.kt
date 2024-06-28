@@ -285,5 +285,7 @@ val kafkaModules = module {
 }
 
 val sykmeldingsopplysningerModule = module {
-    single<SykmeldingsOpplysningerClient> { ProductionSykmeldingsOpplysningerClient(get(qualifier = named("syfoSmregisterDatabase"))) }
+    single<GetSykmeldingerDatabase> {
+        GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
+    }
 }
