@@ -7,6 +7,7 @@ import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.utils.objectMapper
 import java.sql.ResultSet
+import java.time.LocalDate
 
 interface GetSykmeldingerDatabase {
 
@@ -60,6 +61,35 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 it.executeQuery().toBehandlingsutfall()
             }
 
+    private fun getPerioder(
+        sykmeldingId: String
+    ): List<Periode>? =
+        this.database.connection
+            .prepareStatement(
+                """
+                     select * from sykmeldingsdokument beh
+                     where beh.id = sykmeldingId
+                    """,
+            )
+            .use {
+                it.setString(1, sykmeldingId)
+                it.executeQuery().toPerioder()
+            }
+
+    private fun getSykmeldingStatus(
+        sykmeldingId: String
+    ): String =
+        this.database.connection
+            .prepareStatement(
+                """
+                     select * from sykmeldingstatus status
+                     where status.id = sykmeldingId
+                    """,
+            )
+            .use {
+                it.setString(1, sykmeldingId)
+                it.executeQuery().toString()
+            }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
         val sykmeldingsopplysninger =
@@ -71,10 +101,14 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 arbeidsgiver = getArbeidsgiver("id"),
                 synligStatus = null,
                 behandlingsUtfall = getBehandlingsUtfall("id"),
-                hovedDiagnose = getString("hovedDiagnose")?.let { objectMapper.readValue<HovedDiagnose>(it) },
+                hovedDiagnose = getString("hovedDiagnose")?.let {
+                    objectMapper.readValue<HovedDiagnose>(
+                        it,
+                    )
+                },
                 merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-                statusEvent = null,
-                perioder = null,
+                statusEvent = getSykmeldingStatus("id"),
+                perioder = getPerioder("id"),
             )
         return sykmeldingsopplysninger
     }
@@ -97,6 +131,19 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
                 )
             }
         return behandlingsutfall
+    }
+
+    private fun ResultSet.toPerioder(): List<Periode> {
+
+        val perioderJson = getString("perioder") ?: return emptyList()
+        val perioder: List<Map<String, String>> = objectMapper.readValue(perioderJson)
+
+        return perioder.map {
+            Periode(
+                fom = LocalDate.parse(it["fom"]),
+                tom = LocalDate.parse(it["tom"]),
+            )
+        }
     }
 }
 
