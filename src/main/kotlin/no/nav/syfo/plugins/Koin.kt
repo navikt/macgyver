@@ -39,8 +39,6 @@ import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabase
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
-import no.nav.syfo.sykmeldingsopplysninger.ProductionSykmeldingsOpplysningerClient
-import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
