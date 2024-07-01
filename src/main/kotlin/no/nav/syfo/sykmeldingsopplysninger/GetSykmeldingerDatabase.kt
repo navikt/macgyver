@@ -14,6 +14,12 @@ interface GetSykmeldingerDatabase {
     fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
+class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingerDatabase {
+    override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
+        return emptyList()
+    }
+}
+
 class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldingerDatabase {
 
     override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> =

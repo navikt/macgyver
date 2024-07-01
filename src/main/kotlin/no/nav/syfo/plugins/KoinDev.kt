@@ -26,11 +26,10 @@ import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.DevelopmentSykmeldingsOpplysningerClient
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabase
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {
@@ -109,7 +108,7 @@ val developmentEnv = module {
 val developmentSykmeldingModule = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<DeleteSykmeldingDatabase> { DeleteSykmeldingDatabaseDevelopment() }
-
+    single<GetSykmeldingerDatabase> { GetSykmeldingerDatabaseDevelopment() }
     single {
         val env = get<EnvironmentVariables>()
 
@@ -141,8 +140,4 @@ val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClient
 
 val developmentSykmeldingsopplysningerModule = module {
     single<SykmeldingsOpplysningerClient> { DevelopmentSykmeldingsOpplysningerClient() }
-    single<GetSykmeldingerDatabase> {
-        GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
-    }
 }
-
