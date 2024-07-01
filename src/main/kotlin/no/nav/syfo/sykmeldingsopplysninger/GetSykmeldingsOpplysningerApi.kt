@@ -11,7 +11,7 @@ import org.koin.ktor.ext.inject
 
 fun Route.registerSykmeldingsOpplysningerApi() {
     val sykmeldingsOpplysningerClient by inject<SykmeldingsOpplysningerClient>()
-    // val getSykmeldingerDatabase by inject<GetSykmeldingerDatabase>()
+    val getSykmeldingerDatabase by inject<GetSykmeldingerDatabase>()
 
     get("/sykmeldingsopplysninger") {
         logger.info("Henter sykmeldingsopplysninger")
