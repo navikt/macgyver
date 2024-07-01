@@ -4,7 +4,6 @@ import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseDevelopment
 import no.nav.syfo.identendring.update_fnr.UpdateFnrService
-import no.nav.syfo.logging.logger
 import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
@@ -26,7 +25,8 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDev
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.DevelopmentSykmeldingsOpplysningerClient
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
@@ -140,6 +140,11 @@ val developmentSykmeldingModule = module {
 val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClientDevelopment() } }
 
 val developmentSykmeldingsopplysningerModule = module {
-    single<GetSykmeldingerDatabase> { GetSykmeldingerDatabaseDevelopment() }
+    single<GetSykmeldingOpplysningerDatabase> { GetSykmeldingerDatabaseDevelopment() }
     single<SykmeldingsOpplysningerClient> { DevelopmentSykmeldingsOpplysningerClient() }
+    single {
+        GetSykmeldingOpplysningerService(
+            getSykmeldingOpplysningerDatabase = get(),
+        )
+    }
 }

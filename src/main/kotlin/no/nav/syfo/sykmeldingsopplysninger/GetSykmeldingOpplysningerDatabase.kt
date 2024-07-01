@@ -5,30 +5,31 @@ import java.sql.ResultSet
 import java.time.LocalDate
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
+import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.utils.objectMapper
-import no.nav.syfo.logging.logger
 
-interface GetSykmeldingerDatabase {
+interface GetSykmeldingOpplysningerDatabase {
     fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
-class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingerDatabase {
+class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
     override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         logger.info("Henter sykmeldinger fra dev")
-        return emptyList()
+        return getAlleSykmeldinger(fnr)
     }
 }
 
-class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldingerDatabase {
+class GetSykmeldingerDatabaseProduction(val database: Database) :
+    GetSykmeldingOpplysningerDatabase {
 
     override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> =
         this.database.connection
             .prepareStatement(
                 """
-                     select * from sykmeldingopplysninger sm 
-                     where sm.fnr = fnr
+                     select * from sykmeldingopplysninger smo 
+                     where smo.fnr = fnr
                     """,
             )
             .use {
@@ -66,8 +67,8 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
         this.database.connection
             .prepareStatement(
                 """
-                     select * from sykmeldingsdokument beh
-                     where beh.id = sykmeldingId
+                     select * from sykmeldingsdokument smd
+                     where smd.id = sykmeldingId
                     """,
             )
             .use {

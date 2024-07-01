@@ -11,10 +11,13 @@ interface SykmeldingsOpplysningerClient {
 }
 
 class ProductionSykmeldingsOpplysningerClient(
-    private val getSykmeldingerDatabase: GetSykmeldingerDatabase
+    private val getSykmeldingOpplysningerDatabase: GetSykmeldingOpplysningerDatabase
 ) : SykmeldingsOpplysningerClient {
     override suspend fun getSykmeldingsopplysninger(fnr: String): Sykmeldingsopplysninger {
-        return Sykmeldingsopplysninger(fnr, getSykmeldingerDatabase.getAlleSykmeldinger(fnr))
+        return Sykmeldingsopplysninger(
+            fnr,
+            getSykmeldingOpplysningerDatabase.getAlleSykmeldinger(fnr)
+        )
     }
 }
 
