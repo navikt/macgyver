@@ -17,7 +17,7 @@ interface GetSykmeldingOpplysningerDatabase {
 class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
     override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         logger.info("Henter sykmeldinger fra dev")
-        return getAlleSykmeldinger(fnr)
+        return emptyList()
     }
 }
 
@@ -29,12 +29,12 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from sykmeldingopplysninger smo 
-                     where smo.fnr = fnr
+                     where smo.fnr = ?
                     """,
             )
-            .use {
-                it.setString(1, fnr)
-                it.executeQuery().toList { toSykmelding() }
+            .use { statement ->
+                statement.setString(1, fnr)
+                statement.executeQuery().toList { toSykmelding() }
             }
 
     fun getArbeidsgiver(sykmeldingId: String): Arbeidsgiver =
@@ -42,12 +42,12 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from arbeidsgiver arb
-                     where arb.sykmelding_id = sykmeldingId
+                     where arb.sykmelding_id = ?
                     """,
             )
-            .use {
-                it.setString(1, sykmeldingId)
-                it.executeQuery().toArbeidsgiver()
+            .use { statement ->
+                statement.setString(1, sykmeldingId)
+                statement.executeQuery().toArbeidsgiver()
             }
 
     private fun getBehandlingsUtfall(sykmeldingId: String): BehandlingsUtfall? =
@@ -55,12 +55,12 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from behandlingsutfall beh
-                     where beh.id = sykmeldingId
+                     where beh.id = ?
                     """,
             )
-            .use {
-                it.setString(1, sykmeldingId)
-                it.executeQuery().toBehandlingsutfall()
+            .use { statement ->
+                statement.setString(1, sykmeldingId)
+                statement.executeQuery().toBehandlingsutfall()
             }
 
     private fun getPerioder(sykmeldingId: String): List<Periode>? =
@@ -68,12 +68,12 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from sykmeldingsdokument smd
-                     where smd.id = sykmeldingId
+                     where smd.id = ?
                     """,
             )
-            .use {
-                it.setString(1, sykmeldingId)
-                it.executeQuery().toPerioder()
+            .use { statement ->
+                statement.setString(1, sykmeldingId)
+                statement.executeQuery().toPerioder()
             }
 
     private fun getSykmeldingStatus(sykmeldingId: String): String =
@@ -81,12 +81,12 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from sykmeldingstatus status
-                     where status.id = sykmeldingId
+                     where status.id = ?
                     """,
             )
-            .use {
-                it.setString(1, sykmeldingId)
-                it.executeQuery().toString()
+            .use { statement ->
+                statement.setString(1, sykmeldingId)
+                statement.executeQuery().toString()
             }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
