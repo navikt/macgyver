@@ -31,7 +31,7 @@ val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
 val snappyJavaVersion = "1.1.10.5"
 val javaVersion = JavaVersion.VERSION_21
-val kafkaVersion = "3.7.0"
+val kafkaVersion = "3.7.1"
 val diagnosekoderVersion = "1.2024.0"
 val koinVersion = "3.5.6"
 
