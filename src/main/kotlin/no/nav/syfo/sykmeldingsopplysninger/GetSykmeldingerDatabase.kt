@@ -8,14 +8,15 @@ import no.nav.syfo.db.toList
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.logging.logger
 
 interface GetSykmeldingerDatabase {
-
     fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
 class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingerDatabase {
     override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
+        logger.info("Henter sykmeldinger fra dev")
         return emptyList()
     }
 }
@@ -88,6 +89,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) : GetSykmeldinge
             }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
+        logger.info("Konverterer sykmeldinger")
         val sykmeldingsopplysninger =
             Sykmelding(
                 sykmeldingId = "id",

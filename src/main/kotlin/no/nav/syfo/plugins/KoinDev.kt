@@ -4,6 +4,7 @@ import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseDevelopment
 import no.nav.syfo.identendring.update_fnr.UpdateFnrService
+import no.nav.syfo.logging.logger
 import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
@@ -108,7 +109,7 @@ val developmentEnv = module {
 val developmentSykmeldingModule = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<DeleteSykmeldingDatabase> { DeleteSykmeldingDatabaseDevelopment() }
-    single<GetSykmeldingerDatabase> { GetSykmeldingerDatabaseDevelopment() }
+
     single {
         val env = get<EnvironmentVariables>()
 
@@ -139,5 +140,6 @@ val developmentSykmeldingModule = module {
 val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClientDevelopment() } }
 
 val developmentSykmeldingsopplysningerModule = module {
+    single<GetSykmeldingerDatabase> { GetSykmeldingerDatabaseDevelopment() }
     single<SykmeldingsOpplysningerClient> { DevelopmentSykmeldingsOpplysningerClient() }
 }
