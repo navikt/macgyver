@@ -22,7 +22,7 @@ data class Sykmelding(
     val mottakId: String,
     val mottattTidspunkt: LocalDateTime,
     val behandlingsUtfall: BehandlingsUtfall?,
-    val perioder: List<Periode>?,
+    val perioder: List<Periode>,
     val synligStatus: String?,
     val arbeidsgiver: Arbeidsgiver?,
     val hovedDiagnose: HovedDiagnose?,

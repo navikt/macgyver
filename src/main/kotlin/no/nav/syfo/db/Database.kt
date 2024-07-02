@@ -20,8 +20,10 @@ class Database(
 
     init {
         val properties = Properties()
-        properties.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
-        properties.setProperty("cloudSqlInstance", cloudSqlInstance)
+        if (cloudSqlInstance.isNotBlank()) {
+            properties.setProperty("socketFactory", "com.google.cloud.sql.postgres.SocketFactory")
+            properties.setProperty("cloudSqlInstance", cloudSqlInstance)
+        }
         dataSource =
             HikariDataSource(
                 HikariConfig().apply {

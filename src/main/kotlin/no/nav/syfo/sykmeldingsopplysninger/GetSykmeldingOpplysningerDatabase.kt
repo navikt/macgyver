@@ -5,17 +5,18 @@ import java.sql.ResultSet
 import java.time.LocalDate
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
+import no.nav.syfo.identendring.update_fnr.StatusEvent
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
-    fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
+    suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
 class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
-    override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
+    override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         logger.info("Henter sykmeldinger fra dev")
         return emptyList()
     }
@@ -24,12 +25,12 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
 class GetSykmeldingerDatabaseProduction(val database: Database) :
     GetSykmeldingOpplysningerDatabase {
 
-    override fun getAlleSykmeldinger(fnr: String): List<Sykmelding> =
+    override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> =
         this.database.connection
             .prepareStatement(
                 """
-                     select * from sykmeldingopplysninger smo 
-                     where smo.fnr = ?
+                     select * from sykmeldingsopplysninger smo 
+                     where smo.pasient_fnr = ?
                     """,
             )
             .use { statement ->
@@ -63,7 +64,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 statement.executeQuery().toBehandlingsutfall()
             }
 
-    private fun getPerioder(sykmeldingId: String): List<Periode>? =
+    private fun getPerioder(sykmeldingId: String): List<Periode> =
         this.database.connection
             .prepareStatement(
                 """
@@ -81,7 +82,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             .prepareStatement(
                 """
                      select * from sykmeldingstatus status
-                     where status.id = ?
+                     where status.sykmelding_id = ?
                     """,
             )
             .use { statement ->
@@ -90,26 +91,32 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
-        logger.info("Konverterer sykmeldinger")
+        logger.info("Konverterer sykmelding")
         val sykmeldingsopplysninger =
             Sykmelding(
                 sykmeldingId = "id",
                 mottakId = getString("mottak_id"),
                 mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
                 tssId = getString("tss_id"),
-                arbeidsgiver = getArbeidsgiver("id"),
+                //arbeidsgiver = getArbeidsgiver("id"),
+                arbeidsgiver = null,
                 synligStatus = null,
-                behandlingsUtfall = getBehandlingsUtfall("id"),
-                hovedDiagnose =
-                    getString("hovedDiagnose")?.let {
-                        objectMapper.readValue<HovedDiagnose>(
-                            it,
-                        )
-                    },
-                merknader =
-                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
-                statusEvent = getSykmeldingStatus("id"),
-                perioder = getPerioder("id"),
+                behandlingsUtfall = null,
+                //behandlingsUtfall = getBehandlingsUtfall("id"),
+                hovedDiagnose = null,
+               /*hovedDiagnose =
+                getHovedDiagnose("hovedDiagnose")?.let {
+                    objectMapper.readValue<HovedDiagnose>(
+                        it,
+                    )
+                }*/
+                merknader = null,
+                // merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                // statusEvent = getSykmeldingStatus("id"),
+                statusEvent = "APEN",
+                // perioder = getPerioder("id"),
+                perioder = emptyList()
+
             )
         return sykmeldingsopplysninger
     }
@@ -138,14 +145,16 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
     private fun ResultSet.toPerioder(): List<Periode> {
 
-        val perioderJson = getString("perioder") ?: return emptyList()
-        val perioder: List<Map<String, String>> = objectMapper.readValue(perioderJson)
+        val sykmeldingJson = getString("sykmelding") ?: return emptyList()
+        val sykmelding: Sykmelding = objectMapper.readValue(sykmeldingJson)
 
-        return perioder.map {
-            Periode(
-                fom = LocalDate.parse(it["fom"]),
-                tom = LocalDate.parse(it["tom"]),
-            )
-        }
+        return sykmelding.perioder
+    }
+
+    private fun ResultSet.toHovedDiagnose(): HovedDiagnose? {
+        val sykmeldingJson = this.getString("sykmelding") ?: return null
+        val sykmelding: Sykmelding = objectMapper.readValue(sykmeldingJson)
+        return sykmelding.hovedDiagnose
+
     }
 }
