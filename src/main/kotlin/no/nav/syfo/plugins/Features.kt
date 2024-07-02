@@ -11,6 +11,7 @@ import no.nav.syfo.narmesteleder.registrerNarmestelederApi
 import no.nav.syfo.oppgave.registerHentOppgaverApi
 import no.nav.syfo.saf.api.registerJournalpostApi
 import no.nav.syfo.sykmelding.delete_sykmelding.registerDeleteSykmeldingApi
+import no.nav.syfo.sykmeldingsopplysninger.registerSykmeldingsOpplysningerApi
 
 fun Application.configureFeatures() {
     routing {
@@ -23,6 +24,7 @@ fun Application.configureFeatures() {
                 registerDeleteLegeerklaeringApi()
                 registerJournalpostApi()
                 registerPersonApi()
+                registerSykmeldingsOpplysningerApi()
             }
         }
     }

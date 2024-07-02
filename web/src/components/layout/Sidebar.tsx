@@ -60,6 +60,13 @@ function Sidebar({ className }: Props): ReactElement {
           </Link>
         </li>
       </SidebarMenuItem>
+        <SidebarMenuItem title="Sykmeldingsopplysninger" Icon={BandageIcon}>
+            <li>
+                <Link to="/sykmeldingsopplysninger/oppslag">
+                    Hent sykmeldingsopplysninger på en person
+                </Link>
+            </li>
+        </SidebarMenuItem>
     </div>
   );
 }

@@ -5,6 +5,7 @@ type KnownPaths =
   | "/oppgave/list"
   | "/narmesteleder"
   | "/sykmelding/fnr"
+  | "/sykmeldingsopplysninger/oppslag"
   | (string & {});
 
 export async function fetchApi<SchemaType extends ZodTypeAny>(

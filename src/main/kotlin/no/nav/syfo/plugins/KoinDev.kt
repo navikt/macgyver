@@ -24,8 +24,12 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDevelopment
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {
@@ -37,6 +41,7 @@ fun KoinApplication.initDevelopmentModules() {
         developmentNarmestelederModule,
         developmentSykmeldingModule,
         developmentDokarkivModule,
+        developmentSykmeldingsopplysningerModule,
     )
 }
 
@@ -85,12 +90,12 @@ val developmentEnv = module {
             pdlGraphqlPath = "dummy-value",
             pdlScope = "dummy-value",
             narmestelederScope = "dummy-value",
-            syfosmregisterDatabaseUsername = "dummy-value",
-            syfosmregisterDatabasePassword = "dummy-value",
-            syfosmregisterDatabaseHost = "dummy-value",
-            syfosmregisterDatabasePort = "dummy-value",
-            syfosmregisterDatabaseName = "dummy-value",
-            syfosmregisterDatabaseCloudSqlInstance = "dummy-value",
+            syfosmregisterDatabaseUsername = "hein.haraldsen@nav.no",
+            syfosmregisterDatabasePassword = "",
+            syfosmregisterDatabaseHost = "localhost",
+            syfosmregisterDatabasePort = "5432",
+            syfosmregisterDatabaseName = "smregister",
+            syfosmregisterDatabaseCloudSqlInstance = "",
             safGraphqlPath = "dummy-value",
             safScope = "dummy-value",
             dokArkivUrl = "dummy-value",
@@ -103,6 +108,7 @@ val developmentEnv = module {
 val developmentSykmeldingModule = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<DeleteSykmeldingDatabase> { DeleteSykmeldingDatabaseDevelopment() }
+
     single {
         val env = get<EnvironmentVariables>()
 
@@ -111,10 +117,10 @@ val developmentSykmeldingModule = module {
             sykmeldingStatusKafkaProducer = get(),
             tombstoneProducer = get(),
             topics =
-                listOf(
-                    env.manuellTopic,
-                    env.papirSmRegistreringTopic,
-                ),
+            listOf(
+                env.manuellTopic,
+                env.papirSmRegistreringTopic,
+            ),
             dokArkivClient = get(),
         )
     }
@@ -131,3 +137,13 @@ val developmentSykmeldingModule = module {
 }
 
 val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClientDevelopment() } }
+
+val developmentSykmeldingsopplysningerModule = module {
+    // single<GetSykmeldingOpplysningerDatabase> { GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase"))) }
+    // single<SykmeldingsOpplysningerClient> { DevelopmentSykmeldingsOpplysningerClient() }
+    single {
+        GetSykmeldingOpplysningerService(
+            getSykmeldingOpplysningerDatabase = get(),
+        )
+    }
+}
