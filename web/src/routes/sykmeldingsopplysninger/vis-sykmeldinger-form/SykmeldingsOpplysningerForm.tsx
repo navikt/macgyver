@@ -126,7 +126,7 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
 
                     <ul className={"list-style-type: none;"}>
                         <li><b>perioder er
-                            følgende</b> {activePeriod.perioder.map((periode, periodindex) =>
+                            følgende:</b> {activePeriod.perioder.map((periode, periodindex) =>
                             <div key={periodindex} style={{paddingLeft: '20px'}}>
                                 <p><b>fom</b> = {periode.fom}</p>
                                 <p><b>tom</b> = {periode.tom}</p>
@@ -174,7 +174,6 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
             )}
         </div>
     )
-        ;
 };
 
 export default SykmeldingsOpplysningerForm;

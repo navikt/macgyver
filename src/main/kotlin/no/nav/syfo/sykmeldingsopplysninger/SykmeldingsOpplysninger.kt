@@ -3,8 +3,6 @@ package no.nav.syfo.sykmeldingsopplysninger
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
-import no.nav.syfo.model.Merknad
-import no.nav.syfo.model.Status
 
 data class Sykmeldingsopplysninger(val fnr: String, val sykmeldinger: List<Sykmelding>)
 
@@ -24,7 +22,7 @@ data class RuleInfo(
     val ruleName: String?,
     val messageForSender: String?,
     val messageForUser: String?,
-    val ruleStatus: Status?
+    val ruleStatus: no.nav.syfo.sykmeldingsopplysninger.Status
 )
 
 data class Sykmelding(
@@ -62,3 +60,17 @@ data class HovedDiagnose(
     val system: String,
     val tekst: String?,
 )
+
+data class Merknad(val type: String, val beskrivelse: String?)
+
+enum class Status {
+    OK,
+    MANUAL_PROCESSING,
+    INVALID
+}
+
+data class SykmeldingDok(
+    val perioder: List<Periode?>?,
+    val hovedDiagnose: HovedDiagnose?
+)
+

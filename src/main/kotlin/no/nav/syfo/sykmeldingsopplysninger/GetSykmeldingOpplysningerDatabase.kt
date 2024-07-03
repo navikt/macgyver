@@ -4,17 +4,11 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.ResultSet
 import no.nav.syfo.db.Database
 import no.nav.syfo.logging.logger
-import no.nav.syfo.model.Merknad
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
     suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
-
-data class SykmeldingDok(
-    val perioder: List<Periode?>?,
-    val hovedDiagnose: HovedDiagnose?
-)
 
 class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
@@ -55,8 +49,9 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                     statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
                     arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
                     behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
+                    synligStatus = getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
                     perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
-                    hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose
+                    hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
             )
         }
     }
@@ -187,7 +182,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 hovedDiagnose = null,
                 merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
                 // statusEvent = getSykmeldingStatus("id"),
-                statusEvent = "APEN",
+                statusEvent = null,
                 perioder = null,
             )
         return sykmeldingsopplysninger
@@ -226,6 +221,18 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
             val sykmeldingDokument =
                 objectMapper.readValue<SykmeldingDokument>(sykmeldingDokumentJson)
             sykmeldingDokument.medisinskVurdering.hovedDiagnose
+        }
+    }
+
+    private fun getSynligStatus(status: String?): String {
+        if (status == "OK") {
+            return "success"
+        } else if (status == "MANUAL_PROCESSING") {
+            return "warning"
+        } else if (status == "INVALID") {
+            return "danger"
+        } else {
+            return "neutral"
         }
     }
 }
