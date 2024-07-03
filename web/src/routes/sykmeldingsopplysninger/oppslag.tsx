@@ -9,12 +9,10 @@ import {SykmeldingsOpplysningerSchema} from "../../types/sykmeldingsOpplysninger
 import { raiseError } from "../../utils/ts.ts";
 import SykmeldingsOpplysningerForm from "./vis-sykmeldinger-form/SykmeldingsOpplysningerForm.tsx";
 
-export function SykmeldingsOpplysningerOppslag(): ReactElement {
+function SykmeldingsOpplysningerOppslag(): ReactElement {
 
   const [fnrToSearch, setFnrToSearch] = useState<string | null>(null);
-  console.log("Oppslagopplysninger " + fnrToSearch)
   const { data, error, isFetching } = useQuery({
-
     queryKey: ["sykmeldingPerson", fnrToSearch],
     queryFn: async () =>
       fetchApi("/sykmeldingsopplysninger", {

@@ -31,15 +31,15 @@ fun Route.registerSykmeldingsOpplysningerApi() {
         val sykmeldingsOpplysninger =
             getSykmeldingOpplysningerService.getSykmeldingOpplysninger(fnr)
         val principal = call.safePrincipal()
-        /*  auditlogg.info(
-              AuditLogger(principal.email)
-                  .createcCefMessage(
-                      fnr = fnr,
-                      operation = AuditLogger.Operation.READ,
-                      requestPath = "/api/sykmeldingsopplysninger",
-                      permit = AuditLogger.Permit.PERMIT,
-                  ),
-          )*/
+        auditlogg.info(
+            AuditLogger(principal.email)
+                .createcCefMessage(
+                    fnr = fnr,
+                    operation = AuditLogger.Operation.READ,
+                    requestPath = "/api/sykmeldingsopplysninger",
+                    permit = AuditLogger.Permit.PERMIT,
+                ),
+        )
         call.respond(HttpStatusCode.OK, sykmeldingsOpplysninger)
     }
 }

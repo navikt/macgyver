@@ -3,7 +3,6 @@ package no.nav.syfo.sykmeldingsopplysninger
 import java.time.LocalDate
 import java.util.UUID
 import no.nav.syfo.model.Merknad
-import no.nav.syfo.model.RuleInfo
 import no.nav.syfo.model.Status
 
 interface SykmeldingsOpplysningerClient {

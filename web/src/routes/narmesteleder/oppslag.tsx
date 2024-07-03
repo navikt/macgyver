@@ -13,7 +13,6 @@ import NLRequestForm from "./hent-narmesteleder/NLRequestForm";
 
 function OppslagNarmesteleder(): ReactElement {
   const [fnrToSearch, setFnrToSearch] = useState<string | null>(null);
-  console.log("Calling nærmeste leder")
   const { data, error, isFetching } = useQuery({
     queryKey: ["person", fnrToSearch],
     queryFn: async () =>
