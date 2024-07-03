@@ -19,7 +19,6 @@ const SykmeldingItem = ({fnr, sykmeldingId, mottattTidspunkt, mottakId, statusEv
     return (
 
         // wrap en timelineperiode rundt
-        // lage en onclick av noe slag, dersom onlcik vis sykmeldingsopplysnigner
         <li className="flex border-b border-gray-600 py-1 max-[1030px]:flex-col">
             <BodyShort className="min-w-[15rem] font-bold">
                 {fnr}

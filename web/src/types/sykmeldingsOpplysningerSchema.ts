@@ -11,13 +11,13 @@ export const RuleHitsSchema = z.object({
     ruleName: z.string(),
     messageForSender: z.string(),
     messageForUser: z.string(),
-    ruleStatus: RuleStatusSchema,
+    ruleStatus: RuleStatusSchema.nullable(),
 })
 
 
 export const BehandlingsutfallSchema = z.object({
     status: z.string(),
-    ruleHits: z.array(RuleHitsSchema)
+    ruleHits: z.array(RuleHitsSchema).nullable()
 })
 
 export const MerknadSchema = z.object({
@@ -39,16 +39,16 @@ export const HovedDiagnoseSchema = z.object({
 
 export const SykmeldingSchema = z.object({
     sykmeldingId: z.string(),
-    merknader: z.array(MerknadSchema),
-    tssId: z.string(),
+    merknader: z.array(MerknadSchema).nullable(),
+    tssId: z.string().nullable(),
     statusEvent: z.string(),
     mottakId: z.string(),
     mottattTidspunkt: z.string(),
-    behandlingsUtfall: BehandlingsutfallSchema,
+    behandlingsUtfall: BehandlingsutfallSchema.nullable(),
     perioder: z.array(PeriodeSchema),
-    synligStatus: z.string(),
-    arbeidsgiver: ArbeidsgiverSchema,
-    hovedDiagnose: HovedDiagnoseSchema,
+    synligStatus: z.string().nullable(),
+    arbeidsgiver: ArbeidsgiverSchema.nullable(),
+    hovedDiagnose: HovedDiagnoseSchema.nullable(),
 
 })
 
