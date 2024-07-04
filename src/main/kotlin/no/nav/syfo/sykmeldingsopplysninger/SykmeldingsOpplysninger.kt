@@ -13,10 +13,8 @@ data class Periode(
 
 data class BehandlingsUtfall(
     val status: String,
-    @JsonProperty("ruleHits")
-    val ruleHits: List<RuleInfo>?
+    @JsonProperty("ruleHits") val ruleHits: List<RuleInfo>?
 )
-
 
 data class RuleInfo(
     val ruleName: String?,
@@ -41,8 +39,7 @@ data class Sykmelding(
 
 data class SykmeldingDokument(
     val id: String,
-    @JsonProperty("perioder")
-    val perioder: List<Periode?>?,
+    @JsonProperty("perioder") val perioder: List<Periode?>?,
     val medisinskVurdering: MedisinskVurdering
 )
 
@@ -69,8 +66,4 @@ enum class Status {
     INVALID
 }
 
-data class SykmeldingDok(
-    val perioder: List<Periode?>?,
-    val hovedDiagnose: HovedDiagnose?
-)
-
+data class SykmeldingDok(val perioder: List<Periode?>?, val hovedDiagnose: HovedDiagnose?)

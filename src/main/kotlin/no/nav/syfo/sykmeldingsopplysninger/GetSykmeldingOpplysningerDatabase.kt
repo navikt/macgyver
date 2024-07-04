@@ -24,20 +24,22 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
         val sykmeldinger = mutableListOf<Sykmelding>()
 
         this.database.connection.use { connection ->
-            connection.prepareStatement(
-                """
+            connection
+                .prepareStatement(
+                    """
                      select * from sykmeldingsopplysninger smo 
                      where smo.pasient_fnr = ?
                     """,
-            ).use { statement ->
-                statement.setString(1, fnr)
-                statement.executeQuery().use { resultSet ->
-                    while (resultSet.next()) {
-                        val sykmelding = resultSet.toSykmelding()
-                        sykmeldinger.add(sykmelding)
+                )
+                .use { statement ->
+                    statement.setString(1, fnr)
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmelding = resultSet.toSykmelding()
+                            sykmeldinger.add(sykmelding)
+                        }
                     }
                 }
-            }
         }
 
         val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
@@ -46,12 +48,13 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
         val sykmeldingDok = getPerioderAndHovedDiagnose(sykmeldinger.map { it.sykmeldingId })
         return sykmeldinger.map { sykmelding ->
             sykmelding.copy(
-                    statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
-                    arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
-                    behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
-                    synligStatus = getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
-                    perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
-                    hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
+                statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
+                arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
+                behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
+                synligStatus =
+                    getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
+                perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
+                hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
             )
         }
     }
@@ -61,28 +64,27 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
-            connection.prepareStatement(
-                """
+            connection
+                .prepareStatement(
+                    """
                 SELECT * FROM arbeidsgiver arb
                 WHERE arb.sykmelding_id IN ($inClause)
             """,
-            ).use { statement ->
-                sykmeldingIds.forEachIndexed { index, id ->
-                    statement.setString(index + 1, id)
-                }
-                statement.executeQuery().use { resultSet ->
-                    while (resultSet.next()) {
-                        val sykmeldingId = resultSet.getString("sykmelding_id")
-                        val arbeidsgiver = resultSet.toArbeidsgiver()
-                        arbeidsgivere[sykmeldingId] = arbeidsgiver
+                )
+                .use { statement ->
+                    sykmeldingIds.forEachIndexed { index, id -> statement.setString(index + 1, id) }
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmeldingId = resultSet.getString("sykmelding_id")
+                            val arbeidsgiver = resultSet.toArbeidsgiver()
+                            arbeidsgivere[sykmeldingId] = arbeidsgiver
+                        }
                     }
                 }
-            }
         }
 
         return arbeidsgivere
     }
-
 
     private fun getBehandlingsUtfall(sykmeldingIds: List<String>): Map<String, BehandlingsUtfall?> {
 
@@ -90,54 +92,56 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
-            connection.prepareStatement(
-                """
+            connection
+                .prepareStatement(
+                    """
                 SELECT * FROM behandlingsutfall beh
                 WHERE beh.id IN ($inClause)
             """,
-            ).use { statement ->
-                sykmeldingIds.forEachIndexed { index, id ->
-                    statement.setString(index + 1, id)
-                }
-                statement.executeQuery().use { resultSet ->
-                    while (resultSet.next()) {
-                        val sykmeldingId = resultSet.getString("id")
-                        val behandlingsUtfall = resultSet.toBehandlingsutfall()
-                        behandlingsUtfallList[sykmeldingId] = behandlingsUtfall
+                )
+                .use { statement ->
+                    sykmeldingIds.forEachIndexed { index, id -> statement.setString(index + 1, id) }
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmeldingId = resultSet.getString("id")
+                            val behandlingsUtfall = resultSet.toBehandlingsutfall()
+                            behandlingsUtfallList[sykmeldingId] = behandlingsUtfall
+                        }
                     }
                 }
-            }
         }
 
         return behandlingsUtfallList
     }
 
-    private fun getPerioderAndHovedDiagnose(sykmeldingIds: List<String>): MutableMap<String, SykmeldingDok?> {
+    private fun getPerioderAndHovedDiagnose(
+        sykmeldingIds: List<String>
+    ): MutableMap<String, SykmeldingDok?> {
         val periodeList = mutableMapOf<String, List<Periode?>?>()
         val hovedDiagnoseList = mutableMapOf<String, HovedDiagnose?>()
         val sykmeldingDokList = mutableMapOf<String, SykmeldingDok?>()
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
-            connection.prepareStatement(
-                """
+            connection
+                .prepareStatement(
+                    """
                      select * from sykmeldingsdokument smd
                      where smd.id IN ($inClause)
                     """,
-            ).use { statement ->
-                sykmeldingIds.forEachIndexed { index, id ->
-                    statement.setString(index + 1, id)
-                }
-                statement.executeQuery().use { resultSet ->
-                    while (resultSet.next()) {
-                        val sykmeldingId = resultSet.getString("id")
-                        val perioder = resultSet.toPerioder()
-                        val hovedDiagnose = resultSet.toHovedDiagnose()
-                        periodeList[sykmeldingId] = perioder
-                        hovedDiagnoseList[sykmeldingId] = hovedDiagnose
-                        sykmeldingDokList[sykmeldingId] = SykmeldingDok(perioder, hovedDiagnose)
+                )
+                .use { statement ->
+                    sykmeldingIds.forEachIndexed { index, id -> statement.setString(index + 1, id) }
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmeldingId = resultSet.getString("id")
+                            val perioder = resultSet.toPerioder()
+                            val hovedDiagnose = resultSet.toHovedDiagnose()
+                            periodeList[sykmeldingId] = perioder
+                            hovedDiagnoseList[sykmeldingId] = hovedDiagnose
+                            sykmeldingDokList[sykmeldingId] = SykmeldingDok(perioder, hovedDiagnose)
+                        }
                     }
                 }
-            }
         }
         return sykmeldingDokList
     }
@@ -147,23 +151,23 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
-            connection.prepareStatement(
-                """ 
+            connection
+                .prepareStatement(
+                    """ 
                      select * from sykmeldingstatus status
                      where status.sykmelding_id IN ($inClause)
                     """,
-            ).use { statement ->
-                sykmeldingIds.forEachIndexed { index, id ->
-                    statement.setString(index + 1, id)
-                }
-                statement.executeQuery().use { resultSet ->
-                    while (resultSet.next()) {
-                        val sykmeldingId = resultSet.getString("sykmelding_id")
-                        val status = resultSet.getString("event")
-                        statusList[sykmeldingId] = status
+                )
+                .use { statement ->
+                    sykmeldingIds.forEachIndexed { index, id -> statement.setString(index + 1, id) }
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmeldingId = resultSet.getString("sykmelding_id")
+                            val status = resultSet.getString("event")
+                            statusList[sykmeldingId] = status
+                        }
                     }
                 }
-            }
         }
 
         return statusList
@@ -180,7 +184,8 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 synligStatus = null,
                 behandlingsUtfall = null,
                 hovedDiagnose = null,
-                merknader = getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                merknader =
+                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
                 // statusEvent = getSykmeldingStatus("id"),
                 statusEvent = null,
                 perioder = null,

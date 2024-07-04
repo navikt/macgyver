@@ -25,13 +25,10 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDev
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
 import no.nav.syfo.sykmeldingsopplysninger.DevelopmentSykmeldingsOpplysningerClient
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
-import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.sykmeldingsopplysninger.SykmeldingsOpplysningerClient
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 fun KoinApplication.initDevelopmentModules() {
@@ -119,10 +116,10 @@ val developmentSykmeldingModule = module {
             sykmeldingStatusKafkaProducer = get(),
             tombstoneProducer = get(),
             topics =
-            listOf(
-                env.manuellTopic,
-                env.papirSmRegistreringTopic,
-            ),
+                listOf(
+                    env.manuellTopic,
+                    env.papirSmRegistreringTopic,
+                ),
             dokArkivClient = get(),
         )
     }
