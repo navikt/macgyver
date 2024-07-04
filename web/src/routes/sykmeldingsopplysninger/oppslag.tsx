@@ -27,7 +27,7 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
     <BasicPage
       title="Hent sykmeldingsopplysninger"
       ingress="Hent sykmeldingsopplysninger om en person med fødselsnummer"
-      hasAuditLog={false}
+      hasAuditLog={true}
     >
       <FnrForm
         onChange={(fnr: string): void => {

@@ -5,7 +5,6 @@ import java.sql.ResultSet
 import java.time.LocalDate
 import java.util.*
 import no.nav.syfo.db.Database
-import no.nav.syfo.logging.logger
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
