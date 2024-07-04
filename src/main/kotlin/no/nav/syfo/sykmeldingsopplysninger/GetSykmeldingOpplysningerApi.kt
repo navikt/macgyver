@@ -13,7 +13,6 @@ import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerSykmeldingsOpplysningerApi() {
-    val sykmeldingsOpplysningerClient by inject<SykmeldingsOpplysningerClient>()
     val getSykmeldingOpplysningerService by inject<GetSykmeldingOpplysningerService>()
 
     get("/sykmeldingsopplysninger") {
