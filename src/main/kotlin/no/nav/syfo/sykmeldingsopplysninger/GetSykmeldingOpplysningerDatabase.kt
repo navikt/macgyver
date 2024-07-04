@@ -5,6 +5,7 @@ import java.sql.ResultSet
 import java.time.LocalDate
 import java.util.*
 import no.nav.syfo.db.Database
+import no.nav.syfo.logging.logger
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
@@ -260,7 +261,8 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
     private fun getArbeidsgivere(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
         val arbeidsgivere = mutableMapOf<String, Arbeidsgiver>()
-
+        logger.info("sykmeldingIds" + sykmeldingIds.joinToString(",") { "?" })
+        logger.info("Spørring er " + " SELECT * FROM arbeidsgiver arb WHERE arb.sykmelding_id IN " + sykmeldingIds.joinToString(",") { "?" })
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
             connection
