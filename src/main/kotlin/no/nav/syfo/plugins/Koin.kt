@@ -38,6 +38,7 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerPro
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
 import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.utils.EnvironmentVariables
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
@@ -166,6 +167,12 @@ val sykmeldingModule = module {
             sendtSykmeldingTopic = get<EnvironmentVariables>().sendSykmeldingV2Topic,
         )
     }
+
+    single {
+       GetSykmeldingOpplysningerService(
+            getSykmeldingOpplysningerDatabase = get(),
+        )
+    }
 }
 
 val legeerklaeringModule = module {
@@ -280,4 +287,3 @@ val kafkaModules = module {
         )
     }
 }
-
