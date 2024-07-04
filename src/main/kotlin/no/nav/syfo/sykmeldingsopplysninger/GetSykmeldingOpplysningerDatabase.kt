@@ -222,7 +222,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         val sykmeldinger = mutableListOf<Sykmelding>()
-
+        logger.info("Initierer sykmelding")
         this.database.connection.use { connection ->
             connection
                 .prepareStatement(
@@ -242,6 +242,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 }
         }
 
+        logger.info("Henter sykmeldinger " + sykmeldinger.size)
         val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
         val behandlingsUtfall = getBehandlingsUtfall(sykmeldinger.map { it.sykmeldingId })
         val sykmeldingStatus = getSykmeldingStatus(sykmeldinger.map { it.sykmeldingId })
@@ -261,8 +262,6 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
     private fun getArbeidsgivere(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
         val arbeidsgivere = mutableMapOf<String, Arbeidsgiver>()
-        logger.info("sykmeldingIds" + sykmeldingIds.joinToString(",") { "?" })
-        logger.info("Spørring er " + " SELECT * FROM arbeidsgiver arb WHERE arb.sykmelding_id IN " + sykmeldingIds.joinToString(",") { "?" })
         this.database.connection.use { connection ->
             val inClause = sykmeldingIds.joinToString(",") { "?" }
             connection

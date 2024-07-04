@@ -26,8 +26,6 @@ fun Route.registerSykmeldingsOpplysningerApi() {
             return@get
         }
 
-        //   val sykmeldingsOpplysninger =
-        // sykmeldingsOpplysningerClient.getSykmeldingsopplysninger(fnr)
         val sykmeldingsOpplysninger =
             getSykmeldingOpplysningerService.getSykmeldingOpplysninger(fnr)
         val principal = call.safePrincipal()
