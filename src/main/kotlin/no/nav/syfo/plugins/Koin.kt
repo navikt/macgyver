@@ -75,7 +75,6 @@ fun KoinApplication.initProductionModules() {
         dokarkivModule,
         sykmeldingModule,
         safModule,
-        sykmeldingsopplysningerModule,
     )
 }
 
@@ -282,8 +281,3 @@ val kafkaModules = module {
     }
 }
 
-val sykmeldingsopplysningerModule = module {
-    single<GetSykmeldingOpplysningerDatabase> {
-        GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
-    }
-}
