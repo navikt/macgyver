@@ -19,36 +19,36 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
                 merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
                     ),
+                ),
                 tssId = "123456",
                 statusEvent = "SENDT",
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-01-01").atStartOfDay(),
                 behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
                     listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 1),
-                            tom = LocalDate.of(2021, 1, 30),
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
                         ),
                     ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 1),
+                        tom = LocalDate.of(2021, 1, 30),
+                    ),
+                ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
@@ -56,36 +56,36 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
                 merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
                     ),
+                ),
                 tssId = "123456",
                 statusEvent = "SENDT",
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
                 behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "MANUAL_PROCESSING",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
+                BehandlingsUtfall(
+                    status = "MANUAL_PROCESSING",
+                    ruleHits =
                     listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 2, 10),
-                            tom = LocalDate.of(2021, 2, 20),
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
                         ),
                     ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 2, 10),
+                        tom = LocalDate.of(2021, 2, 20),
+                    ),
+                ),
                 synligStatus = getSynligStatus(Status.MANUAL_PROCESSING),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
@@ -93,36 +93,36 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
                 merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
                     ),
+                ),
                 tssId = "123456",
                 statusEvent = "SENDT",
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
                 behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
                     listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 2, 21),
-                            tom = LocalDate.of(2021, 2, 28),
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
                         ),
                     ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 2, 21),
+                        tom = LocalDate.of(2021, 2, 28),
+                    ),
+                ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
@@ -130,36 +130,36 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
                 merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
                     ),
+                ),
                 tssId = "123456",
                 statusEvent = "SENDT",
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-01-30").atStartOfDay(),
                 behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "INVALID",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
+                BehandlingsUtfall(
+                    status = "INVALID",
+                    ruleHits =
                     listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 30),
-                            tom = LocalDate.of(2021, 2, 8),
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
                         ),
                     ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 30),
+                        tom = LocalDate.of(2021, 2, 8),
+                    ),
+                ),
                 synligStatus = getSynligStatus(Status.INVALID),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
@@ -167,36 +167,36 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
                 merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
                     ),
+                ),
                 tssId = "123456",
                 statusEvent = "SENDT",
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-01-15").atStartOfDay(),
                 behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
                     listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 15),
-                            tom = LocalDate.of(2021, 2, 3),
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
                         ),
                     ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 15),
+                        tom = LocalDate.of(2021, 2, 3),
+                    ),
+                ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
@@ -222,7 +222,6 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
 
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         val sykmeldinger = mutableListOf<Sykmelding>()
-        logger.info("Initierer sykmelding")
         this.database.connection.use { connection ->
             connection
                 .prepareStatement(
@@ -242,22 +241,23 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 }
         }
 
-        logger.info("Henter sykmeldinger " + sykmeldinger.size)
-        val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
-        val behandlingsUtfall = getBehandlingsUtfall(sykmeldinger.map { it.sykmeldingId })
-        val sykmeldingStatus = getSykmeldingStatus(sykmeldinger.map { it.sykmeldingId })
-        val sykmeldingDok = getPerioderAndHovedDiagnose(sykmeldinger.map { it.sykmeldingId })
-        return sykmeldinger.map { sykmelding ->
-            sykmelding.copy(
-                statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
-                arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
-                behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
-                synligStatus =
+        if (sykmeldinger.size > 0) {
+            val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
+            val behandlingsUtfall = getBehandlingsUtfall(sykmeldinger.map { it.sykmeldingId })
+            val sykmeldingStatus = getSykmeldingStatus(sykmeldinger.map { it.sykmeldingId })
+            val sykmeldingDok = getPerioderAndHovedDiagnose(sykmeldinger.map { it.sykmeldingId })
+            return sykmeldinger.map { sykmelding ->
+                sykmelding.copy(
+                    statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
+                    arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
+                    behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
+                    synligStatus =
                     getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
-                perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
-                hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
-            )
-        }
+                    perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
+                    hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
+                )
+            }
+        } else return emptyList()
     }
 
     private fun getArbeidsgivere(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
@@ -385,7 +385,7 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
                 behandlingsUtfall = null,
                 hovedDiagnose = null,
                 merknader =
-                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
                 // statusEvent = getSykmeldingStatus("id"),
                 statusEvent = null,
                 perioder = null,
