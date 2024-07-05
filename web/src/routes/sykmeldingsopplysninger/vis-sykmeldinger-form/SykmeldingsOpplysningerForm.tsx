@@ -95,7 +95,7 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
                                     children={<div>
                                         <b>Sykmelding med id: {sykmelding.sykmeldingId} </b>
                                         <ul className={"list-style-type: none;"}>
-                                            <li><b>Periode er
+                                            <li><b>Perioder er
                                                 følgende:</b> {sykmelding.perioder.map((periode, periodindex) =>
                                                 <div key={periodindex} style={{paddingLeft: '20px'}}>
                                                     <p><b>fom</b> = {periode.fom}</p>
@@ -128,7 +128,7 @@ const SykmeldingsOpplysningerForm = ({person}: SykmeldingsOpplysningerProps): Re
                         <br/>
 
                         <ul className={"list-style-type: none;"}>
-                            <li><b>perioder er
+                            <li><b>Perioder er
                                 følgende:</b> {activePeriod.perioder.map((periode, periodindex) =>
                                 <div key={periodindex} style={{paddingLeft: '20px'}}>
                                     <p><b>fom</b> = {periode.fom}</p>
