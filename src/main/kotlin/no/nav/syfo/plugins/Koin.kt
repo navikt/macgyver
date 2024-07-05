@@ -34,10 +34,12 @@ import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingService
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClient
 import no.nav.syfo.sykmelding.delete_sykmelding.DokArkivClientProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
-import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer.*
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerProduction
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerProduction
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseProduction
 import no.nav.syfo.utils.EnvironmentVariables
 import no.nav.syfo.utils.JacksonNullableKafkaSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -137,6 +139,9 @@ val sykmeldingModule = module {
     single<DeleteSykmeldingDatabase> {
         DeleteSykmeldingDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
     }
+    single<GetSykmeldingOpplysningerDatabase> {
+        GetSykmeldingerDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
+    }
     single {
         val env = get<EnvironmentVariables>()
 
@@ -160,6 +165,12 @@ val sykmeldingModule = module {
             narmesteLederResponseKafkaProducer = get(),
             narmestelederClient = get(),
             sendtSykmeldingTopic = get<EnvironmentVariables>().sendSykmeldingV2Topic,
+        )
+    }
+
+    single {
+       GetSykmeldingOpplysningerService(
+            getSykmeldingOpplysningerDatabase = get(),
         )
     }
 }

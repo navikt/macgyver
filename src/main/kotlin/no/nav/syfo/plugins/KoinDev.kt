@@ -24,6 +24,9 @@ import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.SykmeldingStatusKafkaProducerDevelopment
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducer
 import no.nav.syfo.sykmelding.delete_sykmelding.TombstoneKafkaProducerDevelopment
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerDatabase
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingOpplysningerService
+import no.nav.syfo.sykmeldingsopplysninger.GetSykmeldingerDatabaseDevelopment
 import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.core.KoinApplication
 import org.koin.dsl.module
@@ -37,6 +40,7 @@ fun KoinApplication.initDevelopmentModules() {
         developmentNarmestelederModule,
         developmentSykmeldingModule,
         developmentDokarkivModule,
+        developmentSykmeldingsopplysningerModule,
     )
 }
 
@@ -90,7 +94,7 @@ val developmentEnv = module {
             syfosmregisterDatabaseHost = "dummy-value",
             syfosmregisterDatabasePort = "dummy-value",
             syfosmregisterDatabaseName = "dummy-value",
-            syfosmregisterDatabaseCloudSqlInstance = "dummy-value",
+            syfosmregisterDatabaseCloudSqlInstance = "",
             safGraphqlPath = "dummy-value",
             safScope = "dummy-value",
             dokArkivUrl = "dummy-value",
@@ -103,6 +107,7 @@ val developmentEnv = module {
 val developmentSykmeldingModule = module {
     single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<DeleteSykmeldingDatabase> { DeleteSykmeldingDatabaseDevelopment() }
+
     single {
         val env = get<EnvironmentVariables>()
 
@@ -131,3 +136,12 @@ val developmentSykmeldingModule = module {
 }
 
 val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClientDevelopment() } }
+
+val developmentSykmeldingsopplysningerModule = module {
+    single<GetSykmeldingOpplysningerDatabase> { GetSykmeldingerDatabaseDevelopment() }
+    single {
+        GetSykmeldingOpplysningerService(
+            getSykmeldingOpplysningerDatabase = get(),
+        )
+    }
+}
