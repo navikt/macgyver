@@ -18,7 +18,7 @@ interface UpdateFnrDatabase {
     fun updateFnr(fnr: String, nyttFnr: String): Int
 }
 
-class UpdateFnrDatabaseDevelopment() : UpdateFnrDatabase {
+class UpdateFnrDatabaseDevelopment : UpdateFnrDatabase {
     override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
         fnr: String
     ): List<SykmeldingDbModelUtenBehandlingsutfall> {
@@ -31,7 +31,7 @@ class UpdateFnrDatabaseDevelopment() : UpdateFnrDatabase {
     }
 }
 
-class UpdateFnrDatabaseProduction(val database: Database) : UpdateFnrDatabase {
+class UpdateFnrDatabaseProduction(private val database: Database) : UpdateFnrDatabase {
 
     override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
         fnr: String
@@ -77,7 +77,7 @@ class UpdateFnrDatabaseProduction(val database: Database) : UpdateFnrDatabase {
                     utenlandsk_sykmelding
                     FROM sykmeldingsopplysninger AS opplysninger
                         INNER JOIN sykmeldingsdokument AS dokument ON opplysninger.id = dokument.id
-                        LEFT OUTER JOIN arbeidsgiver as arbeidsgiver on arbeidsgiver.sykmelding_id = opplysninger.id
+                        LEFT OUTER JOIN arbeidsgiver on arbeidsgiver.sykmelding_id = opplysninger.id
                         LEFT OUTER JOIN sykmeldingstatus AS status ON opplysninger.id = status.sykmelding_id AND
                                                                    status.timestamp = (SELECT timestamp
                                                                                              FROM sykmeldingstatus
@@ -116,7 +116,7 @@ private fun ResultSet.getStatus(mottattTidspunkt: OffsetDateTime): StatusDbModel
     return when (val status = getString("event")) {
         null -> StatusDbModel(StatusEvent.APEN.name, mottattTidspunkt, null)
         else -> {
-            val status_timestamp = getTimestamp("timestamp").toInstant().atOffset(ZoneOffset.UTC)
+            val statusTimestamp = getTimestamp("timestamp").toInstant().atOffset(ZoneOffset.UTC)
             val arbeidsgiverDbModel =
                 when (status) {
                     StatusEvent.SENDT.name ->
@@ -127,7 +127,7 @@ private fun ResultSet.getStatus(mottattTidspunkt: OffsetDateTime): StatusDbModel
                         )
                     else -> null
                 }
-            return StatusDbModel(status, status_timestamp, arbeidsgiverDbModel)
+            return StatusDbModel(status, statusTimestamp, arbeidsgiverDbModel)
         }
     }
 }

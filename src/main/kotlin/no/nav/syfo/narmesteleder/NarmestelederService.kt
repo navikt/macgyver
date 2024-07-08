@@ -44,7 +44,7 @@ class NarmestelederService(
             logger.info("Sendt nl-request to ${nlRequest.nlRequest.orgnr}")
         }
 
-    suspend fun getNarmesteldereForSykmeldt(sykmeldtFnr: String): List<NarmesteLeder> {
+    suspend fun getNarmesteLedereForSykmeldt(sykmeldtFnr: String): List<NarmesteLeder> {
         return narmestelederClient.getNarmesteledere(sykmeldtFnr)
     }
 }

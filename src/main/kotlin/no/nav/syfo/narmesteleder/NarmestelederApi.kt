@@ -61,8 +61,8 @@ fun Route.registrerNarmestelederApi() {
                 ),
         )
 
-        val narmesteldereForSykmeldt = narmestelederService.getNarmesteldereForSykmeldt(fnr)
+        val narmesteledereForSykmeldt = narmestelederService.getNarmesteLedereForSykmeldt(fnr)
 
-        call.respond(HttpStatusCode.OK, narmesteldereForSykmeldt)
+        call.respond(HttpStatusCode.OK, narmesteledereForSykmeldt)
     }
 }

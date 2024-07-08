@@ -169,7 +169,7 @@ val sykmeldingModule = module {
     }
 
     single {
-       GetSykmeldingOpplysningerService(
+        GetSykmeldingOpplysningerService(
             getSykmeldingOpplysningerDatabase = get(),
         )
     }

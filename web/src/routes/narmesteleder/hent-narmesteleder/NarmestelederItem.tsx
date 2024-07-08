@@ -2,23 +2,23 @@ import { ReactElement } from "react";
 
 import { Alert } from "@navikt/ds-react";
 
-import NarmesteldereListItem from "./NarmesteldereListItem";
+import NarmesteLedereListItem from "./NarmesteLedereListItem.tsx";
 import { Narmesteleder } from "../../../types/narmesteleder.ts";
 
-interface NarmesteldereListProps {
+interface NarmesteLedereListProps {
   narmesteleder: Narmesteleder;
 }
 
 const NarmestelederItem = ({
   narmesteleder,
-}: NarmesteldereListProps): ReactElement => {
+}: NarmesteLedereListProps): ReactElement => {
   return (
     <Alert className="items-start" variant="success">
       <ul>
         {Object.entries(narmesteleder).map(([key, value]) => (
-          <NarmesteldereListItem
+          <NarmesteLedereListItem
             key={narmesteleder.fnr + key}
-            narmesteldereKey={key}
+            narmesteledereKey={key}
             value={value}
           />
         ))}
