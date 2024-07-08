@@ -2,7 +2,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.8.1"
-val jacksonVersion = "2.17.1"
+val jacksonVersion = "2.17.2"
 val ktorVersion = "2.3.12"
 val logbackVersion = "1.5.6"
 val logstashEncoderVersion = "7.4"
@@ -31,7 +31,7 @@ val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
 val snappyJavaVersion = "1.1.10.5"
 val javaVersion = JavaVersion.VERSION_21
-val kafkaVersion = "3.7.0"
+val kafkaVersion = "3.7.1"
 val diagnosekoderVersion = "1.2024.0"
 val koinVersion = "3.5.6"
 
