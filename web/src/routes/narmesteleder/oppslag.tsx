@@ -26,7 +26,7 @@ function OppslagNarmesteleder(): ReactElement {
   return (
     <BasicPage
       title="Nærmesteledere for sykmeldt"
-      ingress="Henting narmesteldere for ein sykmeldt person"
+      ingress="Henting narmesteledere for ein sykmeldt person"
       hasAuditLog
     >
       <NLRequestForm
@@ -37,10 +37,10 @@ function OppslagNarmesteleder(): ReactElement {
       {!data && !error && isFetching && <Loader size="medium" />}
       {data && (
         <div className="flex flex-wrap gap-6">
-          {data.map((narmesteldere: Narmesteleder) => (
+          {data.map((narmesteledere: Narmesteleder) => (
             <NarmestelederItem
-              key={narmesteldere.fnr}
-              narmesteleder={narmesteldere}
+              key={narmesteledere.fnr}
+              narmesteleder={narmesteledere}
             />
           ))}
         </div>
