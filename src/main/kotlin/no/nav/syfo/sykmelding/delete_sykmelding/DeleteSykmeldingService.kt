@@ -46,10 +46,14 @@ class DeleteSykmeldingService(
             throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
 
-        dokArkivClient.registrerFeilMedJournalpost(
-            journalpostId = journalpostId,
-            sykmeldingId = sykmeldingID,
-        )
+        if (journalpostId == "missing") {
+            logger.info("Sletter sykmelding $sykmeldingID uten journalpostId")
+        } else {
+            dokArkivClient.registrerFeilMedJournalpost(
+                journalpostId = journalpostId,
+                sykmeldingId = sykmeldingID,
+            )
+        }
     }
 }
 
