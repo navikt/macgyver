@@ -48,7 +48,7 @@ class DokArkivClientProduction(
             }
             HttpStatusCode.InternalServerError -> {
                 logger.error(
-                    "Dokakriv svarte med feilmelding ved forsøk på å registrering av journalpost med feil for sykmeldingId {}",
+                    "Dokarkiv svarte med feilmelding ved forsøk på å registrering av journalpost med feil for sykmeldingId {}",
                     sykmeldingId,
                 )
                 throw IOException(
