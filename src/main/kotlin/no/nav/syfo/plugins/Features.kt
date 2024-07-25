@@ -3,6 +3,7 @@ package no.nav.syfo.plugins
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
+import no.nav.syfo.altinnstatus.getAltinnStatusApi
 import no.nav.syfo.identendring.registerFnrApi
 import no.nav.syfo.identendring.registerPersonApi
 import no.nav.syfo.legeerklaering.registerDeleteLegeerklaeringApi
@@ -25,6 +26,7 @@ fun Application.configureFeatures() {
                 registerJournalpostApi()
                 registerPersonApi()
                 registerSykmeldingsOpplysningerApi()
+                getAltinnStatusApi()
             }
         }
     }
