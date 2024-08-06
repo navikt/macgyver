@@ -14,7 +14,7 @@ interface TombstoneKafkaProducer {
     )
 }
 
-class TombstoneKafkaProducerProduction() : TombstoneKafkaProducer {
+class TombstoneKafkaProducerProduction : TombstoneKafkaProducer {
     private val tombstoneProducer =
         KafkaProducer<String, Any?>(
             KafkaUtils.getAivenKafkaConfig("delete-sykmelding-status-producer")
@@ -43,7 +43,7 @@ class TombstoneKafkaProducerProduction() : TombstoneKafkaProducer {
     }
 }
 
-class TombstoneKafkaProducerDevelopment() : TombstoneKafkaProducer {
+class TombstoneKafkaProducerDevelopment : TombstoneKafkaProducer {
     override fun send(
         topics: List<String>,
         id: String,

@@ -20,7 +20,7 @@ data class RuleInfo(
     val ruleName: String?,
     val messageForSender: String?,
     val messageForUser: String?,
-    val ruleStatus: no.nav.syfo.sykmeldingsopplysninger.Status
+    val ruleStatus: Status
 )
 
 data class Sykmelding(

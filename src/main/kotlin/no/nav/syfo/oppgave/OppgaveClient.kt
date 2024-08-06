@@ -44,7 +44,7 @@ class ProductionOppgaveClient(
 }
 
 class DevelopmentOppgaveClient : OppgaveClient {
-    val devData: List<Oppgave> =
+    private val devData: List<Oppgave> =
         listOf(
             Oppgave(
                 id = 362848304,

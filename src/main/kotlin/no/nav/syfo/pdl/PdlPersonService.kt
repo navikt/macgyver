@@ -19,18 +19,16 @@ class PdlPersonService(
             pdlResponse.errors.forEach { logger.error("PDL kastet error: {} ", it) }
         }
         if (
-            pdlResponse.data.hentIdenter == null ||
-                pdlResponse.data.hentIdenter.identer.isNullOrEmpty()
+            pdlResponse.data.hentIdenter == null || pdlResponse.data.hentIdenter.identer.isEmpty()
         ) {
             logger.error("Fant ikke aktørid i PDL {}")
             throw FolkeRegistertIdentNotFoundException("Fant ikke FolkeRegistertIdent i PDL")
         }
-        val pdlNavn = pdlResponse.data.person?.navn?.first()
-        if (pdlNavn == null) {
-            throw FolkeRegistertIdentNotFoundException(
-                "Fant ikke FolkeRegistertIdent med navn i PDL"
-            )
-        }
+        val pdlNavn =
+            pdlResponse.data.person?.navn?.first()
+                ?: throw FolkeRegistertIdentNotFoundException(
+                    "Fant ikke FolkeRegistertIdent med navn i PDL"
+                )
 
         return PdlPerson(
             identer = pdlResponse.data.hentIdenter.identer,
@@ -47,10 +45,7 @@ class PdlPersonService(
                 logger.error("PDL returnerte error {}, {}", it, narmesteLederId)
             }
         }
-        if (
-            pdlResponse.data.hentIdenterBolk == null ||
-                pdlResponse.data.hentIdenterBolk.isNullOrEmpty()
-        ) {
+        if (pdlResponse.data.hentIdenterBolk.isNullOrEmpty()) {
             logger.error("Fant ikke identer i PDL {}", narmesteLederId)
             throw IllegalStateException("Fant ingen identer i PDL, skal ikke kunne skje!")
         }
@@ -62,12 +57,10 @@ class PdlPersonService(
                 )
             }
         }
-        return pdlResponse.data.hentIdenterBolk
-            .map {
-                it.ident to
-                    it.identer?.firstOrNull { ident -> ident.gruppe == "FOLKEREGISTERIDENT" }?.ident
-            }
-            .toMap()
+        return pdlResponse.data.hentIdenterBolk.associate {
+            it.ident to
+                it.identer?.firstOrNull { ident -> ident.gruppe == "FOLKEREGISTERIDENT" }?.ident
+        }
     }
 }
 

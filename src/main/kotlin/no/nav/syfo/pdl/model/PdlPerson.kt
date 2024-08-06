@@ -13,7 +13,7 @@ data class PdlPerson(
         return finnIdent(ident = fnr, gruppe = "FOLKEREGISTERIDENT").any { it.historisk }
     }
 
-    fun finnIdent(ident: String, gruppe: String): List<IdentInformasjon> {
+    private fun finnIdent(ident: String, gruppe: String): List<IdentInformasjon> {
         return identer.filter { it.ident == ident && it.gruppe == gruppe }
     }
 }
