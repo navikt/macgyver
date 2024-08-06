@@ -11,7 +11,7 @@ interface GetSykmeldingOpplysningerDatabase {
     suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
-class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
+class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
 
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         return listOf(
@@ -203,20 +203,16 @@ class GetSykmeldingerDatabaseDevelopment() : GetSykmeldingOpplysningerDatabase {
         )
     }
 
-    private fun getSynligStatus(s: Status): String {
-        if (s == Status.OK) {
-            return "success"
-        } else if (s == Status.MANUAL_PROCESSING) {
-            return "warning"
-        } else if (s == Status.INVALID) {
-            return "danger"
-        } else {
-            return "neutral"
+    private fun getSynligStatus(status: Status): String {
+        return when (status) {
+            Status.OK -> "success"
+            Status.MANUAL_PROCESSING -> "warning"
+            Status.INVALID -> "danger"
         }
     }
 }
 
-class GetSykmeldingerDatabaseProduction(val database: Database) :
+class GetSykmeldingerDatabaseProduction(private val database: Database) :
     GetSykmeldingOpplysningerDatabase {
 
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
@@ -429,14 +425,11 @@ class GetSykmeldingerDatabaseProduction(val database: Database) :
     }
 
     private fun getSynligStatus(status: String?): String {
-        if (status == "OK") {
-            return "success"
-        } else if (status == "MANUAL_PROCESSING") {
-            return "warning"
-        } else if (status == "INVALID") {
-            return "danger"
-        } else {
-            return "neutral"
+        return when (status) {
+            "OK" -> "success"
+            "MANUAL_PROCESSING" -> "warning"
+            "INVALID" -> "danger"
+            else -> "neutral"
         }
     }
 }
