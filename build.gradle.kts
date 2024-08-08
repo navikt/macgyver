@@ -22,14 +22,14 @@ val fellesformatVersion = "2.0.1"
 val kithHodemeldingVersion = "2.0.1"
 val javaTimeAdapterVersion = "1.1.3"
 val postgresVersion = "42.7.3"
-val kotlinVersion = "2.0.0"
+val kotlinVersion = "2.0.10"
 val googlePostgresVersion = "1.19.1"
 val junitVersion = "5.10.3"
 val commonsCodecVersion = "1.17.1"
 val ktfmtVersion = "0.49"
 val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.2"
-val snappyJavaVersion = "1.1.10.5"
+val snappyJavaVersion = "1.1.10.6"
 val javaVersion = JavaVersion.VERSION_21
 val kafkaVersion = "3.8.0"
 val diagnosekoderVersion = "1.2024.0"
@@ -37,7 +37,7 @@ val koinVersion = "3.5.6"
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.0.10"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
