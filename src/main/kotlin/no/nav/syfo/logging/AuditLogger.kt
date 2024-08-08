@@ -2,7 +2,7 @@ package no.nav.syfo.logging
 
 import java.time.ZonedDateTime.now
 
-private val application = "macgyver"
+private const val application = "macgyver"
 
 internal class AuditLogger(
     val email: String,

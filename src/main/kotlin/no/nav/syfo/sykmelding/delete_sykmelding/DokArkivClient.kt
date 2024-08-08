@@ -112,7 +112,7 @@ class DokArkivClientProduction(
     }
 }
 
-class DokarkivClientDevelopment() : DokArkivClient {
+class DokarkivClientDevelopment : DokArkivClient {
     override suspend fun registrerFeilMedJournalpost(
         journalpostId: String,
         sykmeldingId: String,

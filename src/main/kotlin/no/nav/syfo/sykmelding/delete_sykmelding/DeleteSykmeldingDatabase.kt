@@ -43,7 +43,8 @@ interface DeleteSykmeldingDatabase {
     fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel?
 }
 
-class DeleteSykmeldingDatabaseProduction(val database: Database) : DeleteSykmeldingDatabase {
+class DeleteSykmeldingDatabaseProduction(private val database: Database) :
+    DeleteSykmeldingDatabase {
     override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? =
         database.connection.use { connection ->
             connection
@@ -61,8 +62,8 @@ class DeleteSykmeldingDatabaseProduction(val database: Database) : DeleteSykmeld
         }
 }
 
-class DeleteSykmeldingDatabaseDevelopment() : DeleteSykmeldingDatabase {
-    override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel? {
+class DeleteSykmeldingDatabaseDevelopment : DeleteSykmeldingDatabase {
+    override fun hentSykmeldingMedId(sykmeldingId: String): SykmeldingDbModel {
         logger.info("Henter sykmelding med id $sykmeldingId")
 
         return SykmeldingDbModel(

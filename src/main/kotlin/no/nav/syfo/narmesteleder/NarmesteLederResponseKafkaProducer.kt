@@ -45,7 +45,7 @@ class NarmesteLederResponseKafkaProducerProduction(
     }
 }
 
-class NarmesteLederResponseKafkaProducerDevelopment() : NarmesteLederResponseKafkaProducer {
+class NarmesteLederResponseKafkaProducerDevelopment : NarmesteLederResponseKafkaProducer {
     override fun publishToKafka(nlResponseKafkaMessage: NlResponseKafkaMessage, orgnummer: String) {
         logger.info(
             "Publishing narmesteleder for orgnummer $orgnummer to kafka topic $nlResponseKafkaMessage"

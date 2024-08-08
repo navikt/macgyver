@@ -26,7 +26,7 @@ import org.koin.test.check.checkModules
 
 class CheckModulesTest : KoinTest {
 
-    val testEnv =
+    private val testEnv =
         EnvironmentVariables(
             applicationPort = 69,
             applicationName = "applicationName-test",
@@ -78,17 +78,17 @@ class CheckModulesTest : KoinTest {
                     ) {
                         mockk<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>()
                     }
-                    single<NarmesteLederRequestKafkaProducer>() {
-                        mockk<NarmesteLederRequestKafkaProducerDevelopment>() {}
+                    single<NarmesteLederRequestKafkaProducer> {
+                        mockk<NarmesteLederRequestKafkaProducerDevelopment> {}
                     }
-                    single<NarmesteLederResponseKafkaProducer>() {
+                    single<NarmesteLederResponseKafkaProducer> {
                         mockk<NarmesteLederResponseKafkaProducerDevelopment>()
                     }
-                    single<SykmeldingStatusKafkaProducer>() {
+                    single<SykmeldingStatusKafkaProducer> {
                         mockk<SykmeldingStatusKafkaProducerDevelopment>()
                     }
-                    single<TombstoneKafkaProducer>() { mockk<TombstoneKafkaProducerDevelopment>() }
-                    single<DokArkivClient>() { mockk<DokarkivClientDevelopment>() }
+                    single<TombstoneKafkaProducer> { mockk<TombstoneKafkaProducerDevelopment>() }
+                    single<DokArkivClient> { mockk<DokarkivClientDevelopment>() }
                 },
             )
 

@@ -30,7 +30,7 @@ class SykmeldingV2KafkaProducerProduction(
     }
 }
 
-class SykmeldingV2KafkaProducerDevelopment() : SykmeldingV2KafkaProducer {
+class SykmeldingV2KafkaProducerDevelopment : SykmeldingV2KafkaProducer {
     override fun sendSykmelding(
         sykmeldingKafkaMessage: SykmeldingV2KafkaMessage?,
         sykmeldingId: String,

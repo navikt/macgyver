@@ -18,7 +18,7 @@ interface UpdateFnrDatabase {
     fun updateFnr(fnr: String, nyttFnr: String): Int
 }
 
-class UpdateFnrDatabaseDevelopment() : UpdateFnrDatabase {
+class UpdateFnrDatabaseDevelopment : UpdateFnrDatabase {
     override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
         fnr: String
     ): List<SykmeldingDbModelUtenBehandlingsutfall> {
@@ -31,7 +31,7 @@ class UpdateFnrDatabaseDevelopment() : UpdateFnrDatabase {
     }
 }
 
-class UpdateFnrDatabaseProduction(val database: Database) : UpdateFnrDatabase {
+class UpdateFnrDatabaseProduction(private val database: Database) : UpdateFnrDatabase {
 
     override fun getSykmeldingerMedFnrUtenBehandlingsutfall(
         fnr: String
