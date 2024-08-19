@@ -37,7 +37,8 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
 
         if (sykmeldinger.size > 0) {
             val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
-            val tidligereArbeidsgiver = getTidligereArbeidsgiver(sykmeldinger.map { it.sykmeldingId })
+            val tidligereArbeidsgiver =
+                getTidligereArbeidsgiver(sykmeldinger.map { it.sykmeldingId })
             val behandlingsUtfall = getBehandlingsUtfall(sykmeldinger.map { it.sykmeldingId })
             val sykmeldingStatus = getSykmeldingStatus(sykmeldinger.map { it.sykmeldingId })
             val sykmeldingDok = getPerioderAndHovedDiagnose(sykmeldinger.map { it.sykmeldingId })
@@ -63,7 +64,10 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
             connection
                 .prepareStatement(
                     """
-                SELECT * FROM tidligere_arbeidsgiver arb
+                SELECT arb.sykmelding_id,
+                    arb.tidligere_arbeidsgiver ->> 'orgNavn' AS orgNavn, 
+                    arb.tidligere_arbeidsgiver ->> 'orgnummer' AS orgnummer 
+                 FROM tidligere_arbeidsgiver arb
                 WHERE arb.sykmelding_id IN ($inClause)
             """,
                 )
@@ -72,7 +76,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                     statement.executeQuery().use { resultSet ->
                         while (resultSet.next()) {
                             val sykmeldingId = resultSet.getString("sykmelding_id")
-                            val arbeidsgiver = resultSet.toArbeidsgiver()
+                            val arbeidsgiver = resultSet.toTidligereArbeidsgiver()
                             tidligereArbeidsgivere[sykmeldingId] = arbeidsgiver
                         }
                     }
@@ -214,6 +218,15 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 tidligereArbeidsgiver = null,
             )
         return sykmeldingsopplysninger
+    }
+
+    private fun ResultSet.toTidligereArbeidsgiver(): Arbeidsgiver {
+        val arbeidsgiver =
+            Arbeidsgiver(
+                orgnummer = getString("orgnummer"),
+                orgNavn = getString("orgNavn"),
+            )
+        return arbeidsgiver
     }
 
     private fun ResultSet.toArbeidsgiver(): Arbeidsgiver {
@@ -428,7 +441,8 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                         ),
                     ),
                 tssId = "123456",
-                statusEvent = SykmeldingStatus(status = "BEKREFTET", timestamp = LocalDateTime.now()),
+                statusEvent =
+                    SykmeldingStatus(status = "BEKREFTET", timestamp = LocalDateTime.now()),
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-01-15").atStartOfDay(),
                 behandlingsUtfall =
