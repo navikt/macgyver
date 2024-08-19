@@ -7,6 +7,7 @@ import {
     RuleInfo,
     SykmeldingsOpplysninger,
     SykmeldingStatus,
+    TidligereArbeidsgiver,
 } from '../../../types/sykmeldingsOpplysningerSchema.ts'
 import { Timeline } from '@navikt/ds-react'
 import { PersonIcon, VirusIcon } from '@navikt/aksel-icons'
@@ -45,6 +46,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
             synligStatus: string
             arbeidsgiver: Arbeidsgiver
             hovedDiagnose: HovedDiagnose
+            tidligereArbeidsgiver: TidligereArbeidsgiver
         }
 
         interface BehandlingsUtfall {
@@ -85,11 +87,13 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                 <Timeline>
                     {timelineRows.map((row, index) => (
                         <Timeline.Row
+                            key={index}
                             label={`Overlappende sykmeldinger ${index + 1}`}
                             icon={<PersonIcon aria-hidden />}
                         >
                             {row.sykmeldinger.map((sykmelding) => (
                                 <Timeline.Period
+                                    key={sykmelding.sykmeldingId}
                                     start={new Date(sykmelding.perioder[0].fom)}
                                     end={new Date(sykmelding.perioder[sykmelding.perioder.length - 1].tom)}
                                     status={sykmelding.synligStatus as StatusType}
@@ -212,20 +216,29 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                                         <b>Status: </b> {activePeriod.statusEvent.status}
                                     </p>
                                     <p>
-                                        <b>tidspunkt:</b> {activePeriod.statusEvent.timestamp}
+                                        <b>Tidspunkt:</b> {activePeriod.statusEvent.timestamp}
                                     </p>
                                 </div>
+                                {activePeriod.statusEvent.status === 'BEKREFTET' && (
+                                    <div style={{ paddingLeft: '20px' }}>
+                                        <p>
+                                            <b>Tidligere Arbeidsgiver:</b> <br />
+                                            <b> Orgnummer:</b> {activePeriod.tidligereArbeidsgiver?.orgnummer} <br />
+                                            <b> OrgNavn:</b> {activePeriod.tidligereArbeidsgiver?.orgNavn}
+                                        </p>
+                                    </div>
+                                )}
                             </li>
                             <li>
-                                <b>Arbeidsgiver:</b>
-                                <div style={{ paddingLeft: '20px' }}>
-                                    <p>
-                                        <b>Orgnummer:</b> {activePeriod.arbeidsgiver?.orgnummer}
-                                    </p>
-                                    <p>
-                                        <b>OrgNavn:</b> {activePeriod.arbeidsgiver?.orgNavn}
-                                    </p>
-                                </div>
+                                {activePeriod.statusEvent.status === 'SENDT' && (
+                                    <div style={{ paddingLeft: '20px' }}>
+                                        <p>
+                                            <b>Arbeidsgiver:</b> <br />
+                                            <b> Orgnummer:</b> {activePeriod.arbeidsgiver?.orgnummer} <br />
+                                            <b> OrgNavn:</b> {activePeriod.arbeidsgiver?.orgNavn}
+                                        </p>
+                                    </div>
+                                )}
                             </li>
                             <li>
                                 <b>Hoveddiagnose:</b>

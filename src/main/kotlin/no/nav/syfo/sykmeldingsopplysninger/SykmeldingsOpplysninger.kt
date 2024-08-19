@@ -35,6 +35,7 @@ data class Sykmelding(
     val synligStatus: String?,
     val arbeidsgiver: Arbeidsgiver?,
     val hovedDiagnose: HovedDiagnose?,
+    val tidligereArbeidsgiver: Arbeidsgiver?,
 )
 
 data class SykmeldingDokument(
