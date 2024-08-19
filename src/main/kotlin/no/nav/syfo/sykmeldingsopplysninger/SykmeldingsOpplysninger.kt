@@ -27,7 +27,7 @@ data class Sykmelding(
     val sykmeldingId: String,
     val merknader: List<Merknad>?,
     val tssId: String?,
-    val statusEvent: String?,
+    val statusEvent: SykmeldingStatus?,
     val mottakId: String,
     val mottattTidspunkt: LocalDateTime,
     val behandlingsUtfall: BehandlingsUtfall?,
@@ -59,6 +59,11 @@ data class HovedDiagnose(
 )
 
 data class Merknad(val type: String, val beskrivelse: String?)
+
+data class SykmeldingStatus(
+    val status: String,
+    val timestamp: LocalDateTime,
+)
 
 enum class Status {
     OK,
