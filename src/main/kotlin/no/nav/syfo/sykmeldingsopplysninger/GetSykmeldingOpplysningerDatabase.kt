@@ -37,6 +37,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
 
         if (sykmeldinger.size > 0) {
             val arbeidsgivere = getArbeidsgivere(sykmeldinger.map { it.sykmeldingId })
+            val tidligereArbeidsgiver = getTidligereArbeidsgiver(sykmeldinger.map { it.sykmeldingId })
             val behandlingsUtfall = getBehandlingsUtfall(sykmeldinger.map { it.sykmeldingId })
             val sykmeldingStatus = getSykmeldingStatus(sykmeldinger.map { it.sykmeldingId })
             val sykmeldingDok = getPerioderAndHovedDiagnose(sykmeldinger.map { it.sykmeldingId })
@@ -44,6 +45,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 sykmelding.copy(
                     statusEvent = sykmeldingStatus[sykmelding.sykmeldingId],
                     arbeidsgiver = arbeidsgivere[sykmelding.sykmeldingId],
+                    tidligereArbeidsgiver = tidligereArbeidsgiver[sykmelding.sykmeldingId],
                     behandlingsUtfall = behandlingsUtfall[sykmelding.sykmeldingId],
                     synligStatus =
                         getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
@@ -52,6 +54,31 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 )
             }
         } else return emptyList()
+    }
+
+    private fun getTidligereArbeidsgiver(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
+        val tidligereArbeidsgivere = mutableMapOf<String, Arbeidsgiver>()
+        this.database.connection.use { connection ->
+            val inClause = sykmeldingIds.joinToString(",") { "?" }
+            connection
+                .prepareStatement(
+                    """
+                SELECT * FROM tidligere_arbeidsgiver arb
+                WHERE arb.sykmelding_id IN ($inClause)
+            """,
+                )
+                .use { statement ->
+                    sykmeldingIds.forEachIndexed { index, id -> statement.setString(index + 1, id) }
+                    statement.executeQuery().use { resultSet ->
+                        while (resultSet.next()) {
+                            val sykmeldingId = resultSet.getString("sykmelding_id")
+                            val arbeidsgiver = resultSet.toArbeidsgiver()
+                            tidligereArbeidsgivere[sykmeldingId] = arbeidsgiver
+                        }
+                    }
+                }
+        }
+        return tidligereArbeidsgivere
     }
 
     private fun getArbeidsgivere(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
@@ -184,6 +211,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 // statusEvent = getSykmeldingStatus("id"),
                 statusEvent = null,
                 perioder = null,
+                tidligereArbeidsgiver = null,
             )
         return sykmeldingsopplysninger
     }
@@ -274,6 +302,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
+                tidligereArbeidsgiver = null
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -311,6 +340,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 synligStatus = getSynligStatus(Status.MANUAL_PROCESSING),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
+                tidligereArbeidsgiver = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -348,6 +378,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
+                tidligereArbeidsgiver = null
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -385,6 +416,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 synligStatus = getSynligStatus(Status.INVALID),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
+                tidligereArbeidsgiver = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -396,7 +428,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                         ),
                     ),
                 tssId = "123456",
-                statusEvent = SykmeldingStatus(status = "SENDT", timestamp = LocalDateTime.now()),
+                statusEvent = SykmeldingStatus(status = "BEKREFTET", timestamp = LocalDateTime.now()),
                 mottakId = UUID.randomUUID().toString(),
                 mottattTidspunkt = LocalDate.parse("2021-01-15").atStartOfDay(),
                 behandlingsUtfall =
@@ -420,8 +452,9 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                         ),
                     ),
                 synligStatus = getSynligStatus(Status.OK),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                arbeidsgiver = null,
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
+                tidligereArbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
             ),
         )
     }

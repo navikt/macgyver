@@ -52,6 +52,7 @@ export const SykmeldingSchema = z.object({
     synligStatus: z.string().nullable(),
     arbeidsgiver: ArbeidsgiverSchema.nullable(),
     hovedDiagnose: HovedDiagnoseSchema.nullable(),
+    tidligereArbeidsgiver: ArbeidsgiverSchema.nullable(),
 })
 
 export const SykmeldingsOpplysningerSchema = z.object({
@@ -65,5 +66,6 @@ export type Merknad = z.infer<typeof MerknadSchema>
 export type RuleInfo = z.infer<typeof RuleHitsSchema>
 export type Periode = z.infer<typeof PeriodeSchema>
 export type Arbeidsgiver = z.infer<typeof ArbeidsgiverSchema>
+export type TidligereArbeidsgiver = z.infer<typeof ArbeidsgiverSchema>
 export type SykmeldingStatus = z.infer<typeof SykmeldingStatusSchema>
 export type HovedDiagnose = z.infer<typeof HovedDiagnoseSchema>
