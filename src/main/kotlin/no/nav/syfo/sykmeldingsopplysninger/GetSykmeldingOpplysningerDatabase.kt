@@ -11,210 +11,8 @@ interface GetSykmeldingOpplysningerDatabase {
     suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
 }
 
-class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
-
-    override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
-        return listOf(
-            Sykmelding(
-                sykmeldingId = UUID.randomUUID().toString(),
-                merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
-                    ),
-                tssId = "123456",
-                statusEvent = "SENDT",
-                mottakId = UUID.randomUUID().toString(),
-                mottattTidspunkt = LocalDate.parse("2021-01-01").atStartOfDay(),
-                behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
-                    listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 1),
-                            tom = LocalDate.of(2021, 1, 30),
-                        ),
-                    ),
-                synligStatus = getSynligStatus(Status.OK),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
-                hovedDiagnose = HovedDiagnose("kode", "system", null),
-            ),
-            Sykmelding(
-                sykmeldingId = UUID.randomUUID().toString(),
-                merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
-                    ),
-                tssId = "123456",
-                statusEvent = "SENDT",
-                mottakId = UUID.randomUUID().toString(),
-                mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
-                behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "MANUAL_PROCESSING",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
-                    listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 2, 10),
-                            tom = LocalDate.of(2021, 2, 20),
-                        ),
-                    ),
-                synligStatus = getSynligStatus(Status.MANUAL_PROCESSING),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
-                hovedDiagnose = HovedDiagnose("kode", "system", null),
-            ),
-            Sykmelding(
-                sykmeldingId = UUID.randomUUID().toString(),
-                merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
-                    ),
-                tssId = "123456",
-                statusEvent = "SENDT",
-                mottakId = UUID.randomUUID().toString(),
-                mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
-                behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
-                    listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 2, 21),
-                            tom = LocalDate.of(2021, 2, 28),
-                        ),
-                    ),
-                synligStatus = getSynligStatus(Status.OK),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
-                hovedDiagnose = HovedDiagnose("kode", "system", null),
-            ),
-            Sykmelding(
-                sykmeldingId = UUID.randomUUID().toString(),
-                merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
-                    ),
-                tssId = "123456",
-                statusEvent = "SENDT",
-                mottakId = UUID.randomUUID().toString(),
-                mottattTidspunkt = LocalDate.parse("2021-01-30").atStartOfDay(),
-                behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "INVALID",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
-                    listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 30),
-                            tom = LocalDate.of(2021, 2, 8),
-                        ),
-                    ),
-                synligStatus = getSynligStatus(Status.INVALID),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
-                hovedDiagnose = HovedDiagnose("kode", "system", null),
-            ),
-            Sykmelding(
-                sykmeldingId = UUID.randomUUID().toString(),
-                merknader =
-                    listOf(
-                        Merknad(
-                            type = "Merknadtype",
-                            beskrivelse = "beskrivelse",
-                        ),
-                    ),
-                tssId = "123456",
-                statusEvent = "SENDT",
-                mottakId = UUID.randomUUID().toString(),
-                mottattTidspunkt = LocalDate.parse("2021-01-15").atStartOfDay(),
-                behandlingsUtfall =
-                    BehandlingsUtfall(
-                        status = "OK",
-                        ruleHits =
-                            listOf(
-                                RuleInfo(
-                                    ruleName = "ruleName",
-                                    messageForSender = "messageForSender",
-                                    messageForUser = "messageForUser",
-                                    ruleStatus = Status.OK,
-                                ),
-                            ),
-                    ),
-                perioder =
-                    listOf(
-                        Periode(
-                            fom = LocalDate.of(2021, 1, 15),
-                            tom = LocalDate.of(2021, 2, 3),
-                        ),
-                    ),
-                synligStatus = getSynligStatus(Status.OK),
-                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
-                hovedDiagnose = HovedDiagnose("kode", "system", null),
-            ),
-        )
-    }
-
-    private fun getSynligStatus(status: Status): String {
-        return when (status) {
-            Status.OK -> "success"
-            Status.MANUAL_PROCESSING -> "warning"
-            Status.INVALID -> "danger"
-        }
-    }
-}
-
 class GetSykmeldingerDatabaseProduction(private val database: Database) :
     GetSykmeldingOpplysningerDatabase {
-
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         val sykmeldinger = mutableListOf<Sykmelding>()
         this.database.connection.use { connection ->
@@ -430,6 +228,208 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
             "MANUAL_PROCESSING" -> "warning"
             "INVALID" -> "danger"
             else -> "neutral"
+        }
+    }
+
+}
+
+class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
+
+    override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
+        return listOf(
+            Sykmelding(
+                sykmeldingId = UUID.randomUUID().toString(),
+                merknader =
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
+                    ),
+                ),
+                tssId = "123456",
+                statusEvent = "SENDT",
+                mottakId = UUID.randomUUID().toString(),
+                mottattTidspunkt = LocalDate.parse("2021-01-01").atStartOfDay(),
+                behandlingsUtfall =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
+                    listOf(
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
+                        ),
+                    ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 1),
+                        tom = LocalDate.of(2021, 1, 30),
+                    ),
+                ),
+                synligStatus = getSynligStatus(Status.OK),
+                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                hovedDiagnose = HovedDiagnose("kode", "system", null),
+            ),
+            Sykmelding(
+                sykmeldingId = UUID.randomUUID().toString(),
+                merknader =
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
+                    ),
+                ),
+                tssId = "123456",
+                statusEvent = "SENDT",
+                mottakId = UUID.randomUUID().toString(),
+                mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
+                behandlingsUtfall =
+                BehandlingsUtfall(
+                    status = "MANUAL_PROCESSING",
+                    ruleHits =
+                    listOf(
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
+                        ),
+                    ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 2, 10),
+                        tom = LocalDate.of(2021, 2, 20),
+                    ),
+                ),
+                synligStatus = getSynligStatus(Status.MANUAL_PROCESSING),
+                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                hovedDiagnose = HovedDiagnose("kode", "system", null),
+            ),
+            Sykmelding(
+                sykmeldingId = UUID.randomUUID().toString(),
+                merknader =
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
+                    ),
+                ),
+                tssId = "123456",
+                statusEvent = "SENDT",
+                mottakId = UUID.randomUUID().toString(),
+                mottattTidspunkt = LocalDate.parse("2021-02-10").atStartOfDay(),
+                behandlingsUtfall =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
+                    listOf(
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
+                        ),
+                    ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 2, 21),
+                        tom = LocalDate.of(2021, 2, 28),
+                    ),
+                ),
+                synligStatus = getSynligStatus(Status.OK),
+                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                hovedDiagnose = HovedDiagnose("kode", "system", null),
+            ),
+            Sykmelding(
+                sykmeldingId = UUID.randomUUID().toString(),
+                merknader =
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
+                    ),
+                ),
+                tssId = "123456",
+                statusEvent = "SENDT",
+                mottakId = UUID.randomUUID().toString(),
+                mottattTidspunkt = LocalDate.parse("2021-01-30").atStartOfDay(),
+                behandlingsUtfall =
+                BehandlingsUtfall(
+                    status = "INVALID",
+                    ruleHits =
+                    listOf(
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
+                        ),
+                    ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 30),
+                        tom = LocalDate.of(2021, 2, 8),
+                    ),
+                ),
+                synligStatus = getSynligStatus(Status.INVALID),
+                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                hovedDiagnose = HovedDiagnose("kode", "system", null),
+            ),
+            Sykmelding(
+                sykmeldingId = UUID.randomUUID().toString(),
+                merknader =
+                listOf(
+                    Merknad(
+                        type = "Merknadtype",
+                        beskrivelse = "beskrivelse",
+                    ),
+                ),
+                tssId = "123456",
+                statusEvent = "SENDT",
+                mottakId = UUID.randomUUID().toString(),
+                mottattTidspunkt = LocalDate.parse("2021-01-15").atStartOfDay(),
+                behandlingsUtfall =
+                BehandlingsUtfall(
+                    status = "OK",
+                    ruleHits =
+                    listOf(
+                        RuleInfo(
+                            ruleName = "ruleName",
+                            messageForSender = "messageForSender",
+                            messageForUser = "messageForUser",
+                            ruleStatus = Status.OK,
+                        ),
+                    ),
+                ),
+                perioder =
+                listOf(
+                    Periode(
+                        fom = LocalDate.of(2021, 1, 15),
+                        tom = LocalDate.of(2021, 2, 3),
+                    ),
+                ),
+                synligStatus = getSynligStatus(Status.OK),
+                arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                hovedDiagnose = HovedDiagnose("kode", "system", null),
+            ),
+        )
+    }
+
+    private fun getSynligStatus(status: Status): String {
+        return when (status) {
+            Status.OK -> "success"
+            Status.MANUAL_PROCESSING -> "warning"
+            Status.INVALID -> "danger"
         }
     }
 }
