@@ -1,5 +1,5 @@
 import { ReactElement, useState } from 'react'
-import { Button, TextField } from '@navikt/ds-react'
+import { Alert, Button, TextField } from '@navikt/ds-react'
 
 import ConfirmModal from '../../../components/confirm-modal/ConfirmModal.tsx'
 
@@ -11,8 +11,31 @@ const NyNlRequestAltinnForm = ({ onChange }: NyNlRequestAltinnFormProps): ReactE
     const [sykmeldingId, setSykmeldingId] = useState<string>('')
     const [fnr, setFnr] = useState('')
     const [orgnummer, setOrgnummer] = useState('')
-
     const [conformationModalOpen, setConformationModalOpen] = useState(false)
+    const [error, setError] = useState<string>('')
+
+    const getMod11 = (strValue: string): number => {
+        let checkNbr = 2
+        let mod = 0
+
+        for (let i = strValue.length - 2; i >= 0; --i) {
+            mod += parseInt(strValue.charAt(i), 10) * checkNbr
+            if (++checkNbr > 7) {
+                checkNbr = 2
+            }
+        }
+        const result = 11 - (mod % 11)
+        return result === 11 ? 0 : result
+    }
+
+    function isValidOrgNumber(orgnummer: string): boolean {
+        return (
+            orgnummer.length === 9 &&
+            /^[0-9]*$/.test(orgnummer) &&
+            (orgnummer.startsWith('8') || orgnummer.startsWith('9')) &&
+            getMod11(orgnummer) === parseInt(orgnummer.charAt(8), 10)
+        )
+    }
 
     return (
         <div>
@@ -37,16 +60,23 @@ const NyNlRequestAltinnForm = ({ onChange }: NyNlRequestAltinnFormProps): ReactE
                 label="orgnummer"
                 size="medium"
                 onChange={(event) => {
-                    setOrgnummer(event.currentTarget.value)
+                    const orgnummer = event.currentTarget.value.trim()
+                    setOrgnummer(orgnummer)
                 }}
                 className="my-4 w-96"
             />
+            {error && <Alert variant="error">{error}</Alert>}
             <Button
                 variant="primary"
                 size="medium"
                 className="my-4"
                 onClick={() => {
-                    setConformationModalOpen(true)
+                    if (isValidOrgNumber(orgnummer)) {
+                        setError('')
+                        setConformationModalOpen(true)
+                    } else {
+                        setError('feil orgnummer ikke valid')
+                    }
                 }}
             >
                 send
