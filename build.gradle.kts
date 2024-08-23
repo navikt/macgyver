@@ -21,8 +21,8 @@ val sykmeldingVersion = "2.0.1"
 val fellesformatVersion = "2.0.1"
 val kithHodemeldingVersion = "2.0.1"
 val javaTimeAdapterVersion = "1.1.3"
-val postgresVersion = "42.7.3"
-val kotlinVersion = "2.0.10"
+val postgresVersion = "42.7.4"
+val kotlinVersion = "2.0.20"
 val googlePostgresVersion = "1.20.0"
 val junitVersion = "5.11.0"
 val commonsCodecVersion = "1.17.1"
@@ -37,7 +37,7 @@ val koinVersion = "3.5.6"
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.0.10"
+    kotlin("jvm") version "2.0.20"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
