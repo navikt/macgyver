@@ -57,7 +57,7 @@ jobs:
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.READER_TOKEN }}
 
   build:
-    if: github.actor != 'dependabot[bot]'
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     name: Build
     runs-on: ubuntu-latest
     permissions:
@@ -104,7 +104,72 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
+  dependabot-build:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: "write"
+      contents: "write"
+      id-token: "write"
+    steps:
+      - uses: navikt/teamsykmelding-github-actions-workflows/actions/gradle-cached-21@main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: corepack enable
+      - run: yarn --immutable
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+        working-directory: web
+      - run: yarn build
+        working-directory: web
+      - run: yarn copy
+        working-directory: web
+      - name: Build jar
+        env:
+          ORG_GRADLE_PROJECT_githubUser: x-access-token
+          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          ./gradlew shadowJar -x test
+
+  trivy-docker:
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      contents: "write"
+      id-token: "write"
+      security-events: "write"
+    name: Trivy docker
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - run: touch me
+      - uses: nais/login@v0
+        with:
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          team: teamsykmelding
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@d710430a6722f083d3b36b8339ff66b32f22ee55
+        with:
+          image-ref: ${{ needs.build.outputs.image }}
+          ignore-unfixed: true
+          vuln-type: 'os'
+          severity: 'CRITICAL,HIGH'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          scanners: 'vuln'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
   deploy-dev:
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     name: Deploy to dev
     runs-on: ubuntu-latest
     needs: [ test, build ]
