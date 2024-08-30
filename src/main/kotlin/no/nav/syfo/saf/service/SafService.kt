@@ -6,13 +6,17 @@ import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.error.JournalposterNotFoundException
 import no.nav.syfo.saf.model.Journalpost
 
-class SafService(
+interface SafService {
+    suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>?
+}
+
+class SafServiceProduction(
     private val safClient: SafClient,
     private val accessTokenClientV2: AccessTokenClientV2,
     private val safScope: String,
-) {
+): SafService {
 
-    suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
+    override suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
         val token = accessTokenClientV2.getAccessTokenV2(safScope)
         val getDokumentoversiktBrukerResponse =
             safClient.getDokumentoversiktBruker(fnr = fnr, token = token)
@@ -32,5 +36,13 @@ class SafService(
         } else {
             return getDokumentoversiktBrukerResponse.data.dokumentoversiktBruker?.journalposter
         }
+    }
+}
+
+class SafServiceDevelopment(
+): SafService {
+
+    override suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
+        return listOf(Journalpost("12345", "journalpost"))
     }
 }

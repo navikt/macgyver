@@ -25,6 +25,7 @@ import no.nav.syfo.pdl.client.PdlClient
 import no.nav.syfo.pdl.client.ProductionPdlClient
 import no.nav.syfo.saf.client.SafClient
 import no.nav.syfo.saf.service.SafService
+import no.nav.syfo.saf.service.SafServiceProduction
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerProduction
@@ -227,8 +228,8 @@ val safModule = module {
                     .replace(Regex("[\n\t]"), ""),
         )
     }
-    single {
-        SafService(
+    single<SafService> {
+        SafServiceProduction(
             safClient = get(),
             accessTokenClientV2 = get(),
             safScope = get<EnvironmentVariables>().safScope,
