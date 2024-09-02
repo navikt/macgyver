@@ -48,6 +48,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
         arbeidsgiver: Arbeidsgiver
         hovedDiagnose: HovedDiagnose
         tidligereArbeidsgiver: TidligereArbeidsgiver
+        journalpostId: string
     }
 
     interface BehandlingsUtfall {
@@ -162,6 +163,9 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                             </p>
                             <p>
                                 <b>TssId:</b> {activePeriod.tssId}
+                            </p>
+                            <p>
+                                <b>JournalpostId:</b> {activePeriod.journalpostId}
                             </p>
                         </div>
                         <div>

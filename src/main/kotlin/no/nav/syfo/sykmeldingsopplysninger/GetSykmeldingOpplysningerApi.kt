@@ -9,11 +9,13 @@ import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
 import no.nav.syfo.logging.sikkerlogg
 import no.nav.syfo.model.HttpMessage
+import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
 
 fun Route.registerSykmeldingsOpplysningerApi() {
     val getSykmeldingOpplysningerService by inject<GetSykmeldingOpplysningerService>()
+    val safService by inject<SafService>()
 
     get("/sykmeldingsopplysninger") {
         logger.info("Henter sykmeldingsopplysninger")
@@ -28,6 +30,20 @@ fun Route.registerSykmeldingsOpplysningerApi() {
 
         val sykmeldingsOpplysninger =
             getSykmeldingOpplysningerService.getSykmeldingOpplysninger(fnr)
+        val journalposter = safService.getJournalPostsBruker(fnr)
+        val oppdatertSykmeldinger = sykmeldingsOpplysninger.sykmeldinger.map { sykmelding ->
+            val sykmeldingPeriode = sykmelding.perioder?.firstOrNull() ?: return@map sykmelding
+            val journalpostId = journalposter?.find {
+                it.periode?.fom == sykmeldingPeriode.fom &&
+                    it.periode?.tom == sykmeldingPeriode.tom
+            }?.journalpostId
+            sykmelding.copy(
+                journalpostId = journalpostId,
+            )
+        }
+        val oppdatertSykmeldingsOpplysninger = sykmeldingsOpplysninger.copy(
+            sykmeldinger = oppdatertSykmeldinger
+        )
         val principal = call.safePrincipal()
         auditlogg.info(
             AuditLogger(principal.email)
@@ -38,6 +54,6 @@ fun Route.registerSykmeldingsOpplysningerApi() {
                     permit = AuditLogger.Permit.PERMIT,
                 ),
         )
-        call.respond(HttpStatusCode.OK, sykmeldingsOpplysninger)
+        call.respond(HttpStatusCode.OK, oppdatertSykmeldingsOpplysninger)
     }
 }
