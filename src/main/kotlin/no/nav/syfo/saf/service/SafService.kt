@@ -70,7 +70,7 @@ class SafServiceDevelopment() : SafService {
     }
 
     override suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>? {
-        return listOf(Journalpost("671128357", "Sykmelding 23.08.2024 - 29.08.2024"))
+        return listOf(Journalpost("671128357", "Avvist sykmelding 26.08.2024 - 15.09.2024"))
     }
 }
 
