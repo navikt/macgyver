@@ -13,6 +13,8 @@ import no.nav.syfo.oppgave.DevelopmentOppgaveClient
 import no.nav.syfo.oppgave.OppgaveClient
 import no.nav.syfo.pdl.PdlPersonService
 import no.nav.syfo.pdl.client.DevelopmentPdlClient
+import no.nav.syfo.saf.service.SafService
+import no.nav.syfo.saf.service.SafServiceDevelopment
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducer
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaProducerDevelopment
 import no.nav.syfo.sykmelding.delete_sykmelding.DeleteSykmeldingDatabase
@@ -41,6 +43,7 @@ fun KoinApplication.initDevelopmentModules() {
         developmentSykmeldingModule,
         developmentDokarkivModule,
         developmentSykmeldingsopplysningerModule,
+        developmentSafModule,
     )
 }
 
@@ -136,6 +139,8 @@ val developmentSykmeldingModule = module {
 }
 
 val developmentDokarkivModule = module { single<DokArkivClient> { DokarkivClientDevelopment() } }
+
+val developmentSafModule = module { single<SafService> { SafServiceDevelopment() } }
 
 val developmentSykmeldingsopplysningerModule = module {
     single<GetSykmeldingOpplysningerDatabase> { GetSykmeldingerDatabaseDevelopment() }

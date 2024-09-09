@@ -53,6 +53,7 @@ export const SykmeldingSchema = z.object({
     arbeidsgiver: ArbeidsgiverSchema.nullable(),
     hovedDiagnose: HovedDiagnoseSchema.nullable(),
     tidligereArbeidsgiver: ArbeidsgiverSchema.nullable(),
+    journalpostId: z.string().nullable(),
 })
 
 export const SykmeldingsOpplysningerSchema = z.object({

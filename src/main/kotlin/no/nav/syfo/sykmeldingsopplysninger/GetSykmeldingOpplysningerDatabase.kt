@@ -216,6 +216,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 statusEvent = null,
                 perioder = null,
                 tidligereArbeidsgiver = null,
+                journalpostId = null,
             )
         return sykmeldingsopplysninger
     }
@@ -308,14 +309,15 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 perioder =
                     listOf(
                         Periode(
-                            fom = LocalDate.of(2021, 1, 1),
-                            tom = LocalDate.of(2021, 1, 30),
+                            fom = LocalDate.of(2024, 8, 23),
+                            tom = LocalDate.of(2024, 8, 29),
                         ),
                     ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
-                tidligereArbeidsgiver = null
+                tidligereArbeidsgiver = null,
+                journalpostId = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -354,6 +356,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
+                journalpostId = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -384,14 +387,15 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 perioder =
                     listOf(
                         Periode(
-                            fom = LocalDate.of(2021, 2, 21),
-                            tom = LocalDate.of(2021, 2, 28),
+                            fom = LocalDate.of(2024, 8, 23),
+                            tom = LocalDate.of(2024, 8, 29),
                         ),
                     ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
-                tidligereArbeidsgiver = null
+                tidligereArbeidsgiver = null,
+                journalpostId = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -422,14 +426,15 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 perioder =
                     listOf(
                         Periode(
-                            fom = LocalDate.of(2021, 1, 30),
-                            tom = LocalDate.of(2021, 2, 8),
+                            fom = LocalDate.of(2024, 8, 23),
+                            tom = LocalDate.of(2024, 8, 29),
                         ),
                     ),
                 synligStatus = getSynligStatus(Status.INVALID),
                 arbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
+                journalpostId = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -461,14 +466,15 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 perioder =
                     listOf(
                         Periode(
-                            fom = LocalDate.of(2021, 1, 15),
-                            tom = LocalDate.of(2021, 2, 3),
+                            fom = LocalDate.of(2024, 8, 23),
+                            tom = LocalDate.of(2024, 8, 29),
                         ),
                     ),
                 synligStatus = getSynligStatus(Status.OK),
                 arbeidsgiver = null,
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
+                journalpostId = null,
             ),
         )
     }

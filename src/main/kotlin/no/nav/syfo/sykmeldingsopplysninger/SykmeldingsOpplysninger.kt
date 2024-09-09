@@ -36,6 +36,7 @@ data class Sykmelding(
     val arbeidsgiver: Arbeidsgiver?,
     val hovedDiagnose: HovedDiagnose?,
     val tidligereArbeidsgiver: Arbeidsgiver?,
+    val journalpostId: String?,
 )
 
 data class SykmeldingDokument(
@@ -73,3 +74,5 @@ enum class Status {
 }
 
 data class SykmeldingDok(val perioder: List<Periode?>?, val hovedDiagnose: HovedDiagnose?)
+
+data class JournalpostMedPeriode(val journalpostId: String, val periode: Periode?)
