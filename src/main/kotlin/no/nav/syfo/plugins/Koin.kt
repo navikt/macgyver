@@ -1,6 +1,7 @@
 package no.nav.syfo.plugins
 
 import io.ktor.server.application.*
+import no.nav.syfo.altinn.AltinnStatusService
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.clients.ProductionAccessTokenClientV2
 import no.nav.syfo.clients.createHttpClient
@@ -77,6 +78,7 @@ fun KoinApplication.initProductionModules() {
         dokarkivModule,
         sykmeldingModule,
         safModule,
+        altinnModule
     )
 }
 
@@ -211,6 +213,18 @@ val narmestelederModule = module {
             pdlService = get(),
             narmestelederRequestProducer = get(),
             narmestelederClient = get(),
+        )
+    }
+}
+
+val altinnModule = module {
+    single {
+        val env = get<EnvironmentVariables>()
+        AltinnStatusService(
+            httpClient = get(),
+            accessTokenClientV2 = get(),
+            baseUrl = env.syfosmaltinnUrl,
+            scope = env.syfosmaltinnScope,
         )
     }
 }

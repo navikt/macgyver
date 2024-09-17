@@ -21,7 +21,7 @@ function AltinnStatusOppslag(): ReactElement {
                 schema: AltinnStatusSchema,
                 headers: { sykmeldingId: sykmeldingIdToSearch ?? raiseError("Missing sykmeldingId"), orgnummer: orgnummerToSearch ?? raiseError("Missing orgnummer")},
             }),
-        enabled: sykmeldingIdToSearch !== null && sykmeldingIdToSearch.length === 36,
+        enabled: sykmeldingIdToSearch !== null && sykmeldingIdToSearch.length === 36 && orgnummerToSearch !== null && orgnummerToSearch.length === 9,
     });
 
     return (
