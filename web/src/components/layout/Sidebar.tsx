@@ -61,6 +61,13 @@ function Sidebar({ className }: Props): ReactElement {
                     <Link to="/sykmeldingsopplysninger/oppslag">Hent sykmeldingsopplysninger på en person</Link>
                 </li>
             </SidebarMenuItem>
+            <SidebarMenuItem title="AltinnStatus" Icon={PersonIcon}>
+                <li>
+                    <Link to="/altinnstatus/oppslag">
+                        Hent status fra Altinn på en gitt sykmelding og orgnummer
+                    </Link>
+                </li>
+            </SidebarMenuItem>
         </div>
     )
 }
