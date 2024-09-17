@@ -19,7 +19,7 @@ function AltinnStatusOppslag(): ReactElement {
         queryFn: async () =>
             fetchApi("/altinnstatus", {
                 schema: AltinnStatusSchema,
-                headers: { sykmeldingId: sykmeldingIdToSearch ?? raiseError("Missing sykmeldingId"),  },
+                headers: { sykmeldingId: sykmeldingIdToSearch ?? raiseError("Missing sykmeldingId"), orgnummer: orgnummerToSearch ?? raiseError("Missing orgnummer")},
             }),
         enabled: sykmeldingIdToSearch !== null && sykmeldingIdToSearch.length === 36,
     });
