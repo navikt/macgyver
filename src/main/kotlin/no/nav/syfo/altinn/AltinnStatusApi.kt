@@ -8,15 +8,15 @@ import org.koin.ktor.ext.inject
 
 fun Route.registerAltinnStatusApi() {
     val altinnStatusService by inject<AltinnStatusService>()
-    get("/altinnstatus") {
-        val sykmeldingId = call.request.headers["sykmeldingId"]
-        val orgnummer = call.request.headers["orgnummer"]
+    get("/altinnstatus/{sykmeldingId}/{orgnummer}") {
+        val sykmeldingId = call.parameters["sykmeldingId"]
+        val orgnummer = call.parameters["orgnummer"]
         if (sykmeldingId.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, "Mangler sykmeldingId i header")
+            call.respond(HttpStatusCode.BadRequest, "Mangler sykmeldingId i parameter")
             return@get
         }
         if (orgnummer.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, "Mangler orgnummer i header")
+            call.respond(HttpStatusCode.BadRequest, "Mangler orgnummer i parameter")
             return@get
         }
 

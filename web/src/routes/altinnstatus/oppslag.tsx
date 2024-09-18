@@ -1,28 +1,31 @@
-import {ReactElement, useState} from "react";
+import {ReactElement} from "react";
 import {AltinnStatusSchema} from "../../types/altinnStatusSchema.ts";
 
 import BasicPage from "../../components/layout/BasicPage.tsx";
+import {fetchApi} from "../../api/api.ts";
 import AltinnStatusSykmeldingIdForm from "./sjekk-altinn-status-form/AltinnStatusSykmeldingIdForm.tsx";
 import AltinnStatusForm from "./sjekk-altinn-status-form/AltinnStatusForm.tsx";
-import { Alert, Loader } from "@navikt/ds-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "../../api/api.ts";
-import { raiseError } from "../../utils/ts.ts";
+import {Alert, Loader} from "@navikt/ds-react";
+import {useMutation} from "@tanstack/react-query";
+
 
 function AltinnStatusOppslag(): ReactElement {
-    const [sykmeldingIdToSearch, setSykmeldingIdToSearch] = useState<string | null>(null);
-    const [orgnummerToSearch, setorgnummerToSearch] = useState<string | null>(null);
+    const { data, isSuccess, isPending, error, mutate } = useMutation({
+        mutationFn: async (params: { sykmeldingId: string; orgnummer: string }) => {
+            if (!params.sykmeldingId) {
+                throw new Error('Mangler sykmeldingId.')
+            }
 
-    const { data, error, isFetching } = useQuery({
-        queryKey: ["sykmeldingId", sykmeldingIdToSearch, "orgnummer", orgnummerToSearch],
-
-        queryFn: async () =>
-            fetchApi("/altinnstatus", {
+            if (!params.orgnummer) {
+                throw new Error('Mangler journalpostId.')
+            }
+            return await fetchApi(`/altinnstatus/${params.sykmeldingId}/${params.orgnummer} ?? 'null'`, {
+                method: 'GET',
                 schema: AltinnStatusSchema,
-                headers: { sykmeldingId: sykmeldingIdToSearch ?? raiseError("Missing sykmeldingId"), orgnummer: orgnummerToSearch ?? raiseError("Missing orgnummer")},
-            }),
-        enabled: sykmeldingIdToSearch !== null && sykmeldingIdToSearch.length === 36 && orgnummerToSearch !== null && orgnummerToSearch.length === 9,
-    });
+            })
+        },
+    })
+
 
     return (
         <BasicPage
@@ -32,12 +35,14 @@ function AltinnStatusOppslag(): ReactElement {
         >
             <AltinnStatusSykmeldingIdForm
                 onChange={(sykmeldingId: string, orgnummer: string): void => {
-                    setSykmeldingIdToSearch(sykmeldingId);
-                    setorgnummerToSearch(orgnummer);
+                    mutate({
+                        sykmeldingId,
+                        orgnummer,
+                    })
                 }}
             />
-            {!data && !error && isFetching && <Loader size="medium" />}
-            {data && <AltinnStatusForm status={data} />}
+            {!data && !error && isPending && <Loader size="medium"/>}
+            {data && isSuccess && <AltinnStatusForm status={data}/>}
             {error && <Alert variant="error">{error.message}</Alert>}
         </BasicPage>
     );
