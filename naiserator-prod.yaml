@@ -51,6 +51,7 @@ spec:
       rules:
         - application: narmesteleder
         - application: syfosmregister
+        - application: syfosmaltinn
       external:
         - host: saf.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
