@@ -17,7 +17,7 @@ function AltinnStatusOppslag(): ReactElement {
             }
 
             if (!params.orgnummer) {
-                throw new Error('Mangler journalpostId.')
+                throw new Error('Mangler orgnummer.')
             }
             return await fetchApi(`/altinnstatus/${params.sykmeldingId}/${params.orgnummer}`, {
                 method: 'GET',
