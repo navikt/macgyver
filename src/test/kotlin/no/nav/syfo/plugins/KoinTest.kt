@@ -53,6 +53,8 @@ class CheckModulesTest : KoinTest {
             dokArkivUrl = "dokArkivUrl-test",
             dokArkivScope = "dokArkivScope-test",
             clusterName = "clusterName-test",
+            syfosmaltinnScope = "syfosmaltinnScope-test",
+            syfosmaltinnUrl = "syfosmaltinnUrl-test",
         )
 
     @Test

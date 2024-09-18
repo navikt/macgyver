@@ -53,6 +53,7 @@ spec:
       rules:
         - application: narmesteleder
         - application: syfosmregister
+        - application: syfosmaltinn
       external:
         - host: saf.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
@@ -106,3 +107,5 @@ spec:
       value: https://dokarkiv.dev-fss-pub.nais.io/rest/journalpostapi/v1/journalpost
     - name: DOK_ARKIV_SCOPE
       value: api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default
+    - name: SYFOSMALTINN_SCOPE
+      value: api://dev-gcp.teamsykmelding.syfosmaltinn/.default

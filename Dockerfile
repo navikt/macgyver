@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21 as jre-build
+FROM eclipse-temurin:21 AS jre-build
 # Create a custom Java runtime
 RUN $JAVA_HOME/bin/jlink \
          --add-modules ALL-MODULE-PATH \
@@ -12,7 +12,7 @@ FROM gcr.io/distroless/base-debian11
 WORKDIR /app
 ENV TZ="Europe/Oslo"
 ENV JAVA_HOME=/opt/java/openjdk
-ENV PATH "${JAVA_HOME}/bin:${PATH}"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 ENV JAVA_OPTS="-Dlogback.configurationFile=logback.xml"
 COPY --from=jre-build /javaruntime $JAVA_HOME
 COPY --from=jre-build /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
