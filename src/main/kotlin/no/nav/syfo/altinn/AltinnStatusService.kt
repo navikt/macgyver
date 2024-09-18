@@ -25,7 +25,7 @@ class AltinnStatusService(
                 }
                 .body<AltinnStatus>()
         } catch (e: Exception) {
-            logger.error("Noe gikk galt ved henting av nærmeste leder")
+            logger.error("Noe gikk galt ved henting av altinn status")
             throw e
         }
     }
