@@ -33,7 +33,7 @@ val snappyJavaVersion = "1.1.10.7"
 val javaVersion = JavaVersion.VERSION_21
 val kafkaVersion = "3.8.0"
 val diagnosekoderVersion = "1.2024.0"
-val koinVersion = "3.5.6"
+val koinVersion = "4.0.0"
 
 plugins {
     id("application")
