@@ -22,6 +22,6 @@ fun Route.registerAltinnStatusApi() {
 
         val altinnStatus = altinnStatusService.getAltinnStatus(sykmeldingId,orgnummer)
 
-        call.respond(altinnStatus)
+        call.respond(HttpStatusCode.OK, altinnStatus)
     }
 }
