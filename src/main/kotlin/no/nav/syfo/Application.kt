@@ -26,4 +26,5 @@ fun Application.module() {
     configureWebApp()
     configureNaisResources()
     configureFeatures()
+    configureCallLogging()
 }
