@@ -8,7 +8,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /javaruntime
 # Runtime
-FROM gcr.io/distroless/base-debian11
+FROM gcr.io/distroless/base-debian12
 WORKDIR /app
 ENV TZ="Europe/Oslo"
 ENV JAVA_HOME=/opt/java/openjdk
