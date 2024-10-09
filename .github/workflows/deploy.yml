@@ -51,6 +51,12 @@ jobs:
     permissions:
       contents: "read"
     steps:
+      - uses: actions/setup-java@v4
+        id: setup-java
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: "gradle"
       - run: ./gradlew test
         env:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
@@ -67,6 +73,12 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
+      - uses: actions/setup-java@v4
+        id: setup-java
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: "gradle"
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -114,6 +126,12 @@ jobs:
       contents: "write"
       id-token: "write"
     steps:
+      - uses: actions/setup-java@v4
+        id: setup-java
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: "gradle"
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
