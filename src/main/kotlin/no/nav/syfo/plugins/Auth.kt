@@ -14,7 +14,7 @@ import no.nav.syfo.utils.EnvironmentVariables
 import org.koin.ktor.ext.inject
 
 fun Application.configureAuth() {
-    if (environment.developmentMode) {
+    if (developmentMode) {
         configureDevelopmentAuth()
     } else {
         configureProductionAuth()
@@ -70,7 +70,7 @@ fun Application.configureDevelopmentAuth() {
     }
 }
 
-data class UserPrincipal(val email: String) : Principal
+data class UserPrincipal(val email: String)
 
 class AuthConfiguration(
     val jwkProvider: JwkProvider,
