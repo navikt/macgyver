@@ -2,13 +2,11 @@ package no.nav.syfo.metrics
 
 import io.ktor.server.application.*
 import io.ktor.server.request.*
-import io.ktor.util.pipeline.PipelineContext
+import io.ktor.util.pipeline.PipelineInterceptor
 import no.nav.syfo.logging.logger
 import no.nav.syfo.logging.sikkerlogg
 
-fun monitorHttpRequests(
-    developmentMode: Boolean
-): suspend PipelineContext<Unit, ApplicationCall>.(Unit) -> Unit {
+fun monitorHttpRequests(developmentMode: Boolean): PipelineInterceptor<Unit, PipelineCall> {
     return {
         try {
             sikkerlogg.info("Received request: ${call.request.uri}")

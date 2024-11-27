@@ -1,15 +1,18 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "no.nav.syfo"
 version = "1.0.0"
 
+val javaVersion = JvmTarget.JVM_21
+
 val coroutinesVersion = "1.9.0"
 val jacksonVersion = "2.18.0"
-val ktorVersion = "2.3.12"
+val ktorVersion = "3.0.1"
 val logbackVersion = "1.5.9"
 val logstashEncoderVersion = "8.0"
 val prometheusVersion = "0.16.0"
 val nimbusVersion = "9.41.2"
 val hikariVersion = "6.0.0"
-val jaxbBasicAntVersion = "1.11.1"
 val javaxAnnotationApiVersion = "1.3.2"
 val jaxwsToolsVersion = "2.3.7"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
@@ -25,15 +28,17 @@ val postgresVersion = "42.7.4"
 val kotlinVersion = "2.0.20"
 val googlePostgresVersion = "1.21.0"
 val junitVersion = "5.11.2"
-val commonsCodecVersion = "1.17.1"
 val ktfmtVersion = "0.49"
 val logbacksyslog4jVersion = "1.0.0"
-val snakeyamlVersion = "2.3"
-val snappyJavaVersion = "1.1.10.7"
-val javaVersion = JavaVersion.VERSION_21
 val kafkaVersion = "3.8.0"
 val diagnosekoderVersion = "1.2024.0"
-val koinVersion = "4.0.0"
+val koinVersion = "4.1.0-Beta1"
+
+
+///Due to vulnerabilities
+val snakeyamlVersion = "2.3"
+val snappyJavaVersion = "1.1.10.7"
+val nettycommonVersion = "4.1.115.Final"
 
 plugins {
     id("application")
@@ -47,6 +52,12 @@ application {
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(javaVersion)
+    }
 }
 
 repositories {
@@ -66,6 +77,11 @@ dependencies {
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    constraints {
+        implementation("io.netty:netty-common:$nettycommonVersion") {
+            because("Due to vulnerabilities in io.ktor:ktor-server-netty")
+        }
+    }
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
@@ -77,11 +93,6 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-apache:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
-    constraints {
-        implementation("commons-codec:commons-codec:$commonsCodecVersion") {
-            because("override transient from io.ktor:ktor-client-apache due to security vulnerability https://devhub.checkmarx.com/cve-details/Cxeb68d52e-5509/")
-        }
-    }
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
@@ -144,12 +155,6 @@ dependencies {
 
 
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = javaVersion.toString()
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = javaVersion.toString()
-    }
 
     shadowJar {
         mergeServiceFiles {

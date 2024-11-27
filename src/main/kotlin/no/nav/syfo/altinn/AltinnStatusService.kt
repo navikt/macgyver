@@ -18,9 +18,7 @@ class AltinnStatusService(
             val token = accessTokenClientV2.getAccessTokenV2(scope)
             return httpClient
                 .get("$baseUrl/internal/altinn/${sykmeldingId}/${orgnummer}") {
-                    headers {
-                        append(HttpHeaders.Authorization, "Bearer $token")
-                    }
+                    headers { append(HttpHeaders.Authorization, "Bearer $token") }
                     accept(ContentType.Application.Json)
                 }
                 .body<AltinnStatus>()
@@ -29,6 +27,4 @@ class AltinnStatusService(
             throw e
         }
     }
-
-
 }

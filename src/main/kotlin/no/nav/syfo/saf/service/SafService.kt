@@ -12,6 +12,7 @@ import no.nav.syfo.sykmeldingsopplysninger.Periode
 
 interface SafService {
     suspend fun getDokumentoversiktBruker(fnr: String): List<Journalpost>?
+
     suspend fun getJournalPostsBruker(fnr: String): List<JournalpostMedPeriode>?
 }
 

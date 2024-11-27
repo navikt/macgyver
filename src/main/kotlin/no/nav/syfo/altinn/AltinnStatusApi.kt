@@ -20,7 +20,7 @@ fun Route.registerAltinnStatusApi() {
             return@get
         }
 
-        val altinnStatus = altinnStatusService.getAltinnStatus(sykmeldingId,orgnummer)
+        val altinnStatus = altinnStatusService.getAltinnStatus(sykmeldingId, orgnummer)
 
         call.respond(HttpStatusCode.OK, altinnStatus)
     }
