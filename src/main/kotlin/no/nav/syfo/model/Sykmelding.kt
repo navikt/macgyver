@@ -24,7 +24,8 @@ data class Sykmelding(
     val avsenderSystem: AvsenderSystem,
     val syketilfelleStartDato: LocalDate?,
     val signaturDato: LocalDateTime,
-    val navnFastlege: String?
+    val navnFastlege: String?,
+    val utenlandskSykmelding: UtenlandskSykmelding?,
 )
 
 data class MedisinskVurdering(

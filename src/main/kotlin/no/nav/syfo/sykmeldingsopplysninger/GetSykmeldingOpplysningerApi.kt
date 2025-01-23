@@ -43,32 +43,33 @@ fun Route.registerSykmeldingsOpplysningerApi() {
 
         try {
             val journalposter = safService.getJournalPostsBruker(fnr)
-            val oppdatertSykmeldinger = sykmeldingsOpplysninger.sykmeldinger.map { sykmelding ->
-                val sykmeldingPeriode = sykmelding.perioder?.firstOrNull() ?: return@map sykmelding
-                val journalpostId = journalposter?.find {
-                    it.periode?.fom == sykmeldingPeriode.fom &&
-                        it.periode.tom == sykmeldingPeriode.tom
-                }?.journalpostId
-                sykmelding.copy(
-                    journalpostId = journalpostId,
-                )
-            }
-            val oppdatertSykmeldingsOpplysninger = sykmeldingsOpplysninger.copy(
-                sykmeldinger = oppdatertSykmeldinger
-            )
+            val oppdatertSykmeldinger =
+                sykmeldingsOpplysninger.sykmeldinger.map { sykmelding ->
+                    val sykmeldingPeriode =
+                        sykmelding.perioder?.firstOrNull() ?: return@map sykmelding
+                    val journalpostId =
+                        journalposter
+                            ?.find {
+                                it.periode?.fom == sykmeldingPeriode.fom &&
+                                    it.periode.tom == sykmeldingPeriode.tom
+                            }
+                            ?.journalpostId
+                    sykmelding.copy(
+                        journalpostId = journalpostId,
+                    )
+                }
+            val oppdatertSykmeldingsOpplysninger =
+                sykmeldingsOpplysninger.copy(sykmeldinger = oppdatertSykmeldinger)
             call.respond(HttpStatusCode.OK, oppdatertSykmeldingsOpplysninger)
         } catch (exception: JournalposterNotFoundException) {
             logger.error("Kastet exception ved henting av journalposter fra saf-api", exception)
             call.respond(HttpStatusCode.OK, sykmeldingsOpplysninger)
-        }
-        catch (exception: Exception) {
+        } catch (exception: Exception) {
             logger.error("Kastet exception ved henting av sykmeldingsopplysninger", exception)
             call.respond(
                 HttpStatusCode.InternalServerError,
                 HttpMessage("Noe gikk galt ved henting av sykmeldingsopplysninger")
             )
         }
-
-
     }
 }
