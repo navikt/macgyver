@@ -7,7 +7,7 @@ import {
     RuleInfo,
     SykmeldingsOpplysninger,
     SykmeldingStatus,
-    TidligereArbeidsgiver,
+    TidligereArbeidsgiver, UtenlandskSykmelding,
 } from '../../../types/sykmeldingsOpplysningerSchema.ts'
 import { Timeline } from '@navikt/ds-react'
 import { PersonIcon, VirusIcon } from '@navikt/aksel-icons'
@@ -48,7 +48,8 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
         arbeidsgiver: Arbeidsgiver
         hovedDiagnose: HovedDiagnose
         tidligereArbeidsgiver: TidligereArbeidsgiver
-        journalpostId: string
+        journalpostId: string,
+        utenlandskSykmelding: UtenlandskSykmelding,
     }
 
     interface BehandlingsUtfall {
@@ -56,7 +57,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
         ruleHits: RuleInfo[]
     }
 
-    let mainRow = {
+    const mainRow = {
         start: sortedSykmeldinger[0]?.perioder[0].fom,
         end: sortedSykmeldinger[0]?.perioder[sortedSykmeldinger[0].perioder.length - 1].tom,
         sykmeldinger: [sortedSykmeldinger[0]],
@@ -199,7 +200,18 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                             )}
                         </div>
                     </div>
-
+                    {activePeriod.utenlandskSykmelding && (
+                        <div>
+                            <p>
+                                <b>UtenlandskSykmelding: land:</b>{' '}
+                                {activePeriod.utenlandskSykmelding?.land}
+                            </p>
+                            <p>
+                                <b>UtenlandskSykmelding: huket av for 2101:</b>{' '}
+                                {activePeriod.utenlandskSykmelding?.folkeRegistertAdresseErBrakkeEllerTilsvarende}
+                            </p>
+                        </div>
+                    )}
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold">Perioder:</h3>
                         <div className="grid grid-cols-2 gap-4 mt-2">
@@ -231,6 +243,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                             ))}
                         </div>
                     </div>
+
 
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold">Behandlingsutfall:</h3>

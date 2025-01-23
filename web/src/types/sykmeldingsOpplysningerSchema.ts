@@ -40,6 +40,11 @@ export const HovedDiagnoseSchema = z.object({
     tekst: z.string().nullable(),
 })
 
+export const UtenlandskSykmeldingSchema = z.object({
+    land: z.string(),
+    folkeRegistertAdresseErBrakkeEllerTilsvarende: z.boolean(),
+})
+
 export const SykmeldingSchema = z.object({
     sykmeldingId: z.string(),
     merknader: z.array(MerknadSchema).nullable(),
@@ -54,6 +59,7 @@ export const SykmeldingSchema = z.object({
     hovedDiagnose: HovedDiagnoseSchema.nullable(),
     tidligereArbeidsgiver: ArbeidsgiverSchema.nullable(),
     journalpostId: z.string().nullable(),
+    utenlandskSykmelding: UtenlandskSykmeldingSchema.nullable(),
 })
 
 export const SykmeldingsOpplysningerSchema = z.object({
@@ -70,3 +76,4 @@ export type Arbeidsgiver = z.infer<typeof ArbeidsgiverSchema>
 export type TidligereArbeidsgiver = z.infer<typeof ArbeidsgiverSchema>
 export type SykmeldingStatus = z.infer<typeof SykmeldingStatusSchema>
 export type HovedDiagnose = z.infer<typeof HovedDiagnoseSchema>
+export type UtenlandskSykmelding = z.infer<typeof UtenlandskSykmeldingSchema>

@@ -3,6 +3,7 @@ package no.nav.syfo.sykmeldingsopplysninger
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
+import no.nav.syfo.model.UtenlandskSykmelding
 
 data class Sykmeldingsopplysninger(val fnr: String, val sykmeldinger: List<Sykmelding>)
 
@@ -37,12 +38,14 @@ data class Sykmelding(
     val hovedDiagnose: HovedDiagnose?,
     val tidligereArbeidsgiver: Arbeidsgiver?,
     val journalpostId: String?,
+    val utenlandskSykmelding: UtenlandskSykmelding? = null,
 )
 
 data class SykmeldingDokument(
     val id: String,
-    @JsonProperty("perioder") val perioder: List<Periode?>?,
-    val medisinskVurdering: MedisinskVurdering
+    val perioder: List<Periode?>?,
+    val medisinskVurdering: MedisinskVurdering,
+    val utenlandskSykmelding: UtenlandskSykmelding?
 )
 
 data class MedisinskVurdering(
@@ -73,6 +76,9 @@ enum class Status {
     INVALID
 }
 
-data class SykmeldingDok(val perioder: List<Periode?>?, val hovedDiagnose: HovedDiagnose?)
+data class SykmeldingDok(
+    val perioder: List<Periode?>?,
+    val hovedDiagnose: HovedDiagnose?,
+)
 
 data class JournalpostMedPeriode(val journalpostId: String, val periode: Periode?)

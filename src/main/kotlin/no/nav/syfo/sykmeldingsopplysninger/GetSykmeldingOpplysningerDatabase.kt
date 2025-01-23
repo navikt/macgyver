@@ -159,8 +159,12 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                     statement.executeQuery().use { resultSet ->
                         while (resultSet.next()) {
                             val sykmeldingId = resultSet.getString("id")
-                            val perioder = resultSet.toPerioder()
-                            val hovedDiagnose = resultSet.toHovedDiagnose()
+                            val sykmelding =
+                                resultSet.getString("sykmelding").let {
+                                    objectMapper.readValue<SykmeldingDokument>(it)
+                                }
+                            val perioder = sykmelding.perioder
+                            val hovedDiagnose = sykmelding.medisinskVurdering.hovedDiagnose
                             periodeList[sykmeldingId] = perioder
                             hovedDiagnoseList[sykmeldingId] = hovedDiagnose
                             sykmeldingDokList[sykmeldingId] = SykmeldingDok(perioder, hovedDiagnose)
@@ -200,6 +204,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
     }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
+
         val sykmeldingsopplysninger =
             Sykmelding(
                 sykmeldingId = getString("id"),
@@ -217,6 +222,8 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 perioder = null,
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                utenlandskSykmelding =
+                    getString("utenlandsk_sykmelding")?.let { objectMapper.readValue(it) },
             )
         return sykmeldingsopplysninger
     }
