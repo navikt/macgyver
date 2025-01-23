@@ -52,6 +52,8 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                         getSynligStatus((behandlingsUtfall[sykmelding.sykmeldingId]?.status)),
                     perioder = sykmeldingDok[sykmelding.sykmeldingId]?.perioder,
                     hovedDiagnose = sykmeldingDok[sykmelding.sykmeldingId]?.hovedDiagnose,
+                    utenlandskSykmelding =
+                        sykmeldingDok[sykmelding.sykmeldingId]?.utenlandskSykmelding,
                 )
             }
         } else return emptyList()
@@ -159,11 +161,17 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                     statement.executeQuery().use { resultSet ->
                         while (resultSet.next()) {
                             val sykmeldingId = resultSet.getString("id")
-                            val perioder = resultSet.toPerioder()
-                            val hovedDiagnose = resultSet.toHovedDiagnose()
+                            val sykmelding =
+                                resultSet.getString("sykmelding").let {
+                                    objectMapper.readValue<SykmeldingDokument>(it)
+                                }
+                            val perioder = sykmelding.perioder
+                            val hovedDiagnose = sykmelding.medisinskVurdering.hovedDiagnose
+                            val utenlandskSykmelding = sykmelding.utenlandskSykmelding
                             periodeList[sykmeldingId] = perioder
                             hovedDiagnoseList[sykmeldingId] = hovedDiagnose
-                            sykmeldingDokList[sykmeldingId] = SykmeldingDok(perioder, hovedDiagnose)
+                            sykmeldingDokList[sykmeldingId] =
+                                SykmeldingDok(perioder, hovedDiagnose, utenlandskSykmelding)
                         }
                     }
                 }
@@ -200,6 +208,10 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
     }
 
     private fun ResultSet.toSykmelding(): Sykmelding {
+        val sykmeldingsDoc = getString("sykmelding")
+        val sykmelding =
+            objectMapper.readValue(sykmeldingsDoc, no.nav.syfo.model.Sykmelding::class.java)
+
         val sykmeldingsopplysninger =
             Sykmelding(
                 sykmeldingId = getString("id"),
@@ -217,6 +229,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 perioder = null,
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                utenlandskSykmelding = null,
             )
         return sykmeldingsopplysninger
     }
