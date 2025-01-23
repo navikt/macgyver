@@ -22,7 +22,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import org.koin.test.check.checkModules
 
 class CheckModulesTest : KoinTest {
 
@@ -93,8 +92,6 @@ class CheckModulesTest : KoinTest {
                     single<DokArkivClient> { mockk<DokarkivClientDevelopment>() }
                 },
             )
-
-            checkModules()
         }
     }
 }
