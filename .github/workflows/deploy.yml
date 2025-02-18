@@ -33,17 +33,12 @@ jobs:
         with:
           languages: kotlin
 
-      - name: Build gradle artifacts
-        run: |
-          ./gradlew shadowJar -x test
-        env:
-          ORG_GRADLE_PROJECT_githubUser: x-access-token
-          ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.READER_TOKEN }}
+      - name: Build
+        run: ./gradlew build -x test
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
+          
 
   test:
     name: Test
