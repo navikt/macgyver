@@ -1,3 +1,7 @@
+import com.diffplug.gradle.spotless.SpotlessTask
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 group = "no.nav.syfo"
 version = "1.0.0"
 
@@ -30,10 +34,12 @@ val ktfmtVersion = "0.49"
 val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.3"
 val snappyJavaVersion = "1.1.10.7"
-val javaVersion = JavaVersion.VERSION_21
 val kafkaVersion = "3.8.0"
 val diagnosekoderVersion = "1.2024.0"
 val koinVersion = "4.0.0"
+
+val javaVersion = "21"
+
 
 plugins {
     id("application")
@@ -142,16 +148,16 @@ dependencies {
 
 }
 
+kotlin {
+    jvmToolchain(javaVersion.toInt())
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(javaVersion))
+    }
+}
 
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = javaVersion.toString()
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = javaVersion.toString()
-    }
 
-    shadowJar {
+    withType<ShadowJar> {
         mergeServiceFiles {
             setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
         }
@@ -167,7 +173,7 @@ tasks {
         }
     }
 
-    test {
+    withType<Test> {
         useJUnitPlatform {}
         testLogging {
             events("skipped", "failed")
@@ -176,10 +182,12 @@ tasks {
         }
     }
 
-    spotless {
-        kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
-        check {
-            dependsOn("spotlessApply")
+    withType<SpotlessTask> {
+        spotless{
+            kotlin { ktfmt(ktfmtVersion).kotlinlangStyle() }
+            check {
+                dependsOn("spotlessApply")
+            }
         }
     }
 }
