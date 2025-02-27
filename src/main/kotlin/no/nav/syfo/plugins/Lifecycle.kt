@@ -6,8 +6,8 @@ import org.koin.ktor.ext.inject
 fun Application.configureLifecycleHooks() {
     val state by inject<ApplicationState>()
 
-    environment.monitor.subscribe(ApplicationStarted) { state.ready = true }
-    environment.monitor.subscribe(ApplicationStopped) { state.ready = false }
+    monitor.subscribe(ApplicationStarted) { state.ready = true }
+    monitor.subscribe(ApplicationStopped) { state.ready = false }
 }
 
 data class ApplicationState(

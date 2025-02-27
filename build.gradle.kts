@@ -7,7 +7,7 @@ version = "1.0.0"
 
 val coroutinesVersion = "1.9.0"
 val jacksonVersion = "2.18.0"
-val ktorVersion = "2.3.12"
+val ktorVersion = "3.1.0"
 val logbackVersion = "1.5.9"
 val logstashEncoderVersion = "8.0"
 val prometheusVersion = "0.16.0"
@@ -36,7 +36,7 @@ val snakeyamlVersion = "2.3"
 val snappyJavaVersion = "1.1.10.7"
 val kafkaVersion = "3.8.0"
 val diagnosekoderVersion = "1.2024.0"
-val koinVersion = "4.0.0"
+val koinVersion = "4.1.0-Beta5"
 
 val javaVersion = "21"
 
@@ -102,7 +102,7 @@ dependencies {
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
     implementation("no.nav.helse.xml:kith-hodemelding:$kithHodemeldingVersion")
 
-    implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.insert-koin:koin-ktor3:$koinVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
 
     constraints {

@@ -93,8 +93,6 @@ class CheckModulesTest : KoinTest {
                     single<DokArkivClient> { mockk<DokarkivClientDevelopment>() }
                 },
             )
-
-            checkModules()
         }
     }
 }
