@@ -1,20 +1,28 @@
-import {ReactElement} from "react";
-import {Alert} from "@navikt/ds-react";
-import {AltinnStatus} from "../../../types/altinnStatusSchema.ts";
+import { ReactElement } from 'react'
+import { Alert } from '@navikt/ds-react'
+
+import { AltinnStatus } from '../../../types/altinnStatusSchema.ts'
 
 interface AltinnStatusFormProps {
-    status: AltinnStatus;
-
+    status: AltinnStatus
 }
 
-const AltinnStatusForm = ({status}: AltinnStatusFormProps): ReactElement => {
+const AltinnStatusForm = ({ status }: AltinnStatusFormProps): ReactElement => {
     return (
         <Alert className="max-w-prose" variant="success">
             <ul>
-                <li><b>Correspondence ID:</b> {status.correspondenceId}</li>
-                <li><b>Created Date:</b> {status.createdDate}</li>
-                <li><b>Orgnummer:</b> {status.orgnummer}</li>
-                <li><b>Senders Reference:</b> {status.sendersReference}</li>
+                <li>
+                    <b>Correspondence ID:</b> {status.correspondenceId}
+                </li>
+                <li>
+                    <b>Created Date:</b> {status.createdDate}
+                </li>
+                <li>
+                    <b>Orgnummer:</b> {status.orgnummer}
+                </li>
+                <li>
+                    <b>Senders Reference:</b> {status.sendersReference}
+                </li>
                 <li>
                     <b>Status Changes:</b>
                     <ul>
@@ -28,7 +36,7 @@ const AltinnStatusForm = ({status}: AltinnStatusFormProps): ReactElement => {
                 </li>
             </ul>
         </Alert>
-    );
-};
+    )
+}
 
-export default AltinnStatusForm;
+export default AltinnStatusForm

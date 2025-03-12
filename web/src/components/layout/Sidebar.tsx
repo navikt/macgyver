@@ -1,5 +1,4 @@
 import { ReactElement } from 'react'
-import SidebarMenuItem from './SidebarMenuItem.tsx'
 import {
     BandageIcon,
     FilesIcon,
@@ -10,6 +9,8 @@ import {
     PersonIcon,
 } from '@navikt/aksel-icons'
 import { Link } from 'react-router-dom'
+
+import SidebarMenuItem from './SidebarMenuItem.tsx'
 
 type Props = {
     className?: string
@@ -63,9 +64,7 @@ function Sidebar({ className }: Props): ReactElement {
             </SidebarMenuItem>
             <SidebarMenuItem title="AltinnStatus" Icon={PersonIcon}>
                 <li>
-                    <Link to="/altinnstatus/oppslag">
-                        Hent status fra Altinn på en gitt sykmelding og orgnummer
-                    </Link>
+                    <Link to="/altinnstatus/oppslag">Hent status fra Altinn på en gitt sykmelding og orgnummer</Link>
                 </li>
             </SidebarMenuItem>
         </div>

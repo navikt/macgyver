@@ -1,13 +1,14 @@
 import { ReactElement, useState } from 'react'
-
-import BasicPage from '../../components/layout/BasicPage.tsx'
-import FnrForm from './oppslag-form/FnrForm.tsx'
-import PersonWithIdent from './oppslag-form/PersonWithIdent.tsx'
 import { Alert, Loader } from '@navikt/ds-react'
 import { useQuery } from '@tanstack/react-query'
+
+import BasicPage from '../../components/layout/BasicPage.tsx'
 import { fetchApi } from '../../api/api.ts'
 import { PersonSchema } from '../../types/personSchema.ts'
 import { raiseError } from '../../utils/ts.ts'
+
+import PersonWithIdent from './oppslag-form/PersonWithIdent.tsx'
+import FnrForm from './oppslag-form/FnrForm.tsx'
 
 function PersonOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)

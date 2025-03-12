@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
-
 import { Alert } from '@navikt/ds-react'
 
-import NarmesteledereListItem from './NarmesteledereListItem'
 import { Narmesteleder } from '../../../types/narmesteleder.ts'
+
+import NarmesteledereListItem from './NarmesteledereListItem'
 
 interface NarmesteledereListProps {
     narmesteleder: Narmesteleder

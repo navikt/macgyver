@@ -1,9 +1,10 @@
+import { ReactElement } from 'react'
 import { useRouteError } from 'react-router-dom'
 import { BodyShort, Heading } from '@navikt/ds-react'
 
 import image from './images/error-page-image.webp'
 
-export default function ErrorPage() {
+export default function ErrorPage(): ReactElement {
     const error = useRouteError()
 
     console.error(error)

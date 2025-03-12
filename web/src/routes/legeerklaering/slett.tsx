@@ -1,9 +1,11 @@
 import { ReactElement } from 'react'
-import BasicPage from '../../components/layout/BasicPage.tsx'
 import { useMutation } from '@tanstack/react-query'
 import { Alert, BodyShort, Loader } from '@navikt/ds-react'
+
+import BasicPage from '../../components/layout/BasicPage.tsx'
 import { fetchApi } from '../../api/api.ts'
 import { MessageSchema } from '../../api/message.ts'
+
 import SlettLegeerklaeringForm from './slett-legeerklaering-form/SlettLegeerklaeringForm.tsx'
 
 function SlettLegeerklaering(): ReactElement {

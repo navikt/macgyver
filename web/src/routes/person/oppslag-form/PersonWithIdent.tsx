@@ -1,5 +1,4 @@
 import { ReactElement } from 'react'
-
 import { Alert } from '@navikt/ds-react'
 
 import { Person } from '../../../types/personSchema.ts'

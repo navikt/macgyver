@@ -1,12 +1,13 @@
 import { ReactElement, useState } from 'react'
+import { Alert, Loader } from '@navikt/ds-react'
+import { useQuery } from '@tanstack/react-query'
 
 import BasicPage from '../../components/layout/BasicPage.tsx'
 import FnrForm from '../person/oppslag-form/FnrForm.tsx'
-import { Alert, Loader } from '@navikt/ds-react'
-import { useQuery } from '@tanstack/react-query'
 import { fetchApi } from '../../api/api.ts'
 import { SykmeldingsOpplysningerSchema } from '../../types/sykmeldingsOpplysningerSchema.ts'
 import { raiseError } from '../../utils/ts.ts'
+
 import SykmeldingsOpplysningerForm from './vis-sykmeldinger-form/SykmeldingsOpplysningerForm.tsx'
 
 function SykmeldingsOpplysningerOppslag(): ReactElement {

@@ -1,13 +1,13 @@
-import {ReactElement} from "react";
-import {AltinnStatusSchema} from "../../types/altinnStatusSchema.ts";
+import { ReactElement } from 'react'
+import { Alert, Loader } from '@navikt/ds-react'
+import { useMutation } from '@tanstack/react-query'
 
-import BasicPage from "../../components/layout/BasicPage.tsx";
-import {fetchApi} from "../../api/api.ts";
-import AltinnStatusSykmeldingIdForm from "./sjekk-altinn-status-form/AltinnStatusSykmeldingIdForm.tsx";
-import AltinnStatusForm from "./sjekk-altinn-status-form/AltinnStatusForm.tsx";
-import {Alert, Loader} from "@navikt/ds-react";
-import {useMutation} from "@tanstack/react-query";
+import { AltinnStatusSchema } from '../../types/altinnStatusSchema.ts'
+import BasicPage from '../../components/layout/BasicPage.tsx'
+import { fetchApi } from '../../api/api.ts'
 
+import AltinnStatusSykmeldingIdForm from './sjekk-altinn-status-form/AltinnStatusSykmeldingIdForm.tsx'
+import AltinnStatusForm from './sjekk-altinn-status-form/AltinnStatusForm.tsx'
 
 function AltinnStatusOppslag(): ReactElement {
     const { data, isSuccess, isPending, error, mutate } = useMutation({
@@ -26,7 +26,6 @@ function AltinnStatusOppslag(): ReactElement {
         },
     })
 
-
     return (
         <BasicPage
             title="Sjekk status i Altinn for denne sykmeldingen"
@@ -41,11 +40,11 @@ function AltinnStatusOppslag(): ReactElement {
                     })
                 }}
             />
-            {!data && !error && isPending && <Loader size="medium"/>}
-            {data && isSuccess && <AltinnStatusForm status={data}/>}
+            {!data && !error && isPending && <Loader size="medium" />}
+            {data && isSuccess && <AltinnStatusForm status={data} />}
             {error && <Alert variant="error">{error.message}</Alert>}
         </BasicPage>
-    );
+    )
 }
 
-export default AltinnStatusOppslag;
+export default AltinnStatusOppslag

@@ -18,7 +18,7 @@ import SlettLegeerklaering from './routes/legeerklaering/slett.tsx'
 import NotFound from './not-found.tsx'
 import JournalposterOppslag from './routes/journalpost/oppslag.tsx'
 import SykmeldingsOpplysningerOppslag from './routes/sykmeldingsopplysninger/oppslag.tsx'
-import AltinnStatusOppslag from "./routes/altinnstatus/oppslag.tsx";
+import AltinnStatusOppslag from './routes/altinnstatus/oppslag.tsx'
 
 const router = createBrowserRouter([
     {
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
             },
             { path: '/person/oppslag', element: <PersonOppslag /> },
             { path: '/sykmeldingsopplysninger/oppslag', element: <SykmeldingsOpplysningerOppslag /> },
-            { path: "/altinnstatus/oppslag", element: <AltinnStatusOppslag />},
+            { path: '/altinnstatus/oppslag', element: <AltinnStatusOppslag /> },
             { path: '/oppgave/oppslag', element: <OppgaveOppslag /> },
             { path: '/ident/endre', element: <EndreIdent /> },
             { path: '/sykmelding/slett', element: <SlettSykmelding /> },

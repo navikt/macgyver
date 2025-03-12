@@ -1,5 +1,4 @@
 import { ReactElement } from 'react'
-
 import { BodyShort } from '@navikt/ds-react'
 
 interface JournalpostListItemProps {
