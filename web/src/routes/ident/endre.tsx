@@ -1,11 +1,13 @@
 import { ReactElement } from 'react'
-import BasicPage from '../../components/layout/BasicPage.tsx'
-import IdentEndringSykmeldtForm from './ident-endring-form/IdentEndringSykmeldtForm.tsx'
 import { useMutation } from '@tanstack/react-query'
+import { Alert, BodyShort, Loader } from '@navikt/ds-react'
+
+import BasicPage from '../../components/layout/BasicPage.tsx'
 import { fetchApi } from '../../api/api.ts'
 import { IdentEndringSykmeldtPayload, IdentEndringSykmeldtPayloadSchema } from '../../types/identEndring.ts'
 import { MessageSchema } from '../../api/message.ts'
-import { Alert, BodyShort, Loader } from '@navikt/ds-react'
+
+import IdentEndringSykmeldtForm from './ident-endring-form/IdentEndringSykmeldtForm.tsx'
 
 function EndreIdent(): ReactElement {
     const { data, isSuccess, isPending, error, mutate } = useMutation({

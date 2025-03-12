@@ -1,16 +1,23 @@
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Button, TextField } from '@navikt/ds-react'
 
 interface NyNlRequestAltinnFormProps {
     onChange: (sykmeldteFnr: string) => void
 }
 
-const NLRequestForm = ({ onChange }: NyNlRequestAltinnFormProps): JSX.Element => {
+const NLRequestForm = ({ onChange }: NyNlRequestAltinnFormProps): ReactElement => {
     const [sykmeldteFnr, setSykmeldteFnr] = useState<string>('')
+    const [error, setError] = useState<string | null>(null)
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault()
         onChange(sykmeldteFnr)
+
+        if (sykmeldteFnr.length !== 11) {
+            setError('Fødselsnummer må være 11 siffer')
+        } else {
+            setError(null)
+        }
     }
     return (
         <div>
@@ -22,7 +29,7 @@ const NLRequestForm = ({ onChange }: NyNlRequestAltinnFormProps): JSX.Element =>
                     setSykmeldteFnr(event.currentTarget.value)
                 }}
                 className="my-6 w-96"
-                error={sykmeldteFnr.length !== 11 ? 'Fødselsnummer må være 11 siffer' : undefined}
+                error={error}
             />
 
             <Button name="hentButton" variant="primary" size="medium" className="my-4" onClick={handleClick}>

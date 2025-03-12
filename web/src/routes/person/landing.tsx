@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
-import BasicPage from '../../components/layout/BasicPage.tsx'
 import { BodyShort } from '@navikt/ds-react'
+
+import BasicPage from '../../components/layout/BasicPage.tsx'
 
 function Landing(): ReactElement {
     return (

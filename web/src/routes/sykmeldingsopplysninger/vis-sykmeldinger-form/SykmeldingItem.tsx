@@ -1,5 +1,4 @@
 import { ReactElement } from 'react'
-
 import { BodyShort } from '@navikt/ds-react'
 
 interface SykmeldingProps {
@@ -37,12 +36,14 @@ const SykmeldingItem = ({
             <BodyShort>StatusEvent = {statusEvent.status}</BodyShort>
             <BodyShort>TssId = {tssid}</BodyShort>
             {merknader.map((merknad) => {
-                return <MerknadItem type={merknad.type} beskrivelse={merknad.beskrivelse}></MerknadItem>
+                return (
+                    <MerknadItem key={merknad.type} type={merknad.type} beskrivelse={merknad.beskrivelse}></MerknadItem>
+                )
             })}
             ,<BodyShort>{behandlingsutfall.status}</BodyShort>
             {behandlingsutfall.ruleHits.map((ruleHit) => {
                 return (
-                    <div>
+                    <div key={ruleHit.ruleName}>
                         <BodyShort>{ruleHit.ruleName}</BodyShort>
                         <BodyShort>{ruleHit.ruleStatus}</BodyShort>
                         <BodyShort>{ruleHit.messageForUser}</BodyShort>
@@ -52,7 +53,7 @@ const SykmeldingItem = ({
             })}
             ,
             {perioder.map((periode) => {
-                return <PeriodeItem fom={periode.fom} tom={periode.tom}></PeriodeItem>
+                return <PeriodeItem key={periode.fom} fom={periode.fom} tom={periode.tom}></PeriodeItem>
             })}
             ,<BodyShort>{synligStatus}</BodyShort>
         </li>

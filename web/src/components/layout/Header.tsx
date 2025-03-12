@@ -1,9 +1,9 @@
 import { ReactElement } from 'react'
 import { Link } from 'react-router-dom'
-
-import logo from './logo.webp'
 import { Heading } from '@navikt/ds-react'
 import { ChatIcon } from '@navikt/aksel-icons'
+
+import logo from './logo.webp'
 
 function Header(): ReactElement {
     return (

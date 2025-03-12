@@ -1,4 +1,7 @@
 import { ReactElement, useState } from 'react'
+import { Timeline } from '@navikt/ds-react'
+import { PersonIcon, VirusIcon } from '@navikt/aksel-icons'
+
 import {
     Arbeidsgiver,
     HovedDiagnose,
@@ -7,16 +10,17 @@ import {
     RuleInfo,
     SykmeldingsOpplysninger,
     SykmeldingStatus,
-    TidligereArbeidsgiver, UtenlandskSykmelding,
+    TidligereArbeidsgiver,
+    UtenlandskSykmelding,
 } from '../../../types/sykmeldingsOpplysningerSchema.ts'
-import { Timeline } from '@navikt/ds-react'
-import { PersonIcon, VirusIcon } from '@navikt/aksel-icons'
 
 interface SykmeldingsOpplysningerProps {
     person: SykmeldingsOpplysninger
 }
 
 const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): ReactElement => {
+    const [activePeriod, setActivePeriod] = useState<Sykmelding | null>(null)
+
     if (person.sykmeldinger.length === 0) {
         return <div>Ingen sykmeldinger funnet</div>
     }
@@ -48,8 +52,8 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
         arbeidsgiver: Arbeidsgiver
         hovedDiagnose: HovedDiagnose
         tidligereArbeidsgiver: TidligereArbeidsgiver
-        journalpostId: string,
-        utenlandskSykmelding: UtenlandskSykmelding,
+        journalpostId: string
+        utenlandskSykmelding: UtenlandskSykmelding
     }
 
     interface BehandlingsUtfall {
@@ -63,9 +67,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
         sykmeldinger: [sortedSykmeldinger[0]],
     }
 
-    const [activePeriod, setActivePeriod] = useState<Sykmelding | null>(null)
-
-    const handlePeriodClick = (sykmelding: Sykmelding) => {
+    const handlePeriodClick = (sykmelding: Sykmelding): void => {
         if (activePeriod === sykmelding) {
             setActivePeriod(null)
         } else {
@@ -113,7 +115,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                                 }
                                 onSelectPeriod={() => handlePeriodClick(sykmelding)}
                                 isActive={activePeriod === sykmelding}
-                                aria-controls={'timeline-panel'}
+                                aria-controls="timeline-panel"
                                 id={sykmelding.sykmeldingId}
                             >
                                 <div className="p-4 bg-white rounded shadow">
@@ -148,7 +150,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                 <div
                     className="mt-8 bg-white p-6 rounded-lg shadow-md"
                     aria-controls={activePeriod.sykmeldingId}
-                    id={'timeline-panel'}
+                    id="timeline-panel"
                 >
                     <h2 className="text-xl font-bold">Detaljer for sykmelding med ID: {activePeriod.sykmeldingId}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -203,8 +205,7 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                     {activePeriod.utenlandskSykmelding && (
                         <div>
                             <p>
-                                <b>UtenlandskSykmelding: land:</b>{' '}
-                                {activePeriod.utenlandskSykmelding?.land}
+                                <b>UtenlandskSykmelding: land:</b> {activePeriod.utenlandskSykmelding?.land}
                             </p>
                             <p>
                                 <b>UtenlandskSykmelding: huket av for 2101:</b>{' '}
@@ -243,7 +244,6 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                             ))}
                         </div>
                     </div>
-
 
                     <div className="mt-6">
                         <h3 className="text-lg font-semibold">Behandlingsutfall:</h3>
