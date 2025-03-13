@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - 'network-policy-smregister-prod.yaml'
-      - 'network-policy-smregistering-prod.yaml'
       - '.github/workflows/deploy-network-policy-prod**'
     branches:
       - '**'
@@ -20,11 +19,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: network-policy-smregister-prod.yaml
-          TEAM: teamsykmelding
-      - name: Deploy network-policy  to prod-gcp
-        uses: nais/deploy/actions/deploy@master
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-gcp
-          RESOURCE: network-policy-smregistering-prod.yaml
           TEAM: teamsykmelding
