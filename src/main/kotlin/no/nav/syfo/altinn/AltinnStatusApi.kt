@@ -8,7 +8,7 @@ import org.koin.ktor.ext.inject
 
 fun Route.registerAltinnStatusApi() {
     val altinnStatusService by inject<AltinnStatusService>()
-    get("/altinnstatus/{sykmeldingId}/{orgnummer}") {
+    get("/infotrygd/{sykmeldingId}/{orgnummer}") {
         val sykmeldingId = call.parameters["sykmeldingId"]
         val orgnummer = call.parameters["orgnummer"]
         if (sykmeldingId.isNullOrEmpty()) {
