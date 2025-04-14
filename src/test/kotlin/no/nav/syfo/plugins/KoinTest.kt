@@ -55,6 +55,7 @@ class CheckModulesTest : KoinTest {
             clusterName = "clusterName-test",
             syfosmaltinnScope = "syfosmaltinnScope-test",
             syfosmaltinnUrl = "syfosmaltinnUrl-test",
+            infotrygdScope = "infotrygdScope-test",
         )
 
     @Test

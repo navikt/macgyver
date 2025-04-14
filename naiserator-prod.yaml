@@ -52,6 +52,7 @@ spec:
         - application: narmesteleder
         - application: syfosmregister
         - application: syfosmaltinn
+        - application: syfosminfotrygd
       external:
         - host: saf.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
@@ -105,3 +106,5 @@ spec:
       value: api://prod-fss.teamdokumenthandtering.dokarkiv/.default
     - name: SYFOSMALTINN_SCOPE
       value: api://prod-gcp.teamsykmelding.syfosmaltinn/.default
+    - name: INFOTRYGD_SCOPE
+      value: api://prod-gcp.teamsykmelding.syfosminfotrygd/.default
