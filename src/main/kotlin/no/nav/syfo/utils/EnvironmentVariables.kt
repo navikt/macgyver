@@ -37,6 +37,8 @@ data class EnvironmentVariables(
     val syfosmaltinnUrl: String = "http://syfosmaltinn",
     val syfosmaltinnScope: String = getEnvVar("SYFOSMALTINN_SCOPE"),
     val clusterName: String = getEnvVar("NAIS_CLUSTER_NAME"),
+    val infotrygdUrl: String = "http://syfosminfotrygd",
+    val infotrygdScope: String = getEnvVar("INFOTRYGD_SCOPE"),
 )
 
 fun getEnvVar(varName: String, defaultValue: String? = null) =

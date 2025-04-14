@@ -9,6 +9,7 @@ import no.nav.syfo.db.Database
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseProduction
 import no.nav.syfo.identendring.update_fnr.UpdateFnrService
+import no.nav.syfo.infotrygd.InfotrygdService
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
@@ -52,6 +53,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
+import kotlin.math.sin
 
 fun Application.configureKoin() {
     install(Koin) {
@@ -78,7 +80,8 @@ fun KoinApplication.initProductionModules() {
         dokarkivModule,
         sykmeldingModule,
         safModule,
-        altinnModule
+        altinnModule,
+        infotrygdModule,
     )
 }
 
@@ -213,6 +216,18 @@ val narmestelederModule = module {
             pdlService = get(),
             narmestelederRequestProducer = get(),
             narmestelederClient = get(),
+        )
+    }
+}
+
+val infotrygdModule = module {
+    single {
+        val env = get<EnvironmentVariables>()
+        InfotrygdService(
+            infotrygdClient = get(),
+            accessTokenClientV2 = get(),
+            baseUrl = env.infotrygdUrl,
+            scope = env.infotrygdScope,
         )
     }
 }

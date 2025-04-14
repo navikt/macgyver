@@ -16,8 +16,8 @@ function InfotrygdOppslag(): ReactElement {
                 throw new Error('Mangler ident.')
             }
 
-            return await fetchApi(`/altinnstatus`, {
-                method: 'GET',
+            return await fetchApi(`/infotrygd`, {
+                method: 'POST',
                 schema: InfotrygdResponse,
                 body: data,
             })

@@ -15,12 +15,12 @@ interface InfotrygdFormProps {
 
 const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
     const [ident, setIdent] = useState('')
-    const [tkNummer, setTkNummer] = useState('')
-    const [hoveddiagnoseKode, setHoveddiagnosekode] = useState('')
-    const [hoveddiagnoseKodeSystem, setHoveddiagnosekodeSystem] = useState('')
-    const [bidiagnoseKode, setBidiagnoseKode] = useState('')
-    const [bidiagnoseKodeSystem, setBidiagnosekodeSystem] = useState('')
-    const [identBehanlder, setIdentBehandler] = useState('')
+    const [tkNummer, setTkNummer] = useState<string | null>(null)
+    const [hoveddiagnoseKode, setHoveddiagnosekode] = useState<string | null>(null)
+    const [hoveddiagnoseKodeSystem, setHoveddiagnosekodeSystem] = useState<string | null>(null)
+    const [bidiagnoseKode, setBidiagnoseKode] = useState<string | null>(null)
+    const [bidiagnoseKodeSystem, setBidiagnosekodeSystem] = useState<string | null>(null)
+    const [identBehanlder, setIdentBehandler] = useState<string | null>(null)
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault()
@@ -50,7 +50,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setTkNummer(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setTkNummer(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
@@ -59,7 +60,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setHoveddiagnosekode(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setHoveddiagnosekode(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
@@ -68,7 +70,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setHoveddiagnosekodeSystem(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setHoveddiagnosekodeSystem(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
@@ -77,7 +80,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setBidiagnoseKode(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setBidiagnoseKode(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
@@ -86,7 +90,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setBidiagnosekodeSystem(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setBidiagnosekodeSystem(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
@@ -95,7 +100,8 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 size="medium"
                 required
                 onChange={(event) => {
-                    setIdentBehandler(event.currentTarget.value)
+                    const value = event.currentTarget.value
+                    setIdentBehandler(value === '' ? null : value)
                 }}
                 className="my-6 w-96"
             />
