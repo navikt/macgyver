@@ -21,9 +21,13 @@ fun Route.registerSykmeldingsOpplysningerApi() {
     get("/sykmeldingsopplysninger") {
         logger.info("Henter sykmeldingsopplysninger")
         val fnr = call.request.headers["fnr"]
-        sikkerlogg.info("prøver å hente sykmeldingsopplysninger på fnr $fnr")
+        val sykmeldingId = call.request.headers["sykmeldingId"]
 
-        if (fnr.isNullOrEmpty()) {
+        val fnrToLookup = fnr ?: getSykmeldingOpplysningerService.getFnrFromSykmeldingId(sykmeldingId)
+
+        sikkerlogg.info("prøver å hente sykmeldingsopplysninger på fnr $fnrToLookup")
+
+        if (fnrToLookup.isNullOrEmpty()) {
             logger.warn("fnr kan ikke være null eller tom")
             call.respond(HttpStatusCode.BadRequest, HttpMessage("fnr kan ikke være null eller tom"))
             return@get
@@ -32,17 +36,17 @@ fun Route.registerSykmeldingsOpplysningerApi() {
         auditlogg.info(
             AuditLogger(principal.email)
                 .createcCefMessage(
-                    fnr = fnr,
+                    fnr = fnrToLookup,
                     operation = AuditLogger.Operation.READ,
                     requestPath = "/api/sykmeldingsopplysninger",
                     permit = AuditLogger.Permit.PERMIT,
                 ),
         )
         val sykmeldingsOpplysninger =
-            getSykmeldingOpplysningerService.getSykmeldingOpplysninger(fnr)
+            getSykmeldingOpplysningerService.getSykmeldingOpplysninger(fnrToLookup)
 
         try {
-            val journalposter = safService.getJournalPostsBruker(fnr)
+            val journalposter = safService.getJournalPostsBruker(fnrToLookup)
             val oppdatertSykmeldinger =
                 sykmeldingsOpplysninger.sykmeldinger.map { sykmelding ->
                     val sykmeldingPeriode =

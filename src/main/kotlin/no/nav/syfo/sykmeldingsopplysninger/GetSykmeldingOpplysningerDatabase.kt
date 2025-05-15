@@ -6,14 +6,18 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import no.nav.syfo.db.Database
+import no.nav.syfo.db.toList
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
     suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
+    suspend fun getFnrForSykmeldingId(sykmeldingId: String): String?
 }
 
 class GetSykmeldingerDatabaseProduction(private val database: Database) :
     GetSykmeldingOpplysningerDatabase {
+
+
     override suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding> {
         val sykmeldinger = mutableListOf<Sykmelding>()
         this.database.connection.use { connection ->
@@ -55,6 +59,22 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 )
             }
         } else return emptyList()
+    }
+
+    override suspend fun getFnrForSykmeldingId(sykmeldingId: String): String? {
+        return database.connection.use { conn ->
+            conn.prepareStatement("""select pasient_fnr from sykmeldingsopplysninger where id = ?""")
+                .use {  ps ->
+                    ps.setString(1, sykmeldingId)
+                    ps.executeQuery().use { rs ->
+                        if(rs.next()) {
+                            rs.getString("pasient_fnr")
+                        } else {
+                            null
+                        }
+                    }
+                }
+        }
     }
 
     private fun getTidligereArbeidsgiver(sykmeldingIds: List<String>): Map<String, Arbeidsgiver> {
@@ -484,6 +504,10 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 journalpostId = null,
             ),
         )
+    }
+
+    override suspend fun getFnrForSykmeldingId(sykmeldingId: String): String? {
+        return null
     }
 
     private fun getSynligStatus(status: Status): String {

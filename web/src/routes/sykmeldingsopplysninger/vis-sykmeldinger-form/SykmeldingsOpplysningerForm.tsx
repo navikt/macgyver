@@ -16,10 +16,12 @@ import {
 
 interface SykmeldingsOpplysningerProps {
     person: SykmeldingsOpplysninger
+    sykmeldingId: string | null
 }
 
-const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): ReactElement => {
+const SykmeldingsOpplysningerForm = ({ person, sykmeldingId }: SykmeldingsOpplysningerProps): ReactElement => {
     const [activePeriod, setActivePeriod] = useState<Sykmelding | null>(null)
+    const [selectedSykmeldingId, setSelectedSykmeldingId] = useState<string | null>(sykmeldingId)
 
     if (person.sykmeldinger.length === 0) {
         return <div>Ingen sykmeldinger funnet</div>
@@ -90,6 +92,15 @@ const SykmeldingsOpplysningerForm = ({ person }: SykmeldingsOpplysningerProps): 
                 mainRow.sykmeldinger.push(sortedSykmeldinger[i])
                 mainRow.end = sistePeriodeSlutt
             }
+        }
+    }
+    if (selectedSykmeldingId != null) {
+        const sykmelding = timelineRows
+            .flatMap((row) => row.sykmeldinger)
+            .find((syk) => syk.sykmeldingId === selectedSykmeldingId)
+        if (sykmelding) {
+            setActivePeriod(sykmelding)
+            setSelectedSykmeldingId(null)
         }
     }
 

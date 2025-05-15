@@ -33,6 +33,7 @@ const router = createBrowserRouter([
             },
             { path: '/person/oppslag', element: <PersonOppslag /> },
             { path: '/sykmeldingsopplysninger/oppslag', element: <SykmeldingsOpplysningerOppslag /> },
+            { path: '/infotrygd/oppslag', element: <InfotrygdOppslag /> },
             { path: '/altinnstatus/oppslag', element: <AltinnStatusOppslag /> },
             { path: '/oppgave/oppslag', element: <OppgaveOppslag /> },
             { path: '/ident/endre', element: <EndreIdent /> },

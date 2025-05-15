@@ -10,4 +10,9 @@ class GetSykmeldingOpplysningerService(
             getSykmeldingOpplysningerDatabase.getAlleSykmeldinger(fnr)
         )
     }
+
+    suspend fun getFnrFromSykmeldingId(sykmeldingId: String?): String? {
+        if(sykmeldingId == null) return null
+        return getSykmeldingOpplysningerDatabase.getFnrForSykmeldingId(sykmeldingId)
+    }
 }
