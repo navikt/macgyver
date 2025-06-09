@@ -159,7 +159,7 @@ jobs:
           team: teamsykmelding
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@0.31.0
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
         with:
