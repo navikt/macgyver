@@ -64,7 +64,7 @@ export default SykmeldingItem
 
 interface MerknadProps {
     type: string
-    beskrivelse: string
+    beskrivelse: string | null
 }
 
 interface StatusEventProps {

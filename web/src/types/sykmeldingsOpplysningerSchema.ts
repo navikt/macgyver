@@ -26,7 +26,7 @@ export const SykmeldingStatusSchema = z.object({
 
 export const MerknadSchema = z.object({
     type: z.string(),
-    beskrivelse: z.string(),
+    beskrivelse: z.string().nullable(),
 })
 
 export const ArbeidsgiverSchema = z.object({
