@@ -31,7 +31,6 @@ val googlePostgresVersion = "1.25.1"
 val junitVersion = "5.13.3"
 val commonsCodecVersion = "1.18.0"
 val ktfmtVersion = "0.49"
-val logbacksyslog4jVersion = "1.0.0"
 val snakeyamlVersion = "2.4"
 val snappyJavaVersion = "1.1.10.7"
 val kafkaVersion = "3.9.1"
@@ -91,8 +90,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
-    implementation("com.papertrailapp:logback-syslog4j:$logbacksyslog4jVersion")
-
+    
     implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
