@@ -19,7 +19,7 @@ function PersonOppslag(): ReactElement {
                 schema: PersonSchema,
                 headers: { fnr: fnrToSearch ?? raiseError('Missing FNR') },
             }),
-        enabled: fnrToSearch !== null && fnrToSearch.length === 11,
+        enabled: fnrToSearch !== null && (fnrToSearch.length === 11 || fnrToSearch.length === 13),
     })
 
     return (

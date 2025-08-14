@@ -28,3 +28,4 @@ fun Application.module() {
     configureFeatures()
     configureCallLogging()
 }
+

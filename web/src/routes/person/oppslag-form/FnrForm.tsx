@@ -17,7 +17,7 @@ const FnrForm = ({ onChange }: FnrFormProps): ReactElement => {
         <div>
             <TextField
                 name="fnr"
-                label="fnr"
+                label="fnr/dnr/aktorid"
                 size="medium"
                 onChange={(event) => {
                     setFnr(event.currentTarget.value)
