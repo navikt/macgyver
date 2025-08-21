@@ -33,7 +33,16 @@ export async function fetchApi<SchemaType extends ZodTypeAny>(
     })
 
     if (!response.ok) {
-        throw new Error(`Ktor backend not happy :( It said ${response.statusText} (${response.status})`)
+        let errorMessage = `Ktor backend not happy :( It said ${response.statusText} (${response.status})`
+        try {
+            const data = await response.json()
+            if (data && data.message) {
+                errorMessage += ` Message: ${data.message}`
+            }
+        } catch {
+            console.log('No message in failed response')
+        }
+        throw new Error(errorMessage)
     }
 
     try {
