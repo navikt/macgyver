@@ -13,7 +13,7 @@ import { JournalpostSchema } from '../../types/journalpost.ts'
 function JournalposterOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
     const { data, error, isFetching, refetch } = useQuery({
-        queryKey: ['person', fnrToSearch],
+        queryKey: ['journalpostPerson', fnrToSearch],
         queryFn: async () =>
             fetchApi('/journalposter', {
                 schema: z.array(JournalpostSchema),
