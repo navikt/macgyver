@@ -1,7 +1,6 @@
 package no.nav.syfo.sykmeldingsopplysninger
 
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.syfo.logging.AuditLogger
@@ -28,8 +27,12 @@ fun Route.registerSykmeldingsOpplysningerApi() {
         sikkerlogg.info("prøver å hente sykmeldingsopplysninger på fnr $fnrToLookup")
 
         if (fnrToLookup.isNullOrEmpty()) {
-            logger.warn("fnr kan ikke være null eller tom")
-            call.respond(HttpStatusCode.BadRequest, HttpMessage("fnr kan ikke være null eller tom"))
+            var message = "Fnr er null eller tom"
+            if (sykmeldingId != null) {
+                message += ", med sykmeldingId $sykmeldingId"
+            }
+            logger.warn(message)
+            call.respond(HttpStatusCode.BadRequest, HttpMessage(message))
             return@get
         }
         val principal = call.safePrincipal()
