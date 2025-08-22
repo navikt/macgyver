@@ -14,7 +14,7 @@ import NLRequestForm from './hent-narmesteleder/NLRequestForm'
 function OppslagNarmesteleder(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
     const { data, error, isFetching } = useQuery({
-        queryKey: ['person', fnrToSearch],
+        queryKey: ['narmestelederPerson', fnrToSearch],
         queryFn: async () =>
             fetchApi('/narmesteleder', {
                 schema: z.array(NarmestelederSchema),
