@@ -14,10 +14,8 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 
 interface SykmeldingStatusKafkaProducer {
-    fun send(
-        sykmeldingStatusKafkaEventDTO: SykmeldingStatusKafkaEventDTO,
-        source: String,
-        fnr: String
+    fun delete(
+        sykmeldingId: String,
     )
 }
 
@@ -35,44 +33,26 @@ class SykmeldingStatusKafkaProducerProduction(
                 ),
         )
 
-    override fun send(
-        sykmeldingStatusKafkaEventDTO: SykmeldingStatusKafkaEventDTO,
-        source: String,
-        fnr: String
+    override fun delete(
+        sykmeldingId: String,
     ) {
         logger.info(
-            "Skriver statusendring for sykmelding med id {} til topic",
-            sykmeldingStatusKafkaEventDTO.sykmeldingId,
+            "Skriver tombstone for sykmelding med id $sykmeldingId til statustopic"
         )
-
-        val metadataDTO =
-            KafkaMetadataDTO(
-                sykmeldingId = sykmeldingStatusKafkaEventDTO.sykmeldingId,
-                timestamp =
-                    OffsetDateTime.now(
-                        ZoneOffset.UTC,
-                    ),
-                fnr = fnr,
-                source = source,
-            )
-
-        val sykmeldingStatusKafkaMessageDTO =
-            SykmeldingStatusKafkaMessageDTO(metadataDTO, sykmeldingStatusKafkaEventDTO)
 
         try {
             kafkaProducer
                 .send(
                     ProducerRecord(
                         topic,
-                        sykmeldingStatusKafkaMessageDTO.event.sykmeldingId,
-                        sykmeldingStatusKafkaMessageDTO,
+                        sykmeldingId,
+                        null,
                     ),
                 )
                 .get()
         } catch (ex: Exception) {
             logger.error(
-                "Failed to send sykmeldingStatus to kafkatopic {}",
-                metadataDTO.sykmeldingId,
+                "Failed to send sykmeldingStatus to kafkatopic $sykmeldingId",
             )
             throw ex
         }
@@ -80,14 +60,11 @@ class SykmeldingStatusKafkaProducerProduction(
 }
 
 class SykmeldingStatusKafkaProducerDevelopment : SykmeldingStatusKafkaProducer {
-    override fun send(
-        sykmeldingStatusKafkaEventDTO: SykmeldingStatusKafkaEventDTO,
-        source: String,
-        fnr: String
+    override fun delete(
+        sykmeldingId: String,
     ) {
         logger.info(
-            "Skriver statusendring for sykmelding med id {} til topic",
-            sykmeldingStatusKafkaEventDTO.sykmeldingId,
+            "Skriver statusendring for sykmelding med id $sykmeldingId til statustopic",
         )
     }
 }
