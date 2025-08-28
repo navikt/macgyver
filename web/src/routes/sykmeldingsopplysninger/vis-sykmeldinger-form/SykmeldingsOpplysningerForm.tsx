@@ -142,7 +142,10 @@ const SykmeldingsOpplysningerForm = ({ person, sykmeldingId }: SykmeldingsOpplys
                                         ))}
                                     </div>
                                     <p className="mt-2">
-                                        <b>Behandlingsutfall status:</b> {sykmelding.behandlingsUtfall.status}
+                                        <b>{`Behandlingsutfall status: `}</b>
+                                        {sykmelding.behandlingsUtfall
+                                            ? sykmelding.behandlingsUtfall.status
+                                            : 'Behandlingsutfall mangler'}
                                     </p>
                                 </div>
                             </Timeline.Period>
