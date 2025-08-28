@@ -18,7 +18,7 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
         queryKey: ['sykmeldingPerson', fnrToSearch],
         queryFn: async () => {
             if (fnrToSearch == null && sykmeldingId == null) {
-                raiseError('Missing FNR or sykmeldingId')
+                raiseError('fnr/dnr/aktørId or sykmeldingId is required.')
             }
             const headers: Record<string, string> = {}
             if (fnrToSearch !== null) {
@@ -37,7 +37,7 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
     return (
         <BasicPage
             title="Hent sykmeldingsopplysninger"
-            ingress="Hent sykmeldingsopplysninger om en person med fødselsnummer"
+            ingress="Hent sykmeldingsopplysninger om en person med fnr/dnr/aktørId eller sykmeldingsId"
             hasAuditLog={true}
         >
             <TextField
