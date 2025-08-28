@@ -19,7 +19,7 @@ import NotFound from './not-found.tsx'
 import JournalposterOppslag from './routes/journalpost/oppslag.tsx'
 import SykmeldingsOpplysningerOppslag from './routes/sykmeldingsopplysninger/oppslag.tsx'
 import AltinnStatusOppslag from './routes/altinnstatus/oppslag.tsx'
-import InfotrygdOppslag from "./routes/infotrygd/oppslag.tsx";
+import InfotrygdOppslag from './routes/infotrygd/oppslag.tsx'
 
 const router = createBrowserRouter([
     {

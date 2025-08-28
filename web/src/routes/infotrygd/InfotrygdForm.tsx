@@ -105,12 +105,7 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 }}
                 className="my-6 w-96"
             />
-            <Button
-                variant="primary"
-                size="medium"
-                className="my-4"
-                onClick={handleClick}
-            >
+            <Button variant="primary" size="medium" className="my-4" onClick={handleClick}>
                 Hent
             </Button>
         </div>
