@@ -47,4 +47,8 @@ class NarmestelederService(
     suspend fun getNarmesteldereForSykmeldt(sykmeldtFnr: String): List<NarmesteLeder> {
         return narmestelederClient.getNarmesteledere(sykmeldtFnr)
     }
+
+    suspend fun getNarmestelderKoblingerForLeder(lederFnr: String): List<NarmesteLeder> {
+        return narmestelederClient.getNarmestelederKoblingerForLeder(lederFnr)
+    }
 }

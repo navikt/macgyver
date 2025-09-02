@@ -65,4 +65,28 @@ fun Route.registrerNarmestelederApi() {
 
         call.respond(HttpStatusCode.OK, narmesteledereForSykmeldt)
     }
+
+    get("/narmesteleder/leder") {
+        val principal = call.safePrincipal()
+        val fnr = call.request.headers["fnr"]
+
+        if (fnr == null) {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("Mangler fnr i header"))
+            return@get
+        }
+
+        auditlogg.info(
+            AuditLogger(principal.email)
+                .createcCefMessage(
+                    fnr = fnr,
+                    operation = AuditLogger.Operation.READ,
+                    requestPath = "/api/narmesteleder/leder",
+                    permit = AuditLogger.Permit.PERMIT,
+                ),
+        )
+
+        val narmesteledereForSykmeldt = narmestelederService.getNarmestelderKoblingerForLeder(fnr)
+
+        call.respond(HttpStatusCode.OK, narmesteledereForSykmeldt)
+    }
 }

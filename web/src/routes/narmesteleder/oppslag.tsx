@@ -26,7 +26,7 @@ function OppslagNarmesteleder(): ReactElement {
     return (
         <BasicPage
             title="Nærmesteledere for sykmeldt"
-            ingress="Henting narmesteledere for ein sykmeldt person"
+            ingress="Hent narmesteledere for ein sykmeldt person"
             hasAuditLog
         >
             <NLRequestForm
