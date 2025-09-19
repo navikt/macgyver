@@ -17,7 +17,7 @@ const NarmestelederItem = ({ narmesteleder }: NarmesteledereListProps): ReactEle
     const [conformationModalOpen, setConformationModalOpen] = useState(false)
     const { data, isSuccess, isPending, error, mutate } = useMutation({
         mutationFn: async (params: { id: string }) => {
-            return await fetchApi(`/api/narmesteleder/${params.id}`, {
+            return await fetchApi(`/narmesteleder/${params.id}`, {
                 headers: {
                     fnr: narmesteleder.fnr,
                     orgnummer: narmesteleder.orgnummer,
