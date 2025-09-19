@@ -1,6 +1,7 @@
 package no.nav.syfo.plugins
 
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import no.nav.syfo.altinn.AltinnStatusService
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.clients.ProductionAccessTokenClientV2
@@ -53,7 +54,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
-import kotlin.math.sin
 
 fun Application.configureKoin() {
     install(Koin) {
@@ -216,6 +216,7 @@ val narmestelederModule = module {
             pdlService = get(),
             narmestelederRequestProducer = get(),
             narmestelederClient = get(),
+            narmestelederResponseProducer = get(),
         )
     }
 }

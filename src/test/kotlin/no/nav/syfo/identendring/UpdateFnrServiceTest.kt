@@ -516,6 +516,7 @@ fun getNarmesteLeder(): NarmesteLeder {
         aktivFom = LocalDate.of(2019, 2, 2),
         aktivTom = null,
         arbeidsgiverForskutterer = true,
+        narmesteLederId = "123"
     )
 }
 
