@@ -1,17 +1,13 @@
 package no.nav.syfo.infotrygd
 
-import com.google.api.gax.rpc.InvalidArgumentException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.opencensus.trace.TraceId
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Diagnose
 import org.koin.ktor.ext.inject
 import java.util.UUID
-import kotlin.math.log
 
 data class InfotrygdGetRequest(
     val ident: String,
@@ -31,7 +27,7 @@ data class InfotrygdGetResponse(
 )
 
 data class InfotrygdDetailedResponse(
-    val response: String,
+    val response: String?,
 )
 
 fun InfotrygdGetRequest.toInfotrygdQuery(): InfotrygdQuery {
