@@ -1,17 +1,13 @@
 package no.nav.syfo.infotrygd
 
-import com.google.api.gax.rpc.InvalidArgumentException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.opencensus.trace.TraceId
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Diagnose
 import org.koin.ktor.ext.inject
 import java.util.UUID
-import kotlin.math.log
 
 data class InfotrygdGetRequest(
     val ident: String,
@@ -27,6 +23,10 @@ data class InfotrygdGetResponse(
     val identDato: String?,
     val tkNummer: String?,
     val traceId: String,
+)
+
+data class InfotrygdDetailedResponse(
+    val response: String,
 )
 
 fun InfotrygdGetRequest.toInfotrygdQuery(): InfotrygdQuery {
@@ -86,6 +86,34 @@ fun Route.registerInfotrygdApi() {
             )
         }
 
+
+    }
+
+    post("/infotrygd/detailed") {
+        logger.info("got infotrygd request")
+        val request = call.receive<InfotrygdGetRequest>()
+        val infotrygdQuery = request.toInfotrygdQuery()
+        try {
+            logger.info("traceId: ${infotrygdQuery.traceId}")
+            val response = infotrygdService.getDetailedInfotrygdResponse(infotrygdQuery)
+
+            call.respond(
+                InfotrygdDetailedResponse(
+                    response = response.toPrettyString(),
+                )
+            );
+        } catch (
+            ex: Exception
+        ) {
+            logger.error("error in infotrygd request: {}", ex.message)
+            call.respond(
+                InfotrygdGetResponse(
+                    tkNummer = "ERROR",
+                    identDato = "ERROR",
+                    traceId = infotrygdQuery.traceId,
+                ),
+            )
+        }
 
     }
 }
