@@ -14,11 +14,11 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
     const [sykmeldingId, setSykmeldingId] = useState<string | null>(null)
 
-    const { data, error, isFetching } = useQuery({
+    const { data, error, isFetching, refetch } = useQuery({
         queryKey: ['sykmeldingPerson', fnrToSearch],
         queryFn: async () => {
             if (fnrToSearch == null && sykmeldingId == null) {
-                raiseError('Missing FNR or sykmeldingId')
+                raiseError('fnr/dnr/aktørId or sykmeldingId is required.')
             }
             const headers: Record<string, string> = {}
             if (fnrToSearch !== null) {
@@ -31,14 +31,13 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
                 headers: headers,
             })
         },
-        enabled:
-            (fnrToSearch !== null && fnrToSearch.length === 11) || (sykmeldingId !== null && sykmeldingId.length !== 0),
+        enabled: false,
     })
 
     return (
         <BasicPage
             title="Hent sykmeldingsopplysninger"
-            ingress="Hent sykmeldingsopplysninger om en person med fødselsnummer"
+            ingress="Hent sykmeldingsopplysninger om en person med fnr/dnr/aktørId eller sykmeldingsId"
             hasAuditLog={true}
         >
             <TextField
@@ -54,6 +53,7 @@ function SykmeldingsOpplysningerOppslag(): ReactElement {
                 onChange={(fnr: string): void => {
                     setFnrToSearch(fnr === '' ? null : fnr)
                 }}
+                refetch={refetch}
             />
             {!data && !error && isFetching && <Loader size="medium" />}
             {data && <SykmeldingsOpplysningerForm person={data} sykmeldingId={sykmeldingId} />}

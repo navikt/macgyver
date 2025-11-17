@@ -1,17 +1,13 @@
 package no.nav.syfo.infotrygd
 
-import com.google.api.gax.rpc.InvalidArgumentException
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.opencensus.trace.TraceId
 import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Diagnose
 import org.koin.ktor.ext.inject
 import java.util.UUID
-import kotlin.math.log
 
 data class InfotrygdGetRequest(
     val ident: String,
@@ -21,12 +17,17 @@ data class InfotrygdGetRequest(
     val bidiagnose: String?,
     val bidiagnoseKodeSystem: String?,
     val identBehandler: String?,
+    val detailed: Boolean = false,
 )
 
 data class InfotrygdGetResponse(
     val identDato: String?,
     val tkNummer: String?,
     val traceId: String,
+)
+
+data class InfotrygdDetailedResponse(
+    val response: String?,
 )
 
 fun InfotrygdGetRequest.toInfotrygdQuery(): InfotrygdQuery {
@@ -63,16 +64,20 @@ fun Route.registerInfotrygdApi() {
         val request = call.receive<InfotrygdGetRequest>()
         val infotrygdQuery = request.toInfotrygdQuery()
         try {
-            logger.info("traceId: ${infotrygdQuery.traceId}")
-            val response = infotrygdService.getInfotrygdResponse(infotrygdQuery)
+            if(request.detailed) {
+                val response = infotrygdService.getDetailedInfotrygdResponse(infotrygdQuery)
+                call.respond(InfotrygdDetailedResponse(response.toPrettyString()))
+            } else {
+                val response = infotrygdService.getInfotrygdResponse(infotrygdQuery)
 
-            call.respond(
-                InfotrygdGetResponse(
-                    tkNummer = response.tkNummer,
-                    identDato = response.identDato,
-                    traceId = infotrygdQuery.traceId,
-                ),
-            );
+                call.respond(
+                    InfotrygdGetResponse(
+                        tkNummer = response.tkNummer,
+                        identDato = response.identDato,
+                        traceId = infotrygdQuery.traceId,
+                    ),
+                );
+            }
         } catch (
             ex: Exception
         ) {
@@ -85,7 +90,5 @@ fun Route.registerInfotrygdApi() {
                 ),
             )
         }
-
-
     }
 }

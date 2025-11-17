@@ -73,6 +73,7 @@ class DevelopmentNarmestelederClient : NarmestelederClient {
                 aktivFom = LocalDate.now(),
                 aktivTom = LocalDate.now(),
                 arbeidsgiverForskutterer = null,
+                narmesteLederId = "123456",
             ),
         )
     }
@@ -88,12 +89,14 @@ class DevelopmentNarmestelederClient : NarmestelederClient {
                 aktivFom = LocalDate.now(),
                 aktivTom = LocalDate.now(),
                 arbeidsgiverForskutterer = null,
+                narmesteLederId = "123456",
             ),
         )
     }
 }
 
 data class NarmesteLeder(
+    val narmesteLederId: String,
     val fnr: String,
     val narmesteLederFnr: String,
     val orgnummer: String,

@@ -1,16 +1,14 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { Button, TextField } from '@navikt/ds-react'
 
 interface FnrFormProps {
     onChange: (fnr: string) => void
+    refetch: () => void
 }
 
-const FnrForm = ({ onChange }: FnrFormProps): ReactElement => {
-    const [fnr, setFnr] = useState('')
-
-    const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-        event.preventDefault()
-        onChange(fnr)
+const FnrForm = ({ onChange, refetch }: FnrFormProps): ReactElement => {
+    const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+        refetch()
     }
 
     return (
@@ -20,7 +18,7 @@ const FnrForm = ({ onChange }: FnrFormProps): ReactElement => {
                 label="fnr/dnr/aktorid"
                 size="medium"
                 onChange={(event) => {
-                    setFnr(event.currentTarget.value)
+                    onChange(event.currentTarget.value)
                 }}
                 className="my-6 w-96"
             />

@@ -20,6 +20,11 @@ export const InfotrygdResponseView = ({ response }: InfotrygdRespons): ReactElem
                 <li>
                     <b>traceId:</b> {response.traceId}
                 </li>
+                <li>
+                    <pre className="max-w-prose p-2 overflow-x-auto bg-bg-subtle border-border-subtle rounded-sm">
+                        {response.response}
+                    </pre>
+                </li>
             </ul>
         </Alert>
     )

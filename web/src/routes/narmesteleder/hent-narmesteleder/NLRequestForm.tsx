@@ -6,14 +6,14 @@ interface NyNlRequestAltinnFormProps {
 }
 
 const NLRequestForm = ({ onChange }: NyNlRequestAltinnFormProps): ReactElement => {
-    const [sykmeldteFnr, setSykmeldteFnr] = useState<string>('')
+    const [fnr, setSykmeldteFnr] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault()
-        onChange(sykmeldteFnr)
+        onChange(fnr)
 
-        if (sykmeldteFnr.length !== 11) {
+        if (fnr.length !== 11) {
             setError('Fødselsnummer må være 11 siffer')
         } else {
             setError(null)
@@ -22,8 +22,8 @@ const NLRequestForm = ({ onChange }: NyNlRequestAltinnFormProps): ReactElement =
     return (
         <div>
             <TextField
-                name="sykmeldteFnr"
-                label="sykmeldteFnr"
+                name="fnr"
+                label="fnr"
                 size="medium"
                 onChange={(event) => {
                     setSykmeldteFnr(event.currentTarget.value)

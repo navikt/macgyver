@@ -1,5 +1,6 @@
 package no.nav.syfo.infotrygd
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
@@ -22,6 +23,17 @@ class InfotrygdService(
         val token = accessTokenClientV2.getAccessTokenV2(scope)
         logger.info("getting infotrygd info ${query.traceId}")
         return infotrygdClient.get("$baseUrl/api/infotrygd") {
+            headers { append(HttpHeaders.Authorization, "Bearer $token") }
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            setBody(query)
+        }.body()
+    }
+
+    suspend fun getDetailedInfotrygdResponse(query: InfotrygdQuery): JsonNode {
+        val token = accessTokenClientV2.getAccessTokenV2(scope)
+        logger.info("getting infotrygd detailed info ${query.traceId}")
+        return infotrygdClient.get("$baseUrl/api/infotrygd/details") {
             headers { append(HttpHeaders.Authorization, "Bearer $token") }
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)

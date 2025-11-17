@@ -1,12 +1,8 @@
 package no.nav.syfo.sykmelding.delete_sykmelding
 
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
-import no.nav.syfo.model.sykmeldingstatus.STATUS_SLETTET
-import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaEventDTO
 import no.nav.syfo.plugins.UserPrincipal
 
 class DeleteSykmeldingService(
@@ -28,16 +24,8 @@ class DeleteSykmeldingService(
                         permit = AuditLogger.Permit.PERMIT,
                     ),
             )
-            sykmeldingStatusKafkaProducer.send(
-                SykmeldingStatusKafkaEventDTO(
-                    sykmeldingID,
-                    OffsetDateTime.now(ZoneOffset.UTC),
-                    STATUS_SLETTET,
-                    null,
-                    null,
-                ),
-                "macgyver",
-                sykmelding.sykmeldingsopplysninger.pasientFnr,
+            sykmeldingStatusKafkaProducer.delete(
+                sykmeldingID
             )
 
             tombstoneProducer.send(topics, sykmeldingID)

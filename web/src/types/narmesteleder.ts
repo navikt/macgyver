@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const NarmestelederSchema = z.object({
+    narmesteLederId: z.string(),
     fnr: z.string(),
     narmesteLederFnr: z.string(),
     orgnummer: z.string(),

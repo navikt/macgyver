@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { Button, TextField } from '@navikt/ds-react'
+import { Button, Checkbox, TextField } from '@navikt/ds-react'
 
 interface InfotrygdFormProps {
     onChange: (
@@ -10,6 +10,7 @@ interface InfotrygdFormProps {
         bidiagnose: string | null,
         bidiagnoseKodeSystem: string | null,
         identBehanlder: string | null,
+        detailed: boolean,
     ) => void
 }
 
@@ -21,6 +22,7 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
     const [bidiagnoseKode, setBidiagnoseKode] = useState<string | null>(null)
     const [bidiagnoseKodeSystem, setBidiagnosekodeSystem] = useState<string | null>(null)
     const [identBehanlder, setIdentBehandler] = useState<string | null>(null)
+    const [detailed, setDetailed] = useState(false)
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault()
@@ -32,6 +34,7 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
             bidiagnoseKode,
             bidiagnoseKodeSystem,
             identBehanlder,
+            detailed,
         )
     }
     return (
@@ -105,12 +108,17 @@ const InfotrygdForm = ({ onChange }: InfotrygdFormProps): ReactElement => {
                 }}
                 className="my-6 w-96"
             />
-            <Button
-                variant="primary"
+            <Checkbox
+                value="detailed"
                 size="medium"
-                className="my-4"
-                onClick={handleClick}
+                onChange={(event) => {
+                    setDetailed(event.currentTarget.checked)
+                }}
+                checked={detailed}
             >
+                Detailed
+            </Checkbox>
+            <Button variant="primary" size="medium" className="my-4" onClick={handleClick}>
                 Hent
             </Button>
         </div>

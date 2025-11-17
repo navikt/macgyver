@@ -12,14 +12,14 @@ import { JournalpostSchema } from '../../types/journalpost.ts'
 
 function JournalposterOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
-    const { data, error, isFetching } = useQuery({
-        queryKey: ['person', fnrToSearch],
+    const { data, error, isFetching, refetch } = useQuery({
+        queryKey: ['journalpostPerson', fnrToSearch],
         queryFn: async () =>
             fetchApi('/journalposter', {
                 schema: z.array(JournalpostSchema),
                 headers: { fnr: fnrToSearch ?? raiseError('Missing FNR') },
             }),
-        enabled: fnrToSearch !== null && fnrToSearch.length === 11,
+        enabled: false,
     })
 
     return (
@@ -28,7 +28,7 @@ function JournalposterOppslag(): ReactElement {
             ingress="Hent en liste med journalposter, med oppgaveId fra saf-api"
             hasAuditLog
         >
-            <FnrForm onChange={setFnrToSearch} />
+            <FnrForm onChange={setFnrToSearch} refetch={refetch} />
             {!data && !error && isFetching && <Loader size="medium" />}
             {data && <JournalpostList journalpostLister={data} />}
             {error && <Alert variant="error">{error.message}</Alert>}

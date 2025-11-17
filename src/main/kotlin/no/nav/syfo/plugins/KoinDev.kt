@@ -7,6 +7,8 @@ import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
+import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.NarmestelederClient
 import no.nav.syfo.narmesteleder.NarmestelederService
 import no.nav.syfo.oppgave.DevelopmentOppgaveClient
@@ -53,6 +55,7 @@ val developmentKafkaModules = module {
     single<NarmesteLederRequestKafkaProducer> { NarmesteLederRequestKafkaProducerDevelopment() }
     single<SykmeldingStatusKafkaProducer> { SykmeldingStatusKafkaProducerDevelopment() }
     single<TombstoneKafkaProducer> { TombstoneKafkaProducerDevelopment() }
+    single<NarmesteLederResponseKafkaProducer> { NarmesteLederResponseKafkaProducerDevelopment() }
 }
 
 val developmentOppgaveModule = module { single<OppgaveClient> { DevelopmentOppgaveClient() } }
@@ -64,6 +67,7 @@ val developmentNarmestelederModule = module {
             pdlService = get(),
             narmestelederRequestProducer = get(),
             narmestelederClient = get(),
+            narmestelederResponseProducer = get(),
         )
     }
 }
@@ -103,6 +107,10 @@ val developmentEnv = module {
             dokArkivUrl = "dummy-value",
             dokArkivScope = "dummy-value",
             clusterName = "dummy-value",
+            syfosmaltinnUrl = "dummy-value",
+            syfosmaltinnScope = "dummy-value",
+            infotrygdUrl = "dummy-value",
+            infotrygdScope = "dummy-value",
         )
     }
 }

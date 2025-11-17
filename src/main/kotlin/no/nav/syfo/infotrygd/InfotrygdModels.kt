@@ -19,4 +19,5 @@ data class InfotrygdQuery(
 data class InfotrygdResponse(
     val identDato: String?,
     val tkNummer: String?,
+    val response: String?,
 )

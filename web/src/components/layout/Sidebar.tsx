@@ -41,6 +41,9 @@ function Sidebar({ className }: Props): ReactElement {
                 <li>
                     <Link to="/narmesteleder/oppslag">Hent nærmesteledere for en sykmeldt</Link>
                 </li>
+                <li>
+                    <Link to="/narmesteleder/leder">Hent nærmestelederkoblinger for en leder</Link>
+                </li>
             </SidebarMenuItem>
             <SidebarMenuItem title="Legeerklæring" Icon={StethoscopeIcon}>
                 <li>
@@ -65,6 +68,11 @@ function Sidebar({ className }: Props): ReactElement {
             <SidebarMenuItem title="AltinnStatus" Icon={PersonIcon}>
                 <li>
                     <Link to="/altinnstatus/oppslag">Hent status fra Altinn på en gitt sykmelding og orgnummer</Link>
+                </li>
+            </SidebarMenuItem>
+            <SidebarMenuItem title="Infotrygd" Icon={PersonIcon}>
+                <li>
+                    <Link to="/infotrygd/oppslag">Send Infotrygdforespørsel</Link>
                 </li>
             </SidebarMenuItem>
         </div>

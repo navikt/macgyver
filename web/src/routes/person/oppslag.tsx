@@ -12,14 +12,14 @@ import FnrForm from './oppslag-form/FnrForm.tsx'
 
 function PersonOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
-    const { data, error, isFetching } = useQuery({
+    const { data, error, isFetching, refetch } = useQuery({
         queryKey: ['person', fnrToSearch],
         queryFn: async () =>
             fetchApi('/person', {
                 schema: PersonSchema,
                 headers: { fnr: fnrToSearch ?? raiseError('Missing FNR') },
             }),
-        enabled: fnrToSearch !== null && (fnrToSearch.length === 11 || fnrToSearch.length === 13),
+        enabled: false,
     })
 
     return (
@@ -32,6 +32,7 @@ function PersonOppslag(): ReactElement {
                 onChange={(fnr: string): void => {
                     setFnrToSearch(fnr)
                 }}
+                refetch={refetch}
             />
             {!data && !error && isFetching && <Loader size="medium" />}
             {data && <PersonWithIdent person={data} />}

@@ -35,6 +35,7 @@ function InfotrygdOppslag(): ReactElement {
                     bidiagnose: string | null,
                     bidiagnoseKodeSystem: string | null,
                     identBehandler: string | null,
+                    detailed: boolean,
                 ): void => {
                     mutate({
                         ident,
@@ -44,6 +45,7 @@ function InfotrygdOppslag(): ReactElement {
                         bidiagnose,
                         bidiagnoseKodeSystem,
                         identBehandler,
+                        detailed,
                     })
                 }}
             ></InfotrygdForm>

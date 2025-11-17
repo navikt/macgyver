@@ -1,22 +1,22 @@
 import { ReactElement, useState } from 'react'
-import { z } from 'zod'
 import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
 import { Alert, Loader } from '@navikt/ds-react'
 
-import BasicPage from '../../components/layout/BasicPage'
-import { fetchApi } from '../../api/api'
-import { raiseError } from '../../utils/ts'
-import { Narmesteleder, NarmestelederSchema } from '../../types/narmesteleder'
+import { fetchApi } from '../../api/api.ts'
+import { Narmesteleder, NarmestelederSchema } from '../../types/narmesteleder.ts'
+import { raiseError } from '../../utils/ts.ts'
+import BasicPage from '../../components/layout/BasicPage.tsx'
 
+import NLRequestForm from './hent-narmesteleder/NLRequestForm.tsx'
 import NarmestelederItem from './hent-narmesteleder/NarmestelederItem.tsx'
-import NLRequestForm from './hent-narmesteleder/NLRequestForm'
 
-function OppslagNarmesteleder(): ReactElement {
+function LederOppslag(): ReactElement {
     const [fnrToSearch, setFnrToSearch] = useState<string | null>(null)
     const { data, error, isFetching } = useQuery({
-        queryKey: ['narmestelederPerson', fnrToSearch],
+        queryKey: ['narmestelederLeder', fnrToSearch],
         queryFn: async () =>
-            fetchApi('/narmesteleder', {
+            fetchApi('/narmesteleder/leder', {
                 schema: z.array(NarmestelederSchema),
                 headers: { fnr: fnrToSearch ?? raiseError('Missing FNR') },
             }),
@@ -25,8 +25,8 @@ function OppslagNarmesteleder(): ReactElement {
 
     return (
         <BasicPage
-            title="Nærmesteledere for sykmeldt"
-            ingress="Hent narmesteledere for ein sykmeldt person"
+            title="Nærmestelederkoblinger for leder"
+            ingress="Hent narmestelederekoblinger for en leder"
             hasAuditLog
         >
             <NLRequestForm
@@ -47,4 +47,4 @@ function OppslagNarmesteleder(): ReactElement {
     )
 }
 
-export default OppslagNarmesteleder
+export default LederOppslag
