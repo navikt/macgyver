@@ -21,6 +21,7 @@ import SykmeldingsOpplysningerOppslag from './routes/sykmeldingsopplysninger/opp
 import AltinnStatusOppslag from './routes/altinnstatus/oppslag.tsx'
 import InfotrygdOppslag from './routes/infotrygd/oppslag.tsx'
 import LederOppslag from './routes/narmesteleder/lederOppslag.tsx'
+import DeaktiverNarmesteleder from './routes/narmesteleder/deaktiver.tsx'
 
 const router = createBrowserRouter([
     {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
             { path: '/ident/endre', element: <EndreIdent /> },
             { path: '/sykmelding/slett', element: <SlettSykmelding /> },
             { path: '/narmesteleder/ny', element: <NyNarmesteleder /> },
+            { path: '/narmesteleder/deaktiver', element: <DeaktiverNarmesteleder /> },
             { path: '/narmesteleder/oppslag', element: <OppslagNarmesteleder /> },
             { path: '/narmesteleder/leder', element: <LederOppslag /> },
             { path: '/legeerklaering/slett', element: <SlettLegeerklaering /> },

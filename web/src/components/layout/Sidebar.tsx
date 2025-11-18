@@ -44,6 +44,9 @@ function Sidebar({ className }: Props): ReactElement {
                 <li>
                     <Link to="/narmesteleder/leder">Hent nærmestelederkoblinger for en leder</Link>
                 </li>
+                <li>
+                    <Link to="/narmesteleder/deaktiver">Deaktiver narmesteleder kobling</Link>
+                </li>
             </SidebarMenuItem>
             <SidebarMenuItem title="Legeerklæring" Icon={StethoscopeIcon}>
                 <li>
