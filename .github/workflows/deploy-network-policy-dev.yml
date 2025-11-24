@@ -11,7 +11,7 @@ jobs:
     name: deploy network-policy to dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Deploy network-policy to dev-gcp
         uses: nais/deploy/actions/deploy@master
         env:
