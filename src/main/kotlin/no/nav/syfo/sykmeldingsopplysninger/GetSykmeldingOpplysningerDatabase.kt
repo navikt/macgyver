@@ -66,10 +66,10 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
     override suspend fun getFnrForSykmeldingId(sykmeldingId: String): String? {
         return database.connection.use { conn ->
             conn.prepareStatement("""select pasient_fnr from sykmeldingsopplysninger where id = ?""")
-                .use {  ps ->
+                .use { ps ->
                     ps.setString(1, sykmeldingId)
                     ps.executeQuery().use { rs ->
-                        if(rs.next()) {
+                        if (rs.next()) {
                             rs.getString("pasient_fnr")
                         } else {
                             null
@@ -246,7 +246,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 journalpostId = null,
                 utenlandskSykmelding =
                     getString("utenlandsk_sykmelding")?.let { objectMapper.readValue(it) },
-                behandler = getString("behandler")?.let { objectMapper.readValue(it) },
+                legeHpr = getString("lege_hpr"),
             )
         return sykmeldingsopplysninger
     }
@@ -348,7 +348,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                behandler = null,
+                legeHpr = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -388,23 +388,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                behandler = Behandler(
-                    fornavn = "Behandler",
-                    etternavn = "behandlersen",
-                    aktoerId = "aktoerId",
-                    fnr = "12312312323",
-                    hpr = "987987",
-                    adresse = Adresse(
-                        gate = "Gate",
-                        postnummer = null,
-                        kommune = null,
-                        postboks = null,
-                        land = null,
-                    ),
-                    mellomnavn = null,
-                    her = null,
-                    tlf = null,
-                ),
+                legeHpr = "986987",
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -444,23 +428,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                                behandler = Behandler(
-                    fornavn = "Behandler",
-                    etternavn = "behandlersen",
-                    aktoerId = "aktoerId",
-                    fnr = "12312312323",
-                    hpr = "987987",
-                    adresse = Adresse(
-                        gate = "Gate",
-                        postnummer = null,
-                        kommune = null,
-                        postboks = null,
-                        land = null,
-                    ),
-                    mellomnavn = null,
-                    her = null,
-                    tlf = null,
-                ),
+                legeHpr = "986987",
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -500,23 +468,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                                behandler = Behandler(
-                    fornavn = "Behandler",
-                    etternavn = "behandlersen",
-                    aktoerId = "aktoerId",
-                    fnr = "12312312323",
-                    hpr = "987987",
-                    adresse = Adresse(
-                        gate = "Gate",
-                        postnummer = null,
-                        kommune = null,
-                        postboks = null,
-                        land = null,
-                    ),
-                    mellomnavn = null,
-                    her = null,
-                    tlf = null,
-                ),
+                legeHpr = "986987",
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -557,23 +509,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 journalpostId = null,
-                                behandler = Behandler(
-                    fornavn = "Behandler",
-                    etternavn = "behandlersen",
-                    aktoerId = "aktoerId",
-                    fnr = "12312312323",
-                    hpr = "987987",
-                    adresse = Adresse(
-                        gate = "Gate",
-                        postnummer = null,
-                        kommune = null,
-                        postboks = null,
-                        land = null,
-                    ),
-                    mellomnavn = null,
-                    her = null,
-                    tlf = null,
-                ),
+                legeHpr = "986987",
             ),
         )
     }

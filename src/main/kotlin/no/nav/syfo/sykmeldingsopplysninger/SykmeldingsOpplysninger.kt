@@ -40,7 +40,7 @@ data class Sykmelding(
     val tidligereArbeidsgiver: Arbeidsgiver?,
     val journalpostId: String?,
     val utenlandskSykmelding: UtenlandskSykmelding? = null,
-    val behandler: Behandler? = null
+    val legeHpr: String?,
 )
 
 data class SykmeldingDokument(
