@@ -6,7 +6,7 @@ import io.ktor.server.routing.*
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
-import no.nav.syfo.logging.sikkerlogg
+import no.nav.syfo.logging.teamLogger
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.saf.error.JournalposterNotFoundException
 import no.nav.syfo.saf.service.SafService
@@ -24,7 +24,7 @@ fun Route.registerSykmeldingsOpplysningerApi() {
 
         val fnrToLookup = fnr ?: getSykmeldingOpplysningerService.getFnrFromSykmeldingId(sykmeldingId)
 
-        sikkerlogg.info("prøver å hente sykmeldingsopplysninger på fnr $fnrToLookup")
+        teamLogger().info("prøver å hente sykmeldingsopplysninger på fnr $fnrToLookup")
 
         if (fnrToLookup.isNullOrEmpty()) {
             var message = "Fnr er null eller tom"

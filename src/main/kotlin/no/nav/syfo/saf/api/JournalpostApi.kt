@@ -1,13 +1,12 @@
 package no.nav.syfo.saf.api
 
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
-import no.nav.syfo.logging.sikkerlogg
+import no.nav.syfo.logging.teamLogger
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.saf.service.SafService
 import no.nav.syfo.utils.safePrincipal
@@ -18,7 +17,7 @@ fun Route.registerJournalpostApi() {
 
     get("/journalposter") {
         val fnr = call.request.headers["fnr"]
-        sikkerlogg.info("prøver å hente journalposter på fnr $fnr")
+        teamLogger().info("prøver å hente journalposter på fnr $fnr")
 
         if (fnr.isNullOrEmpty()) {
             logger.warn("fnr kan ikke være null eller tom")
@@ -37,7 +36,7 @@ fun Route.registerJournalpostApi() {
                         permit = AuditLogger.Permit.PERMIT,
                     ),
             )
-            sikkerlogg.info("Henter journalposter fra saf-api fnr: $fnr")
+            teamLogger().info("Henter journalposter fra saf-api fnr: $fnr")
 
             val journalposter = safService.getDokumentoversiktBruker(fnr)
 

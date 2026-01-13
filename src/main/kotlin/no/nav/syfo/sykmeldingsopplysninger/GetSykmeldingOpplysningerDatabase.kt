@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
+import no.nav.syfo.model.Adresse
 import no.nav.syfo.model.Behandler
 import no.nav.syfo.utils.objectMapper
 
@@ -387,7 +388,23 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                behandler = null,
+                behandler = Behandler(
+                    fornavn = "Behandler",
+                    etternavn = "behandlersen",
+                    aktoerId = "aktoerId",
+                    fnr = "12312312323",
+                    hpr = "987987",
+                    adresse = Adresse(
+                        gate = "Gate",
+                        postnummer = null,
+                        kommune = null,
+                        postboks = null,
+                        land = null,
+                    ),
+                    mellomnavn = null,
+                    her = null,
+                    tlf = null,
+                ),
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -427,7 +444,23 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                behandler = null,
+                                behandler = Behandler(
+                    fornavn = "Behandler",
+                    etternavn = "behandlersen",
+                    aktoerId = "aktoerId",
+                    fnr = "12312312323",
+                    hpr = "987987",
+                    adresse = Adresse(
+                        gate = "Gate",
+                        postnummer = null,
+                        kommune = null,
+                        postboks = null,
+                        land = null,
+                    ),
+                    mellomnavn = null,
+                    her = null,
+                    tlf = null,
+                ),
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -467,7 +500,23 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
-                behandler = null,
+                                behandler = Behandler(
+                    fornavn = "Behandler",
+                    etternavn = "behandlersen",
+                    aktoerId = "aktoerId",
+                    fnr = "12312312323",
+                    hpr = "987987",
+                    adresse = Adresse(
+                        gate = "Gate",
+                        postnummer = null,
+                        kommune = null,
+                        postboks = null,
+                        land = null,
+                    ),
+                    mellomnavn = null,
+                    her = null,
+                    tlf = null,
+                ),
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -508,7 +557,23 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 journalpostId = null,
-                behandler = null,
+                                behandler = Behandler(
+                    fornavn = "Behandler",
+                    etternavn = "behandlersen",
+                    aktoerId = "aktoerId",
+                    fnr = "12312312323",
+                    hpr = "987987",
+                    adresse = Adresse(
+                        gate = "Gate",
+                        postnummer = null,
+                        kommune = null,
+                        postboks = null,
+                        land = null,
+                    ),
+                    mellomnavn = null,
+                    her = null,
+                    tlf = null,
+                ),
             ),
         )
     }

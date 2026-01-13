@@ -1,18 +1,17 @@
 package no.nav.syfo.oppgave
 
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.util.*
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
 import no.nav.syfo.logging.logger
-import no.nav.syfo.logging.sikkerlogg
+import no.nav.syfo.logging.teamLogger
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
+import java.util.*
 
 fun Route.registerHentOppgaverApi() {
     val oppgaveClient by inject<OppgaveClient>()
@@ -42,7 +41,7 @@ fun Route.registerHentOppgaverApi() {
                         permit = AuditLogger.Permit.PERMIT,
                     ),
             )
-            sikkerlogg.info("Henter oppgaver fra Oppgave-api ider: $ids")
+            teamLogger().info("Henter oppgaver fra Oppgave-api ider: $ids")
 
             val toList =
                 ids.map { oppgaveClient.hentOppgave(oppgaveId = it, msgId = callId) }.toList()

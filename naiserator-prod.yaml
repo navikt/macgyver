@@ -53,6 +53,8 @@ spec:
         - application: syfosmregister
         - application: syfosmaltinn
         - application: syfosminfotrygd
+        - application: logging
+          namespace: nais-system
       external:
         - host: saf.prod-fss-pub.nais.io
         - host: pdl-api.prod-fss-pub.nais.io
@@ -74,8 +76,6 @@ spec:
       autoLoginIgnorePaths:
         - /assets/*
         - /favicon.ico
-  secureLogs:
-    enabled: true
   envFrom:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets

@@ -9,7 +9,7 @@ import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.identendring.update_fnr.UpdateIdentException
 import no.nav.syfo.logging.AuditLogger
 import no.nav.syfo.logging.auditlogg
-import no.nav.syfo.logging.sikkerlogg
+import no.nav.syfo.logging.teamLogger
 import no.nav.syfo.model.HttpMessage
 import no.nav.syfo.utils.safePrincipal
 import org.koin.ktor.ext.inject
@@ -48,7 +48,7 @@ fun Route.registerFnrApi() {
                                 permit = AuditLogger.Permit.PERMIT,
                             ),
                     )
-                    sikkerlogg.info(
+                    teamLogger().info(
                         "enderer fnr for sykmeldt fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}",
                     )
 
@@ -103,7 +103,7 @@ fun Route.registerFnrApi() {
                             ),
                     )
 
-                    sikkerlogg.info(
+                    teamLogger().info(
                         "enderer fnr for leder fra: ${endreFnr.fnr} til: ${endreFnr.nyttFnr}",
                     )
 

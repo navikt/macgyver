@@ -4,12 +4,12 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.pipeline.*
 import no.nav.syfo.logging.logger
-import no.nav.syfo.logging.sikkerlogg
+import no.nav.syfo.logging.teamLogger
 
 fun monitorHttpRequests(developmentMode: Boolean): PipelineInterceptor<Unit, PipelineCall> {
     return {
         try {
-            sikkerlogg.info("Received request: ${call.request.uri}")
+            teamLogger().info("Received request: ${call.request.uri}")
             val label = context.request.path()
             val timer = HTTP_HISTOGRAM.labels(label).startTimer()
             proceed()
@@ -22,10 +22,10 @@ fun monitorHttpRequests(developmentMode: Boolean): PipelineInterceptor<Unit, Pip
                 )
             } else {
                 logger.error(
-                    "Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}. Se securelogs for detaljert exception"
+                    "Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}. Se teamlogs for detaljert exception"
                 )
             }
-            sikkerlogg.error(
+            teamLogger().error(
                 "Feil under behandling av HTTP-forespørsel til '${call.request.uri}': ${e.javaClass.simpleName}: ${e.message}. Se exception for detaljer.",
                 e,
             )
