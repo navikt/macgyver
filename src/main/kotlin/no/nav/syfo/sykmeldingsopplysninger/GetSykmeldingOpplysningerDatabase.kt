@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 import no.nav.syfo.db.Database
 import no.nav.syfo.db.toList
+import no.nav.syfo.model.Behandler
 import no.nav.syfo.utils.objectMapper
 
 interface GetSykmeldingOpplysningerDatabase {
@@ -244,6 +245,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 journalpostId = null,
                 utenlandskSykmelding =
                     getString("utenlandsk_sykmelding")?.let { objectMapper.readValue(it) },
+                behandler = getString("behandler")?.let { objectMapper.readValue(it) },
             )
         return sykmeldingsopplysninger
     }
@@ -345,6 +347,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                behandler = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -384,6 +387,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                behandler = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -423,6 +427,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                behandler = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -462,6 +467,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
+                behandler = null,
             ),
             Sykmelding(
                 sykmeldingId = UUID.randomUUID().toString(),
@@ -502,6 +508,7 @@ class GetSykmeldingerDatabaseDevelopment : GetSykmeldingOpplysningerDatabase {
                 hovedDiagnose = HovedDiagnose("kode", "system", null),
                 tidligereArbeidsgiver = Arbeidsgiver("orgnummer", "orgNavn"),
                 journalpostId = null,
+                behandler = null,
             ),
         )
     }

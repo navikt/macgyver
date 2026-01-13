@@ -1,6 +1,7 @@
 package no.nav.syfo.sykmeldingsopplysninger
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.syfo.model.Behandler
 import java.time.LocalDate
 import java.time.LocalDateTime
 import no.nav.syfo.model.UtenlandskSykmelding
@@ -39,6 +40,7 @@ data class Sykmelding(
     val tidligereArbeidsgiver: Arbeidsgiver?,
     val journalpostId: String?,
     val utenlandskSykmelding: UtenlandskSykmelding? = null,
+    val behandler: Behandler? = null
 )
 
 data class SykmeldingDokument(

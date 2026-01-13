@@ -3,7 +3,7 @@ import { Timeline } from '@navikt/ds-react'
 import { PersonIcon, VirusIcon } from '@navikt/aksel-icons'
 
 import {
-    Arbeidsgiver,
+    Arbeidsgiver, Behandler,
     HovedDiagnose,
     Merknad,
     Periode,
@@ -56,6 +56,7 @@ const SykmeldingsOpplysningerForm = ({ person, sykmeldingId }: SykmeldingsOpplys
         tidligereArbeidsgiver: TidligereArbeidsgiver
         journalpostId: string
         utenlandskSykmelding: UtenlandskSykmelding
+        behandler: Behandler
     }
 
     interface BehandlingsUtfall {
@@ -299,6 +300,20 @@ const SykmeldingsOpplysningerForm = ({ person, sykmeldingId }: SykmeldingsOpplys
                             </p>
                         </div>
                     </div>
+
+                    {activePeriod.behandler && (
+                        <div className="mt-6">
+                            <h3 className="text-lg font-semibold">Behandler:</h3>
+                            <div className="bg-gray-100 p-4 rounded-md shadow-sm">
+                                <p>
+                                    <b>HPR-nummer:</b> {activePeriod.behandler.hpr}
+                                </p>
+                                <p>
+                                    <b>Fødselsnummer:</b> {activePeriod.behandler.fnr}
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
