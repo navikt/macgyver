@@ -57,7 +57,7 @@ spec:
         - application: logging
           namespace: nais-system
       external:
-        - host: saf.dev-fss-pub.nais.io
+        - host: saf-q2.dev-fss-pub.nais.io
         - host: pdl-api.dev-fss-pub.nais.io
         - host: oppgave.dev-fss-pub.nais.io
         - host: dokarkiv.dev-fss-pub.nais.io
@@ -95,7 +95,7 @@ spec:
     - name: SYFOSMREGISTER_DB_NAME
       value: smregister
     - name: SAF_GRAPHQL_PATH
-      value: https://saf.dev-fss-pub.nais.io/graphql
+      value: https://saf-q2.dev-fss-pub.nais.io/graphql
     - name: SAF_SCOPE
       value: api://dev-fss.teamdokumenthandtering.saf/.default
     - name: DOK_ARKIV_URL
