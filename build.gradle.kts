@@ -8,7 +8,7 @@ version = "1.0.0"
 val coroutinesVersion = "1.10.2"
 val jacksonVersion = "2.20.2"
 val ktorVersion = "3.4.0"
-val logbackVersion = "1.5.18"
+val logbackVersion = "1.5.26"
 val logstashEncoderVersion = "8.1"
 val prometheusVersion = "0.16.0"
 val nimbusVersion = "10.3.1"
@@ -31,7 +31,6 @@ val googlePostgresVersion = "1.25.1"
 val junitVersion = "5.13.3"
 val ktfmtVersion = "0.49"
 val snakeyamlVersion = "2.4"
-val snappyJavaVersion = "1.1.10.7"
 val kafkaVersion = "3.9.1"
 val diagnosekoderVersion = "1.2025.0"
 val koinVersion = "4.1.0-Beta8"
@@ -74,7 +73,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
-    implementation("org.apache.kafka:kafka_2.12:$kafkaVersion")
+    implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
 
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
@@ -96,12 +95,6 @@ dependencies {
 
     implementation("io.insert-koin:koin-ktor3:$koinVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
-
-    constraints {
-        implementation("org.xerial.snappy:snappy-java:$snappyJavaVersion") {
-            because("override transient from org.apache.kafka:kafka_2.12")
-        }
-    }
     implementation("com.migesok:jaxb-java-time-adapters:$javaTimeAdapterVersion")
 
     implementation("javax.xml.ws:jaxws-api:$javaxJaxwsApiVersion")
@@ -109,9 +102,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
     implementation("org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion")
     implementation("javax.activation:activation:$javaxActivationVersion")
-    implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
-        exclude(group = "com.sun.xml.ws", module = "policy")
-    }
+    implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion")
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
