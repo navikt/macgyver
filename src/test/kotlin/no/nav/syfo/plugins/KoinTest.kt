@@ -2,7 +2,6 @@ package no.nav.syfo.plugins
 
 import io.mockk.mockk
 import no.nav.syfo.db.Database
-import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
@@ -22,7 +21,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.koin.test.KoinTest
-import org.koin.test.check.checkModules
 
 class CheckModulesTest : KoinTest {
 
@@ -68,7 +66,6 @@ class CheckModulesTest : KoinTest {
                     // Mock up any "leaf nodes" in the dependency tree that we don't want
                     // instantiated. That way we can verify that all dependencies are satisfied
                     single { testEnv }
-                    single { mockk<UpdateFnrDatabase>() }
                     single { mockk<AuthConfiguration>() }
                     single<Database>(named("syfoSmregisterDatabase")) { mockk<Database>() }
                     single<KafkaProducer<String, SykmeldingV2KafkaMessage?>>(

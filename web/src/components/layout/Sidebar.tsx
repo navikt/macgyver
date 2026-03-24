@@ -4,7 +4,6 @@ import {
     FilesIcon,
     FilePdfIcon,
     ReceptionIcon,
-    PersonGroupIcon,
     StethoscopeIcon,
     PersonIcon,
 } from '@navikt/aksel-icons'
@@ -19,11 +18,6 @@ type Props = {
 function Sidebar({ className }: Props): ReactElement {
     return (
         <div className={className}>
-            <SidebarMenuItem title="IdentEndring" Icon={PersonGroupIcon}>
-                <li>
-                    <Link to="/ident/endre">Endre fnr for en gitt sykmelding</Link>
-                </li>
-            </SidebarMenuItem>
             <SidebarMenuItem title="Sykmelding" Icon={BandageIcon}>
                 <li>
                     <Link to="/sykmelding/slett">Slett en gitt sykmelding</Link>

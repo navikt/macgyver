@@ -7,9 +7,6 @@ import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.clients.ProductionAccessTokenClientV2
 import no.nav.syfo.clients.createHttpClient
 import no.nav.syfo.db.Database
-import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
-import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseProduction
-import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.infotrygd.InfotrygdService
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
@@ -139,9 +136,7 @@ val sykmeldingModule = module {
             dbPassword = env.syfosmregisterDatabasePassword,
         )
     }
-    single<UpdateFnrDatabase> {
-        UpdateFnrDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
-    }
+
     single<DeleteSykmeldingDatabase> {
         DeleteSykmeldingDatabaseProduction(get(qualifier = named("syfoSmregisterDatabase")))
     }
@@ -161,16 +156,6 @@ val sykmeldingModule = module {
                     env.papirSmRegistreringTopic,
                 ),
             dokArkivClient = get(),
-        )
-    }
-    single {
-        UpdateFnrService(
-            pdlPersonService = get(),
-            updateFnrDatabase = get(),
-            sendtSykmeldingKafkaProducer = get(),
-            narmesteLederResponseKafkaProducer = get(),
-            narmestelederClient = get(),
-            sendtSykmeldingTopic = get<EnvironmentVariables>().sendSykmeldingV2Topic,
         )
     }
 

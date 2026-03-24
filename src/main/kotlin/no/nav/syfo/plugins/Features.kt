@@ -4,8 +4,6 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 import no.nav.syfo.altinn.registerAltinnStatusApi
-import no.nav.syfo.identendring.registerFnrApi
-import no.nav.syfo.identendring.registerPersonApi
 import no.nav.syfo.infotrygd.registerInfotrygdApi
 import no.nav.syfo.legeerklaering.registerDeleteLegeerklaeringApi
 import no.nav.syfo.metrics.monitorHttpRequests
@@ -19,13 +17,11 @@ fun Application.configureFeatures() {
     routing {
         authenticate(if (application.developmentMode) "local" else "jwt") {
             route("/api") {
-                registerFnrApi()
                 registerDeleteSykmeldingApi()
                 registerHentOppgaverApi()
                 registrerNarmestelederApi()
                 registerDeleteLegeerklaeringApi()
                 registerJournalpostApi()
-                registerPersonApi()
                 registerSykmeldingsOpplysningerApi()
                 registerAltinnStatusApi()
                 registerInfotrygdApi()

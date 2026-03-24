@@ -80,7 +80,7 @@ jobs:
           cache: "gradle"
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
       - run: corepack enable
       - run: yarn --immutable
         env:
@@ -127,7 +127,7 @@ jobs:
           cache: "gradle"
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
       - run: corepack enable
       - run: yarn --immutable
         env:

@@ -10,7 +10,6 @@ import Root from './routes/root.tsx'
 import Landing from './routes/person/landing.tsx'
 import PersonOppslag from './routes/person/oppslag.tsx'
 import OppgaveOppslag from './routes/oppgaver/oppslag.tsx'
-import EndreIdent from './routes/ident/endre.tsx'
 import SlettSykmelding from './routes/sykmelding/slett.tsx'
 import NyNarmesteleder from './routes/narmesteleder/ny.tsx'
 import OppslagNarmesteleder from './routes/narmesteleder/oppslag.tsx'
@@ -38,7 +37,6 @@ const router = createBrowserRouter([
             { path: '/infotrygd/oppslag', element: <InfotrygdOppslag /> },
             { path: '/altinnstatus/oppslag', element: <AltinnStatusOppslag /> },
             { path: '/oppgave/oppslag', element: <OppgaveOppslag /> },
-            { path: '/ident/endre', element: <EndreIdent /> },
             { path: '/sykmelding/slett', element: <SlettSykmelding /> },
             { path: '/narmesteleder/ny', element: <NyNarmesteleder /> },
             { path: '/narmesteleder/deaktiver', element: <DeaktiverNarmesteleder /> },

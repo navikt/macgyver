@@ -1,9 +1,6 @@
 package no.nav.syfo.plugins
 
 import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
-import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabase
-import no.nav.syfo.identendring.update_fnr.UpdateFnrDatabaseDevelopment
-import no.nav.syfo.identendring.update_fnr.UpdateFnrService
 import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
@@ -50,7 +47,6 @@ fun KoinApplication.initDevelopmentModules() {
 }
 
 val developmentKafkaModules = module {
-    single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
     single<SykmeldingV2KafkaProducer> { SykmeldingV2KafkaProducerDevelopment() }
     single<NarmesteLederRequestKafkaProducer> { NarmesteLederRequestKafkaProducerDevelopment() }
     single<SykmeldingStatusKafkaProducer> { SykmeldingStatusKafkaProducerDevelopment() }
@@ -116,7 +112,7 @@ val developmentEnv = module {
 }
 
 val developmentSykmeldingModule = module {
-    single<UpdateFnrDatabase> { UpdateFnrDatabaseDevelopment() }
+
     single<DeleteSykmeldingDatabase> { DeleteSykmeldingDatabaseDevelopment() }
 
     single {
@@ -132,16 +128,6 @@ val developmentSykmeldingModule = module {
                     env.papirSmRegistreringTopic,
                 ),
             dokArkivClient = get(),
-        )
-    }
-    single {
-        UpdateFnrService(
-            pdlPersonService = get(),
-            updateFnrDatabase = get(),
-            sendtSykmeldingKafkaProducer = get(),
-            narmesteLederResponseKafkaProducer = get(),
-            narmestelederClient = get(),
-            sendtSykmeldingTopic = get<EnvironmentVariables>().sendSykmeldingV2Topic,
         )
     }
 }
