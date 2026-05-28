@@ -27,8 +27,9 @@ class SafClient(
                 query = graphQlQuery,
                 variables =
                     Variables(
-                        brukerId = BrukerIdInput(id = fnr, type = BrukerIdType.FNR),
-                        foerste = 100
+                        id = fnr,
+                        type = BrukerIdType.FNR.name,
+                        foerste = 1000
                     ),
             )
 

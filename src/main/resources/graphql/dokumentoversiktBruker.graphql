@@ -1,8 +1,25 @@
-query dokumentoversiktBruker($brukerId: BrukerIdInput!, $foerste: Int!) {
-    dokumentoversiktBruker(brukerId: $brukerId, foerste: $foerste) {
-        journalposter {
-            journalpostId
-            tittel
-        }
+query DokumentoversiktBruker(
+  $id: String!
+  $type: BrukerIdType!
+  $tema: [Tema]
+  $foerste: Int
+) {
+  dokumentoversiktBruker(
+    brukerId: { id: $id, type: $type }
+    tema: $tema
+    foerste: $foerste
+  ) {
+    journalposter {
+      journalpostId
+      tittel
+      journalposttype
+      journalstatus
+      tema
+      eksternReferanseId
     }
+    sideInfo {
+      antall
+      totaltAntall
+    }
+  }
 }
