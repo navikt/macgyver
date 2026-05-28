@@ -6,5 +6,5 @@ data class Variables(
     val id: String,
     val type: String,
     val foerste: Int,
-    val tema: List<String> = listOf("SYM", "SYK")
+    val tema: List<String> = listOf("SYM")
 )
