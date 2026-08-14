@@ -3,8 +3,6 @@ package no.nav.syfo.plugins
 import io.mockk.mockk
 import no.nav.syfo.db.Database
 import no.nav.syfo.model.sykmeldingstatus.SykmeldingStatusKafkaMessageDTO
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
 import no.nav.syfo.sykmelding.aivenmigrering.SykmeldingV2KafkaMessage
@@ -77,9 +75,6 @@ class CheckModulesTest : KoinTest {
                         named("sykmeldingStatusProducer"),
                     ) {
                         mockk<KafkaProducer<String, SykmeldingStatusKafkaMessageDTO>>()
-                    }
-                    single<NarmesteLederRequestKafkaProducer> {
-                        mockk<NarmesteLederRequestKafkaProducerDevelopment> {}
                     }
                     single<NarmesteLederResponseKafkaProducer> {
                         mockk<NarmesteLederResponseKafkaProducerDevelopment>()

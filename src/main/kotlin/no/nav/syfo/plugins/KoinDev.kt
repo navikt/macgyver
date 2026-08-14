@@ -2,8 +2,6 @@ package no.nav.syfo.plugins
 
 import no.nav.syfo.clients.DevelopmentAccessTokenClientV2
 import no.nav.syfo.narmesteleder.DevelopmentNarmestelederClient
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerDevelopment
 import no.nav.syfo.narmesteleder.NarmestelederClient
@@ -48,7 +46,6 @@ fun KoinApplication.initDevelopmentModules() {
 
 val developmentKafkaModules = module {
     single<SykmeldingV2KafkaProducer> { SykmeldingV2KafkaProducerDevelopment() }
-    single<NarmesteLederRequestKafkaProducer> { NarmesteLederRequestKafkaProducerDevelopment() }
     single<SykmeldingStatusKafkaProducer> { SykmeldingStatusKafkaProducerDevelopment() }
     single<TombstoneKafkaProducer> { TombstoneKafkaProducerDevelopment() }
     single<NarmesteLederResponseKafkaProducer> { NarmesteLederResponseKafkaProducerDevelopment() }
@@ -60,8 +57,6 @@ val developmentNarmestelederModule = module {
     single<NarmestelederClient> { DevelopmentNarmestelederClient() }
     single {
         NarmestelederService(
-            pdlService = get(),
-            narmestelederRequestProducer = get(),
             narmestelederClient = get(),
             narmestelederResponseProducer = get(),
         )

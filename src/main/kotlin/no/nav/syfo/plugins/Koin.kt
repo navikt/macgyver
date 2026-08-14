@@ -11,8 +11,6 @@ import no.nav.syfo.infotrygd.InfotrygdService
 import no.nav.syfo.kafka.aiven.KafkaUtils
 import no.nav.syfo.kafka.toProducerConfig
 import no.nav.syfo.legeerklaering.DeleteLegeerklaeringService
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducer
-import no.nav.syfo.narmesteleder.NarmesteLederRequestKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducer
 import no.nav.syfo.narmesteleder.NarmesteLederResponseKafkaProducerProduction
 import no.nav.syfo.narmesteleder.NarmestelederClient
@@ -198,8 +196,6 @@ val narmestelederModule = module {
     }
     single {
         NarmestelederService(
-            pdlService = get(),
-            narmestelederRequestProducer = get(),
             narmestelederClient = get(),
             narmestelederResponseProducer = get(),
         )
@@ -283,11 +279,6 @@ val kafkaModules = module {
     }
     single<TombstoneKafkaProducer> { TombstoneKafkaProducerProduction() }
 
-    single<NarmesteLederRequestKafkaProducer> {
-        NarmesteLederRequestKafkaProducerProduction(
-            get<EnvironmentVariables>().narmestelederRequestTopic
-        )
-    }
     single<NarmesteLederResponseKafkaProducer> {
         NarmesteLederResponseKafkaProducerProduction(
             get<EnvironmentVariables>().nlResponseTopic,
