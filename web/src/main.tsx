@@ -11,7 +11,6 @@ import Landing from './routes/person/landing.tsx'
 import PersonOppslag from './routes/person/oppslag.tsx'
 import OppgaveOppslag from './routes/oppgaver/oppslag.tsx'
 import SlettSykmelding from './routes/sykmelding/slett.tsx'
-import NyNarmesteleder from './routes/narmesteleder/ny.tsx'
 import OppslagNarmesteleder from './routes/narmesteleder/oppslag.tsx'
 import SlettLegeerklaering from './routes/legeerklaering/slett.tsx'
 import NotFound from './not-found.tsx'
@@ -38,7 +37,6 @@ const router = createBrowserRouter([
             { path: '/altinnstatus/oppslag', element: <AltinnStatusOppslag /> },
             { path: '/oppgave/oppslag', element: <OppgaveOppslag /> },
             { path: '/sykmelding/slett', element: <SlettSykmelding /> },
-            { path: '/narmesteleder/ny', element: <NyNarmesteleder /> },
             { path: '/narmesteleder/deaktiver', element: <DeaktiverNarmesteleder /> },
             { path: '/narmesteleder/oppslag', element: <OppslagNarmesteleder /> },
             { path: '/narmesteleder/leder', element: <LederOppslag /> },

@@ -13,7 +13,6 @@ data class EnvironmentVariables(
     val mottattSykmeldingV2Topic: String = "teamsykmelding.syfo-mottatt-sykmelding",
     val nlResponseTopic: String = "teamsykmelding.syfo-narmesteleder",
     val aivenSykmeldingStatusTopic: String = "teamsykmelding.sykmeldingstatus-leesah",
-    val narmestelederRequestTopic: String = "teamsykmelding.syfo-nl-request",
     val papirSmRegistreringTopic: String = "teamsykmelding.papir-sm-registering",
     val manuellTopic: String = "teamsykmelding.sykmelding-manuell",
     val oppgavebehandlingUrl: String = getEnvVar("OPPGAVEBEHANDLING_URL"),
