@@ -24,15 +24,11 @@ class DeleteSykmeldingService(
                         permit = AuditLogger.Permit.PERMIT,
                     ),
             )
-            sykmeldingStatusKafkaProducer.delete(
-                sykmeldingID
-            )
-
-            tombstoneProducer.send(topics, sykmeldingID)
-        } else {
-            logger.warn("Could not find sykmelding with id $sykmeldingID")
-            throw DeleteSykmeldingException("Could not find sykmelding with id $sykmeldingID")
         }
+        sykmeldingStatusKafkaProducer.delete(
+            sykmeldingID
+        )
+        tombstoneProducer.send(topics, sykmeldingID)
 
         if (journalpostId == "missing") {
             logger.info("Sletter sykmelding $sykmeldingID uten journalpostId")
