@@ -7,9 +7,9 @@ version = "1.0.0"
 
 val coroutinesVersion = "1.10.2"
 val jacksonVersion = "2.20.2"
-val ktorVersion = "3.4.0"
-val logbackVersion = "1.5.26"
-val logstashEncoderVersion = "8.1"
+val ktorVersion = "3.5.2"
+val logbackVersion = "1.6.3"
+val logstashEncoderVersion = "9.0"
 val prometheusVersion = "0.16.0"
 val nimbusVersion = "10.3.1"
 val hikariVersion = "6.3.0"
@@ -29,19 +29,18 @@ val postgresVersion = "42.7.7"
 val kotlinVersion = "2.2.0"
 val googlePostgresVersion = "1.25.1"
 val junitVersion = "5.13.3"
-val ktfmtVersion = "0.49"
-val snakeyamlVersion = "2.4"
-val kafkaVersion = "3.9.1"
-val diagnosekoderVersion = "1.2025.0"
+val ktfmtVersion = "0.56"
+val kafkaVersion = "4.3.1"
+val diagnosekoderVersion = "1.2026.0"
 val koinVersion = "4.1.0-Beta8"
 
-val javaVersion = "21"
+val javaVersion = "25"
 
 
 plugins {
     id("application")
-    kotlin("jvm") version "2.2.0"
-    id("com.diffplug.spotless") version "7.1.0"
+    kotlin("jvm") version "2.4.10"
+    id("com.diffplug.spotless") version "8.10.1"
     id("com.gradleup.shadow") version "8.3.8"
 }
 
@@ -76,18 +75,17 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
 
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-jackson3:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache5:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
-    
-    implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+    implementation("tools.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion")
+    implementation("tools.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("tools.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
 
     implementation("no.nav.helse.xml:sm2013:$sykmeldingVersion")
     implementation("no.nav.helse.xml:xmlfellesformat:$fellesformatVersion")
@@ -109,11 +107,7 @@ dependencies {
     implementation("com.google.cloud.sql:postgres-socket-factory:$googlePostgresVersion") {
         exclude(group = "commons-codec", module = "commons-codec")
     }
-    constraints {
-        implementation("org.yaml:snakeyaml:$snakeyamlVersion") {
-            because("override transient version from io.confluent:kafka-avro-serializer")
-        }
-    }
+
 
     implementation("no.nav.helse:diagnosekoder:$diagnosekoderVersion")
 

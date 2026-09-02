@@ -1,7 +1,7 @@
 package no.nav.syfo.sykmelding.aivenmigrering
 
 import no.nav.syfo.logging.logger
-import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.utils.jsonMapper
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -37,6 +37,6 @@ class SykmeldingV2KafkaProducerDevelopment : SykmeldingV2KafkaProducer {
         topic: String
     ) {
         logger.info("Sending sykmelding $sykmeldingId")
-        logger.info(objectMapper.writeValueAsString(sykmeldingKafkaMessage))
+        logger.info(jsonMapper.writeValueAsString(sykmeldingKafkaMessage))
     }
 }

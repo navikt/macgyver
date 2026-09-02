@@ -1,6 +1,5 @@
 package no.nav.syfo.sykmelding.delete_sykmelding
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.ResultSet
 import java.time.LocalDateTime
 import no.nav.syfo.db.Database
@@ -8,7 +7,8 @@ import no.nav.syfo.logging.logger
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.Sykmelding
 import no.nav.syfo.model.UtenlandskSykmelding
-import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.utils.jsonMapper
+import tools.jackson.module.kotlin.readValue
 
 data class Sykmeldingsopplysninger(
     var id: String,
@@ -116,11 +116,11 @@ private fun ResultSet.toSykmelding(): SykmeldingDbModel? {
                 mottattTidspunkt = getTimestamp("mottatt_tidspunkt").toLocalDateTime(),
                 tssid = getString("tss_id"),
                 merknader =
-                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                    getString("merknader")?.let { jsonMapper.readValue<List<Merknad>>(it) },
                 partnerreferanse = getString("partnerreferanse"),
                 utenlandskSykmelding =
                     getString("utenlandsk_sykmelding")?.let {
-                        objectMapper.readValue<UtenlandskSykmelding>(it)
+                        jsonMapper.readValue<UtenlandskSykmelding>(it)
                     },
             )
         return SykmeldingDbModel(sykmeldingsopplysninger, sykmeldingsdokument)
@@ -133,5 +133,5 @@ private fun ResultSet.getNullsafeSykmeldingsdokument(sykmeldingId: String): Sykm
     if (sykmeldingDokument.isNullOrEmpty()) {
         return null
     }
-    return Sykmeldingsdokument(sykmeldingId, objectMapper.readValue(getString("sykmelding")))
+    return Sykmeldingsdokument(sykmeldingId, jsonMapper.readValue(getString("sykmelding")))
 }

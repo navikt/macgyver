@@ -1,6 +1,5 @@
 package no.nav.syfo.infotrygd
 
-import com.fasterxml.jackson.databind.JsonNode
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
@@ -10,9 +9,9 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.http.headers
 import no.nav.syfo.clients.AccessTokenClientV2
 import no.nav.syfo.logging.logger
+import tools.jackson.databind.JsonNode
 
 class InfotrygdService(
     val infotrygdClient: HttpClient, private val accessTokenClientV2: AccessTokenClientV2,
