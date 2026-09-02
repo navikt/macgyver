@@ -1,15 +1,12 @@
 package no.nav.syfo.sykmeldingsopplysninger
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.sql.ResultSet
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import no.nav.syfo.db.Database
-import no.nav.syfo.db.toList
-import no.nav.syfo.model.Adresse
-import no.nav.syfo.model.Behandler
-import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.utils.jsonMapper
+import tools.jackson.module.kotlin.readValue
 
 interface GetSykmeldingOpplysningerDatabase {
     suspend fun getAlleSykmeldinger(fnr: String): List<Sykmelding>
@@ -183,7 +180,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                             val sykmeldingId = resultSet.getString("id")
                             val sykmelding =
                                 resultSet.getString("sykmelding").let {
-                                    objectMapper.readValue<SykmeldingDokument>(it)
+                                    jsonMapper.readValue<SykmeldingDokument>(it)
                                 }
                             val perioder = sykmelding.perioder
                             val hovedDiagnose = sykmelding.medisinskVurdering.hovedDiagnose
@@ -238,14 +235,14 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
                 behandlingsUtfall = null,
                 hovedDiagnose = null,
                 merknader =
-                    getString("merknader")?.let { objectMapper.readValue<List<Merknad>>(it) },
+                    getString("merknader")?.let { jsonMapper.readValue<List<Merknad>>(it) },
                 // statusEvent = getSykmeldingStatus("id"),
                 statusEvent = null,
                 perioder = null,
                 tidligereArbeidsgiver = null,
                 journalpostId = null,
                 utenlandskSykmelding =
-                    getString("utenlandsk_sykmelding")?.let { objectMapper.readValue(it) },
+                    getString("utenlandsk_sykmelding")?.let { jsonMapper.readValue(it) },
                 legeHpr = getString("lege_hpr"),
             )
         return sykmeldingsopplysninger
@@ -273,7 +270,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
         val behandlingsutfallJson = getString("behandlingsutfall")
 
         return behandlingsutfallJson?.let {
-            val behandlingsutfall = objectMapper.readValue<BehandlingsUtfall>(behandlingsutfallJson)
+            val behandlingsutfall = jsonMapper.readValue<BehandlingsUtfall>(behandlingsutfallJson)
             behandlingsutfall
         }
     }
@@ -282,7 +279,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
         val sykmeldingDokumentJson = getString("sykmelding")
         return sykmeldingDokumentJson?.let {
             val sykmeldingDokument =
-                objectMapper.readValue<SykmeldingDokument>(sykmeldingDokumentJson)
+                jsonMapper.readValue<SykmeldingDokument>(sykmeldingDokumentJson)
             sykmeldingDokument.perioder
         }
     }
@@ -291,7 +288,7 @@ class GetSykmeldingerDatabaseProduction(private val database: Database) :
         val sykmeldingDokumentJson = getString("sykmelding")
         return sykmeldingDokumentJson?.let {
             val sykmeldingDokument =
-                objectMapper.readValue<SykmeldingDokument>(sykmeldingDokumentJson)
+                jsonMapper.readValue<SykmeldingDokument>(sykmeldingDokumentJson)
             sykmeldingDokument.medisinskVurdering.hovedDiagnose
         }
     }

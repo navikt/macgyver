@@ -7,7 +7,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import java.time.LocalDate
 import no.nav.syfo.utils.generateJWT
-import no.nav.syfo.utils.objectMapper
+import no.nav.syfo.utils.jsonMapper
 import no.nav.syfo.utils.setupTestApplication
 import no.nav.syfo.utils.testClient
 import org.junit.jupiter.api.AfterEach
@@ -57,7 +57,7 @@ internal class OppgaveApiTest {
                     append("Content-Type", "application/json")
                     append(HttpHeaders.Authorization, "Bearer ${generateJWT("2", "clientId")}")
                 }
-                setBody(objectMapper.writeValueAsString(oppgaverid))
+                setBody(jsonMapper.writeValueAsString(oppgaverid))
             }
 
         assertEquals(response.status, HttpStatusCode.OK)

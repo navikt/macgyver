@@ -21,7 +21,7 @@ Frontend:
 
 #### Requirements
 
-* JDK 21
+* JDK 25
 * Node 20
 
 ## FlowChart
@@ -46,7 +46,7 @@ This the high level flow of the application
 
 Install these using mise/asdf or any other package manager (**not** brew)
 
-- JDK 21
+- JDK 25
 - Node 20
 
 Enable corepack:
