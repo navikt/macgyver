@@ -133,7 +133,9 @@ kotlin {
 tasks {
 
     withType<ShadowJar> {
-        mergeServiceFiles()
+        mergeServiceFiles {
+            setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
+        }
         archiveBaseName.set("app")
         archiveClassifier.set("")
         isZip64 = true
@@ -141,6 +143,7 @@ tasks {
             attributes(
                 mapOf(
                    "Main-Class" to "no.nav.syfo.ApplicationKt",
+   "               "Multi-Release" to "true",
                 ),
             )
         }
