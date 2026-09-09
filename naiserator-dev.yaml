@@ -78,6 +78,8 @@ spec:
   ingresses:
     - "https://macgyver.ansatt.dev.nav.no"
   env:
+    - name: OTEL_JAVAAGENT_LOGGING
+      value: none
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.dev-fss-pub.nais.io/graphql
     - name: PDL_SCOPE
