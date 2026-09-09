@@ -33,7 +33,6 @@ val ktfmtVersion = "0.56"
 val kafkaVersion = "4.3.1"
 val diagnosekoderVersion = "1.2026.0"
 val koinVersion = "4.1.0-Beta8"
-val dnsjavaVersion = "3.6.3"
 
 val javaVersion = "25"
 
@@ -61,8 +60,6 @@ repositories {
 }
 
 dependencies {
-    runtimeOnly("dnsjava:dnsjava:$dnsjavaVersion")
-
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$coroutinesVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
