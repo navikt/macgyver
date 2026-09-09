@@ -10,7 +10,7 @@ val jacksonVersion = "3.2.2"
 val ktorVersion = "3.5.2"
 val logbackVersion = "1.6.3"
 val logstashEncoderVersion = "9.0"
-val prometheusVersion = "0.16.0"
+val prometheusVersion = "1.17.1"
 val nimbusVersion = "10.9.1"
 val hikariVersion = "7.1.0"
 val jaxbBasicAntVersion = "1.11.1"
@@ -61,8 +61,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$coroutinesVersion")
-    implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
-    implementation("io.prometheus:simpleclient_common:$prometheusVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
@@ -70,6 +69,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
 
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")

@@ -8,12 +8,11 @@ import no.nav.syfo.logging.teamLogger
 
 fun monitorHttpRequests(developmentMode: Boolean): PipelineInterceptor<Unit, PipelineCall> {
     return {
+        val startTime = System.nanoTime()
+
         try {
             teamLogger().info("Received request: ${call.request.uri}")
-            val label = context.request.path()
-            val timer = HTTP_HISTOGRAM.labels(label).startTimer()
             proceed()
-            timer.observeDuration()
         } catch (e: Exception) {
             if (developmentMode) {
                 logger.error(
@@ -30,6 +29,10 @@ fun monitorHttpRequests(developmentMode: Boolean): PipelineInterceptor<Unit, Pip
                 e,
             )
             throw e
+        }
+        finally {
+            val durationSeconds = (System.nanoTime() - startTime).toDouble() / 1_000_000_000.0
+            HTTP_HISTOGRAM.record(durationSeconds)
         }
     }
 }

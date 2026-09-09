@@ -25,7 +25,7 @@ spec:
     timeout: 5
   prometheus:
     enabled: true
-    path: /api/internal/prometheus
+    path: /api/internal/metrics
   observability:
     autoInstrumentation:
       enabled: true
