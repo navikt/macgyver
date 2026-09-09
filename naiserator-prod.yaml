@@ -79,6 +79,8 @@ spec:
     - secret: google-sql-syfosmregister-smregister-macgyver-38b6dc12
     - secret: macgyver-secrets
   env:
+    - name: OTEL_JAVAAGENT_LOGGING
+      value: none
     - name: PDL_GRAPHQL_PATH
       value: https://pdl-api.prod-fss-pub.nais.io/graphql
     - name: PDL_SCOPE
