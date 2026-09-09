@@ -141,7 +141,6 @@ tasks {
             attributes(
                 mapOf(
                    "Main-Class" to "no.nav.syfo.ApplicationKt",
-                   "Multi-Release" to "true",
                 ),
             )
         }
