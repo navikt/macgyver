@@ -40,8 +40,8 @@ val javaVersion = "25"
 plugins {
     id("application")
     kotlin("jvm") version "2.4.10"
-    id("com.diffplug.spotless") version "8.10.1"
-    id("com.gradleup.shadow") version "8.3.8"
+    id("com.diffplug.spotless") version "8.10.2"
+    id("com.gradleup.shadow") version "9.6.1"
 }
 
 application {
