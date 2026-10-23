@@ -133,6 +133,7 @@ kotlin {
 tasks {
 
     withType<ShadowJar> {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         mergeServiceFiles()
         archiveBaseName.set("app")
         archiveClassifier.set("")
@@ -144,6 +145,9 @@ tasks {
                    "Multi-Release" to "true",
                 ),
             )
+        }
+        from("src/main/resources/logback.xml") {
+            into("/")
         }
     }
 
