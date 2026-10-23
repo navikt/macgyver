@@ -5,8 +5,7 @@ import io.ktor.server.routing.*
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 
 fun Route.naisPrometheusRoute(appRegistry: PrometheusMeterRegistry) {
-
     get("/metrics") {
-        application.routing { get("/internal/metrics") { call.respond(appRegistry.scrape()) } }
+       call.respond(appRegistry.scrape())
     }
 }
