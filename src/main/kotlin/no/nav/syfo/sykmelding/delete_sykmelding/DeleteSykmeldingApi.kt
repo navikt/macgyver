@@ -15,13 +15,17 @@ fun Route.registerDeleteSykmeldingApi() {
 
     delete("/sykmelding/{sykmeldingId}/{journalpostId}") {
         val sykmeldingId = call.parameters["sykmeldingId"]!!
-        val journalpostId = call.parameters["journalpostId"]
+        val journalpostId = call.parameters["journalpostId"]!!
         logger.info("Deleting sykmelding $sykmeldingId")
         if (sykmeldingId.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, HttpMessage("Sykmeldingid må være satt"))
             return@delete
         }
 
+        if (journalpostId.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, HttpMessage("journalpostId må være satt"))
+            return@delete
+        }
 
         logger.info("Deleting sykmelding $sykmeldingId and journalpostId $journalpostId")
 
