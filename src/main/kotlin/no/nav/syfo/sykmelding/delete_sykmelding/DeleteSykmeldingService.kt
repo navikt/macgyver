@@ -12,7 +12,7 @@ class DeleteSykmeldingService(
     val topics: List<String>,
     val dokArkivClient: DokArkivClient
 ) {
-    suspend fun deleteSykmelding(sykmeldingID: String, journalpostId: String, user: UserPrincipal) {
+    suspend fun deleteSykmelding(sykmeldingID: String, journalpostId: String?, user: UserPrincipal) {
         val sykmelding = deleteSykmeldingDatabase.hentSykmeldingMedId(sykmeldingID)
         if (sykmelding != null) {
             auditlogg.info(
@@ -30,7 +30,7 @@ class DeleteSykmeldingService(
         )
         tombstoneProducer.send(topics, sykmeldingID)
 
-        if (journalpostId == "missing") {
+        if (journalpostId.isNullOrBlank()) {
             logger.info("Sletter sykmelding $sykmeldingID uten journalpostId")
         } else {
             dokArkivClient.registrerFeilMedJournalpost(

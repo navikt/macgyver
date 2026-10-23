@@ -15,10 +15,6 @@ function SlettSykmelding(): ReactElement {
                 throw new Error('Mangler sykmeldingId.')
             }
 
-            if (!params.journalpostId) {
-                throw new Error('Mangler journalpostId.')
-            }
-
             return await fetchApi(`/sykmelding/${params.sykmeldingId}/${params.journalpostId ?? 'null'}`, {
                 method: 'DELETE',
                 schema: MessageSchema,
