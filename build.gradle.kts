@@ -6,7 +6,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val coroutinesVersion = "1.11.0"
-val jacksonVersion = "3.2.4"
+val jacksonVersion = "3.3.0"
 val ktorVersion = "3.6.1"
 val logbackVersion = "1.6.6"
 val logstashEncoderVersion = "9.0"
@@ -20,7 +20,7 @@ val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxJaxwsApiVersion = "2.3.1"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val javaxActivationVersion = "1.1.1"
-val mockkVersion = "1.14.11"
+val mockkVersion = "1.14.12"
 val sykmeldingVersion = "2.0.1"
 val fellesformatVersion = "2.0.1"
 val kithHodemeldingVersion = "2.0.1"
@@ -40,7 +40,7 @@ val javaVersion = "25"
 plugins {
     id("application")
     kotlin("jvm") version "2.4.21"
-    id("com.diffplug.spotless") version "8.10.4"
+    id("com.diffplug.spotless") version "8.11.0"
     id("com.gradleup.shadow") version "9.6.1"
 }
 
