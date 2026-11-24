@@ -8,9 +8,9 @@ version = "1.0.0"
 val coroutinesVersion = "1.11.0"
 val jacksonVersion = "3.3.0"
 val ktorVersion = "3.6.1"
-val logbackVersion = "1.6.7"
+val logbackVersion = "1.6.8"
 val logstashEncoderVersion = "9.0"
-val prometheusVersion = "1.17.2"
+val prometheusVersion = "1.18.0"
 val nimbusVersion = "10.10"
 val hikariVersion = "7.1.0"
 val jaxbBasicAntVersion = "1.11.1"
@@ -40,7 +40,7 @@ val javaVersion = "25"
 plugins {
     id("application")
     kotlin("jvm") version "2.4.21"
-    id("com.diffplug.spotless") version "8.11.0"
+    id("com.diffplug.spotless") version "8.12.0"
     id("com.gradleup.shadow") version "9.6.1"
 }
 
